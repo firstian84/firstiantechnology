@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --neon-blue: #00f2ff;
+            --neon-purple: #7000ff;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #050505;
+            color: #e5e7eb;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glass-card {
+            background: rgba(15, 15, 15, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .glass-card:hover::before { opacity: 1; }
+
+        .glass-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px -15px rgba(0, 242, 255, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, var(--neon-blue) 50%, var(--neon-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        /* Responsive Animations */
+        @keyframes neon-glow-subtle {
+            0%, 100% { box-shadow: 0 0 5px rgba(0, 242, 255, 0.1); border-color: rgba(255, 255, 255, 0.05); }
+            50% { box-shadow: 0 0 15px rgba(0, 242, 255, 0.3), 0 0 10px rgba(112, 0, 255, 0.2); border-color: var(--neon-blue); }
+        }
+
+        .btn-wa-animated {
+            background: linear-gradient(45deg, #25d366, #128c7e);
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+            animation: pulse-wa-main 2s infinite;
+        }
+
+        @keyframes pulse-wa-main {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        .social-row { 
+            display: flex; 
+            gap: 12px; 
+            justify-content: center; 
+            padding: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-social {
+            width: 50px; height: 50px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 20px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: neon-glow-subtle 3s infinite ease-in-out;
+        }
+
+        .btn-social:hover { transform: scale(1.1) rotate(5deg); border-color: white; animation: none; box-shadow: 0 0 25px var(--neon-blue); }
+        .btn-ig:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+        .btn-fb:hover { background: #1877F2; }
+        .btn-toped:hover { background: #42b549; }
+        .btn-yt:hover { background: #FF0000; }
+
+        #audioControls { opacity: 0; position: absolute; pointer-events: none; }
+        .reveal { opacity: 0; transform: translateY(30px); }
+
+        .address-btn {
+            display: flex;
+            text-align: left;
+            transition: all 0.3s ease;
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid transparent;
+            animation: neon-glow-subtle 4s infinite ease-in-out;
+            width: 100%;
+        }
+        .address-btn:hover { background: rgba(59, 130, 246, 0.1); transform: translateX(5px); animation: none; border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 md:px-6 pt-10">
+        <h1 class="reveal text-5xl sm:text-6xl md:text-8xl font-bold mb-6 tracking-tight leading-tight">
+            Limitless<br><span class="gradient-text">Creation.</span>
+        </h1>
+        <p class="reveal max-w-3xl text-gray-400 text-base md:text-lg mb-10 leading-relaxed backdrop-blur-sm p-6 rounded-2xl bg-black/20">
+            Since opening our industries in 2015, we’ve had one goal in mind, Put science to priority and creating without limmitation affordable designs for our growing community of clients. We offer a lowhighend services. Browse our site to see some of our latest work and give us a call today to set up an introductory meeting. 
+            <br><br>
+            From hands-on creative work to practical advice, we want to ensure that all of our clients find exactly what they’re looking for. A firm belief in sustainable and functional design defines the kind of services offered here @firstian technology innovation. 
+        </p>
+    </section>
+
+    <section id="services" class="py-20 px-4 md:px-12 relative max-w-7xl mx-auto">
+        <div class="mb-16 text-center">
+            <div class="reveal h-1.5 w-24 bg-blue-600 mx-auto mb-4 rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div class="reveal glass-card p-8 rounded-3xl">
+                <i data-lucide="layout" class="text-blue-400 mb-6 w-10 h-10"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Architectural Interior</h3>
+                <ul class="text-sm text-gray-400 space-y-3">
+                    <li>• Site, Contour, View & Circulation Analysis</li>
+                    <li>• Feng Shui Analysis</li>
+                    <li>• Mesh Modeling Design & Room Concept</li>
+                    <li>• Master Plan & Site Plan</li>
+                    <li>• Quantity Material & Product</li>
+                    <li>• CAD Drawing & Construction Detail</li>
+                </ul>
+            </div>
+
+            <div class="reveal glass-card p-8 rounded-3xl">
+                <i data-lucide="layers" class="text-purple-400 mb-6 w-10 h-10"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Creative Multimedia</h3>
+                <ul class="text-sm text-gray-400 space-y-3">
+                    <li>• Storyboarding, Design & Modeling</li>
+                    <li>• Level & World Design</li>
+                    <li>• Animation, Skinning & Rigid Body</li>
+                    <li>• Face Motion, Physics & Particle Effects</li>
+                    <li>• High-End Rendering & Compositing</li>
+                    <li>• Scripting & Game Development</li>
+                </ul>
+            </div>
+
+            <div class="reveal glass-card p-8 rounded-3xl">
+                <i data-lucide="shield-check" class="text-green-400 mb-6 w-10 h-10"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Tactical & Security</h3>
+                <ul class="text-sm text-gray-400 space-y-3">
+                    <li>• Private Investigation & Bodyguard</li>
+                    <li>• Escort & Diplomatic Negotiations</li>
+                    <li>• Paramedic & Fire Rescue Skills</li>
+                    <li>• Martial Arts, Watchman & Patrol</li>
+                    <li>• National KUHP & Identification</li>
+                    <li>• Otonom Robotic Systems Support</li>
+                </ul>
+            </div>
+
+            <div class="reveal glass-card p-8 rounded-3xl">
+                <i data-lucide="cpu" class="text-yellow-400 mb-6 w-10 h-10"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Industrial Tech</h3>
+                <ul class="text-sm text-gray-400 space-y-3">
+                    <li>• Digital Design & Algorithm</li>
+                    <li>• Sensoring & Controller Calibration</li>
+                    <li>• Prototype Development</li>
+                    <li>• Real Scale Modelling</li>
+                    <li>• Assemble Product & Build Quality</li>
+                    <li>• Customize Tech Hardware/Software</li>
+                </ul>
+            </div>
+
+            <div class="reveal glass-card p-8 rounded-3xl">
+                <i data-lucide="zap" class="text-orange-400 mb-6 w-10 h-10"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Cakra (Specialized)</h3>
+                <ul class="text-sm text-gray-400 space-y-3">
+                    <li>• Physical, Mental & Spiritual Practices</li>
+                    <li>• Increase Positive Thinking & Concentration</li>
+                    <li>• Effective Thinking Ability & Awareness</li>
+                    <li>• Inner Electrostatic Control</li>
+                    <li>• Self Defence Touchless (Extreme Threat)</li>
+                    <li>• Senses Level & Wellness Mastery</li>
+                </ul>
+            </div>
+
+            <div class="reveal glass-card p-8 rounded-3xl">
+                <i data-lucide="camera" class="text-pink-400 mb-6 w-10 h-10"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Media Production</h3>
+                <ul class="text-sm text-gray-400 space-y-3">
+                    <li>• Photo Themes & Artistic Photography</li>
+                    <li>• Drone Footage & Independent Movie</li>
+                    <li>• Green Screen & Photo Editing</li>
+                    <li>• Artistic Visual Effects</li>
+                    <li>• Movie Production & Editing</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="locations" class="py-20 px-4 md:px-12 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="reveal space-y-4">
+                <a href="https://maps.google.com/?q=Pondok+jaya+3+no.7A+mampang+prapatan" target="_blank" class="address-btn gap-4">
+                    <i data-lucide="home" class="text-blue-500 shrink-0 mt-1"></i>
+                    <div>
+                        <p class="font-bold">Living (Pondok Jaya)</p>
+                        <p class="text-sm text-gray-500 italic">Pondok jaya 3 no.7A mampang prapatan – south jakarta</p>
+                    </div>
+                </a>
+                
+                <a href="https://maps.google.com/?q=Jl.+Teuku+Nyak+Arief+No.16+Kby.+Lama" target="_blank" class="address-btn gap-4">
+                    <i data-lucide="map-pin" class="text-blue-500 shrink-0 mt-1"></i>
+                    <div>
+                        <p class="font-bold">OFFICE-1 (M Center)</p>
+                        <p class="text-sm text-gray-500 italic">Jl. Teuku Nyak Arief No.16 RT.6/RW.1, Kby. Lama Utara, Jakarta Selatan, Floor 5 R210</p>
+                    </div>
+                </a>
+                
+                <a href="https://maps.google.com/?q=18+Office+Park+TB+Simatupang" target="_blank" class="address-btn gap-4">
+                    <i data-lucide="map-pin" class="text-blue-500 shrink-0 mt-1"></i>
+                    <div>
+                        <p class="font-bold">OFFICE-2 (18 Office Park)</p>
+                        <p class="text-sm text-gray-500 italic">Jl. TB Simatupang No.18 Kebagusan Pasar Minggu South Jakarta City</p>
+                    </div>
+                </a>
+                
+                <a href="https://maps.google.com/?q=Jl.+Pondok+Jaya+VII+No.6B" target="_blank" class="address-btn gap-4">
+                    <i data-lucide="hammer" class="text-blue-500 shrink-0 mt-1"></i>
+                    <div>
+                        <p class="font-bold">WORKSHOP</p>
+                        <p class="text-sm text-gray-500 italic">Jl. Pondok Jaya VII No.6B, Pela Mampang, Jakarta Selatan</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="reveal flex flex-col items-center justify-center gap-10">
+                <button onclick="openWA()" class="btn-wa-animated inline-flex items-center gap-4 px-12 py-5 rounded-2xl font-bold uppercase tracking-widest text-white text-lg">
+                    <i class="fab fa-whatsapp text-3xl"></i> 
+                    <span>Direct Chat</span>
+                </button>
+
+                <div class="social-row">
+                    <button onclick="openIG()" class="btn-social btn-ig"><i class="fab fa-instagram"></i></button>
+                    <button onclick="openFB()" class="btn-social btn-fb"><i class="fab fa-facebook-f"></i></button>
+                    <button onclick="openTokopedia()" class="btn-social btn-toped"><i class="fas fa-shopping-bag"></i></button>
+                    <button onclick="openYT()" class="btn-social btn-yt"><i class="fab fa-youtube"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="audioControls">
+        <button id="butt1" onclick="playAudio()">play</button>
+        <audio id="myAudio" loop>
+            <source src="https://docs.google.com/uc?export=download&id=18eT1V0nNmpUgmzVvReaOyLlDjNq8C3iI" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <footer class="py-12 border-t border-white/5 text-center text-[10px] md:text-xs text-gray-600 uppercase tracking-[0.2em]">
+        © 2026 Firstian Technology<span class="text-blue-500">.</span>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // --- GSAP SCROLL TRIGGER ---
+        gsap.registerPlugin(ScrollTrigger);
+        
+        gsap.utils.toArray(".reveal").forEach((el) => {
+            gsap.to(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 90%",
+                    toggleActions: "play none none none"
+                },
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: "power4.out"
+            });
+        });
+
+        // --- THREE.JS BACKGROUND ---
+        const canvas = document.querySelector('#bg-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 50;
+
+        let particles;
+        const particleCount = window.innerWidth < 768 ? 60 : 120; // Fewer particles on mobile
+        const positions = new Float32Array(particleCount * 3);
+        const velocities = [];
+
+        for(let i=0; i<particleCount; i++) {
+            positions[i*3] = (Math.random() - 0.5) * 100;
+            positions[i*3+1] = (Math.random() - 0.5) * 100;
+            positions[i*3+2] = (Math.random() - 0.5) * 100;
+            velocities.push({ x: (Math.random()-0.5)*0.05, y: (Math.random()-0.5)*0.05, z: (Math.random()-0.5)*0.05 });
+        }
+
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const mat = new THREE.PointsMaterial({ size: 0.8, color: 0x3b82f6, transparent: true, opacity: 0.6 });
+        particles = new THREE.Points(geo, mat);
+        scene.add(particles);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const pos = particles.geometry.attributes.position.array;
+            
+            for(let i=0; i<particleCount; i++) {
+                pos[i*3] += velocities[i].x;
+                pos[i*3+1] += velocities[i].y;
+                pos[i*3+2] += velocities[i].z;
+                if(Math.abs(pos[i*3]) > 60) velocities[i].x *= -1;
+                if(Math.abs(pos[i*3+1]) > 60) velocities[i].y *= -1;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+            particles.rotation.y += 0.0008;
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        }
+
+        window.addEventListener('resize', onWindowResize);
+        onWindowResize();
+        animate();
+
+        // --- FUNCTIONS ---
+        function openWA() { window.open("https://wa.me/6287796126529?text=Halo Firstian Technology, saya ingin bertanya tentang proyek...", "_blank"); }
+        function openIG() { window.open("https://www.instagram.com/firstian_technology/", "_blank"); }
+        function openFB() { window.open("https://web.facebook.com/firstian.budiastomo", "_blank"); }
+        function openTokopedia() { window.open("https://tk.tokopedia.com/ZSPseqGdm/", "_blank"); }
+        function openYT() { window.open("https://www.youtube.com/@firstianbudi/videos?sub_confirmation=1", "_blank"); }
+
+        var audio = document.getElementById("myAudio");
+        function playAudio() { audio.play().catch(e => console.log("User interaction required for audio")); }
+        
+        window.addEventListener('click', playAudio, { once: true });
+        window.addEventListener('touchstart', playAudio, { once: true });
+    </script>
+</body>
+</html>

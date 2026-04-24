@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
+  
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -20,6 +21,8 @@
             --glow-color: rgba(0, 242, 255, 0.6);
             --wa-green: #25d366;
             --wa-dark: #128c7e;
+            --color-visit-glow: #00f2fe;
+            --color-visit-glow2: #4facfe;
         }
 
         body {
@@ -30,6 +33,51 @@
             width: 100%;
         }
 
+        /* --- VISITOR COUNTER STYLING --- */
+        #visitor-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .visit-counter-btn {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: white;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.4);
+            text-shadow: 0 0 5px rgba(0, 242, 254, 0.8);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3), inset 0 0 5px rgba(0, 242, 254, 0.2);
+            animation: neon-pulse 2s infinite alternate;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .visit-counter-btn:hover {
+            transform: scale(1.1) translateY(-2px);
+            background: linear-gradient(135deg, var(--color-visit-glow) 0%, var(--color-visit-glow2) 100%);
+            border-color: transparent;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 1), 0 0 40px rgba(79, 172, 254, 0.7);
+            text-shadow: 0 0 10px #fff;
+            color: #000;
+        }
+
+        @keyframes neon-pulse {
+            from { box-shadow: 0 0 10px rgba(0, 242, 254, 0.3); text-shadow: 0 0 5px rgba(0, 242, 254, 0.8); }
+            to { box-shadow: 0 0 18px rgba(0, 242, 254, 0.6); text-shadow: 0 0 10px rgba(0, 242, 254, 1); }
+        }
+
+        /* --- EXISTING STYLES --- */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -103,7 +151,6 @@
             filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));
         }
 
-        /* UPDATED: Smaller Dimension for WA Button */
         .btn-wa-animated {
             background: linear-gradient(45deg, var(--wa-green), var(--wa-dark));
             box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
@@ -166,6 +213,12 @@
 </head>
 <body>
 
+    <div id="visitor-container">
+        <div class="visit-counter-btn" id="visitor-btn">
+            <i class="fas fa-eye"></i> KUNJUNGAN : <span id="visitor-val">0</span>
+        </div>
+    </div>
+
     <div class="ai-aura"></div>
     <canvas id="bg-canvas"></canvas>
 
@@ -174,9 +227,7 @@
             Limitless<br><span class="gradient-text">Creation.</span>
         </h1>
         <p class="reveal max-w-3xl text-gray-300 text-base md:text-lg mb-10 leading-relaxed backdrop-blur-xl p-8 rounded-3xl bg-black/40 border border-white/10 shadow-2xl">
-            Since opening our industries in 2015, we’ve had one goal in mind: Put science to priority and creating without limitation affordable designs for our growing community of clients. We offer low-high end services. Browse our site to see some of our latest work and give us a call today to set up an introductory meeting. <br><br>
-            From hands-on creative work to practical advice, we want to ensure that all of our clients find exactly what they’re looking for. A firm belief in sustainable and functional design defines the kind of services offered here @Firstian Technology Innovation. <br><br>
-            If you have any additional questions after browsing the services we offer, please do not hesitate to get in touch.
+            Since opening our industries in 2015, we’ve had one goal in mind : Put science to priority and creating without limmitation affordable designs for our growing community of clients. We offer a lowhighend services. Browse our site to see some of our latest work and give us a call today to set up an introductory meeting. From hands-on creative work to practical advice, we want to ensure that all of our clients find exactly what they’re looking for. A firm belief in sustainable and functional design defines the kind of services offered here @firstian technology innovation. 
         </p>
     </section>
 
@@ -186,67 +237,82 @@
             <h2 class="reveal text-4xl font-bold tracking-widest uppercase">Our Services</h2>
         </div>
 
+      
+      
+      
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div onclick="window.open('https://sites.google.com/view/1farchie/home', '_blank')" class="reveal glass-card card-arch p-8 rounded-3xl cursor-pointer group">
                 <i data-lucide="layers" class="text-blue-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
                 <h3 class="text-xl font-bold mb-4 uppercase">Architectural Interior</h3>
                 <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• Site location & Contour analysis</li>
-                    <li>• View & Circulation analysis</li>
-                    <li>• Feng Shui analysis</li>
-                    <li>• Mesh modeling & Room concept</li>
-                    <li>• Master plan & Site plan</li>
-                    <li>• CAD Drawing & Construction</li>
+                    <li>• Site location analist, Countour analist,  View analist</li>
+                    <li>• Circulation analist, Feng Shui analist, Reference images</li>
+                    <li>• Mesh modeling design, Room concept, Revision design</li>
+                    <li>• Image detail, Master plan, Site plan</li>
+                    <li>• Color scheme, 3D images, Quantity  material</li>
+                    <li>• Quantity  product, cad drawn</li>
+                  <li>• construction, supervision, quality control</li>
                 </ul>
             </div>
 
+          
+          
             <div onclick="window.open('https://sites.google.com/view/1fcgi/home', '_blank')" class="reveal glass-card card-multi p-8 rounded-3xl cursor-pointer group">
                 <i data-lucide="monitor" class="text-purple-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
                 <h3 class="text-xl font-bold mb-4 uppercase">CGI - Creative Multimedia</h3>
                 <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• Story Board & Modelling</li>
-                    <li>• Animation & Skinning</li>
-                    <li>• Physics & Particle effects</li>
-                    <li>• Lighting & Compositing</li>
-                    <li>• Movie production & Game dev</li>
+                    <li>• Story Board, design, Modelling, Textureing</li>
+                    <li>• level design, world design, Animated</li>
+                    <li>• Skinning, riggid body, face motion</li>
+                    <li>• physic effect, particle effect, Lighting</li>
+                    <li>• Rendering, Composite, Artistic</li>
+                  <li>• Scripting, movie production, game development</li>
                 </ul>
             </div>
-
+        
             <div onclick="window.open('https://sites.google.com/view/ringamansejati/home', '_blank')" class="reveal glass-card card-tactical p-8 rounded-3xl cursor-pointer group">
                 <i data-lucide="shield-check" class="text-green-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
                 <h3 class="text-xl font-bold mb-4 uppercase">Tactical & Security</h3>
                 <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• Private Investigation</li>
-                    <li>• Escort & Negotiation</li>
+                    <li>• delivers personnel with skills paramedic, fire rescue, martial arts</li>
+                    <li>• Tatchman, patrol, Escort</li>
                     <li>• Paramedic & Fire Rescue</li>
-                    <li>• Martial Arts Patrol</li>
-                    <li>• Robotic Systems Support</li>
+                    <li>• Tiplomatic negotiations, indentification, User computers program</li>
+                    <li>• Technology tactical tools, private investigation, private bodyguard</li>
+                    <li>• National KUHP</li>
+                    <li>• Security technology hardware and software robotic system</li>
                 </ul>
             </div>
 
+       
+          
             <div onclick="window.open('https://sites.google.com/view/1finnovation/home', '_blank')" class="reveal glass-card card-tech p-8 rounded-3xl cursor-pointer group">
                 <i data-lucide="cpu" class="text-yellow-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
                 <h3 class="text-xl font-bold mb-4 uppercase">Industrial Tech</h3>
                 <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• Digital design & Algorithm</li>
-                    <li>• Sensing & Controller</li>
-                    <li>• Assemble & Prototype</li>
-                    <li>• Custom Tech Solutions</li>
+                    <li>• Digital design, algoritm, sensoring</li>
+                    <li>• Controller, calibration, real scale modelling</li>
+                    <li>• Assemble product, prototype, build quality product </li>
+                  
                 </ul>
             </div>
 
+        
+          
             <div onclick="window.open('https://youtu.be/3YqkwxiXZpo', '_blank')" class="reveal glass-card card-cakra p-8 rounded-3xl cursor-pointer group">
                 <i data-lucide="zap" class="text-orange-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
                 <h3 class="text-xl font-bold mb-4 uppercase">Cakra</h3>
                 <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• Spiritual Practices</li>
-                    <li>• Positive Concentration</li>
-                    <li>• Awareness Mastery</li>
-                    <li>• Electrostatic Control</li>
-                    <li>• Wellness Leveling</li>
+                    <li>•  physical, mental, and spiritual practices disciplines to increase positive thinking</li>
+                    <li>• increase concentration level, increase efective thinking ability</li>
+                    <li>• add special skills besides profession, increase awareness</li>
+                    <li>• increase senses level, increase inner electrostatic control</li>
+                    <li>• self confidence, wellness</li>
+                  <li>• self defence touchless for extreme emotion threat</li>
                 </ul>
             </div>
 
+          
             <div onclick="window.open('https://sites.google.com/view/prosalesreport/home', '_blank')" class="reveal glass-card card-prod p-8 rounded-3xl cursor-pointer group">
                 <i data-lucide="camera" class="text-pink-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
                 <h3 class="text-xl font-bold mb-4 uppercase">Media Production</h3>
@@ -345,7 +411,7 @@
             );
         });
 
-        // --- THREE.JS AI NEURAL NETWORK BACKGROUND ---
+        // --- THREE.JS BACKGROUND ---
         const canvas = document.querySelector('#bg-canvas');
         const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
         const scene = new THREE.Scene();
@@ -361,16 +427,8 @@
 
         for(let i=0; i<nodeCount; i++) {
             const mesh = new THREE.Mesh(nodeGeometry, nodeMaterial);
-            mesh.position.set(
-                (Math.random() - 0.5) * 150,
-                (Math.random() - 0.5) * 150,
-                (Math.random() - 0.5) * 150
-            );
-            mesh.velocity = new THREE.Vector3(
-                (Math.random() - 0.5) * 0.1,
-                (Math.random() - 0.5) * 0.1,
-                (Math.random() - 0.5) * 0.1
-            );
+            mesh.position.set((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150);
+            mesh.velocity = new THREE.Vector3((Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1);
             nodes.push(mesh);
             group.add(mesh);
         }
@@ -398,12 +456,7 @@
         }
 
         gsap.to(group.rotation, {
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 2
-            },
+            scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 2 },
             y: Math.PI * 2,
             x: Math.PI / 2
         });
@@ -431,7 +484,7 @@
         onWindowResize();
         animate();
 
-        // --- NAVIGATION FUNCTIONS ---
+        // --- NAVIGATION & AUDIO ---
         function openWA() { window.open("https://wa.me/6287796126529?text=Halo Firstian Technology, saya ingin bertanya tentang proyek...", "_blank"); }
         function openIG() { window.open("https://www.instagram.com/firstian_technology/", "_blank"); }
         function openFB() { window.open("https://web.facebook.com/firstian.budiastomo", "_blank"); }
@@ -441,6 +494,46 @@
         var audio = document.getElementById("myAudio");
         function playAudio() { audio.play().catch(e => console.log("User interaction required")); }
         window.addEventListener('click', playAudio, { once: true });
+
+        // --- UPSTASH VISITOR COUNTER LOGIC ---
+        const URL_BASE = "https://enabled-crayfish-71186.upstash.io";
+        const TOKEN = "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY";
+
+        const formatNum = (num) => {
+            const value = parseInt(num);
+            return isNaN(value) ? 0 : value.toLocaleString('id-ID');
+        };
+
+        async function updateDashboardData() {
+            try {
+                const resVisit = await fetch(`${URL_BASE}/get/visitor_web`, { 
+                    headers: { Authorization: `Bearer ${TOKEN}` } 
+                });
+                const dataVisit = await resVisit.json();
+                const visitorElement = document.getElementById('visitor-val');
+                if (visitorElement && dataVisit.result !== null) {
+                    visitorElement.innerText = formatNum(dataVisit.result);
+                }
+            } catch (error) {
+                console.error("Gagal sinkronisasi data:", error);
+            }
+        }
+
+        async function handleVisit() {
+            try {
+                await fetch(`${URL_BASE}/incr/visitor_web`, { 
+                    headers: { Authorization: `Bearer ${TOKEN}` } 
+                });
+                updateDashboardData();
+            } catch (error) {
+                console.error("Error saat mencatat kunjungan:", error);
+                updateDashboardData();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', handleVisit);
+        setInterval(updateDashboardData, 5000); 
+
     </script>
 </body>
 </html>

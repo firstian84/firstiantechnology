@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -36,20 +36,31 @@
         }
 
         .glass-card {
-            background: rgba(15, 15, 15, 0.7);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            background-color: rgba(10, 10, 10, 0.7);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-blend-mode: multiply;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             position: relative;
             overflow: hidden;
         }
+      
+       .card-arch { background-image: url('https://lh3.googleusercontent.com/d/1BlpxtPeNnp4m0__FS1TEVO-1I-UFWuGg'); }
+        .card-multi { background-image: url('https://lh3.googleusercontent.com/d/1_qLAxaIZOxqRS3AqHty296esXOH-_FOG'); }
+        .card-tactical { background-image: url('https://lh3.googleusercontent.com/d/129eyMKUTaDjLrkBX4XU2cXxFXY0ZubRP'); }
+        .card-tech { background-image: url('https://lh3.googleusercontent.com/d/1rcF_Ij4XWHiOWkMnBQHcNI2Y-qjr78wd'); }
+        .card-cakra { background-image: url('https://lh3.googleusercontent.com/d/1Lhd3UIKsnk8yf10EJ0O9kmpqau63qKaD'); }
+        .card-prod { background-image: url('https://lh3.googleusercontent.com/d/1WGjnUSFOVPfIfW7xLbt6edFAnQqjIi0v'); }
 
         .glass-card::before {
             content: "";
             position: absolute;
             top: -50%; left: -50%;
             width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(0, 242, 255, 0.2) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.5s;
         }
@@ -58,8 +69,9 @@
 
         .glass-card:hover {
             border-color: var(--neon-blue);
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px -15px rgba(0, 242, 255, 0.2);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 242, 255, 0.4);
+            background-color: rgba(10, 10, 10, 0.4);
         }
 
         .gradient-text {
@@ -67,12 +79,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
-        }
-
-        /* Responsive Animations */
-        @keyframes neon-glow-subtle {
-            0%, 100% { box-shadow: 0 0 5px rgba(0, 242, 255, 0.1); border-color: rgba(255, 255, 255, 0.05); }
-            50% { box-shadow: 0 0 15px rgba(0, 242, 255, 0.3), 0 0 10px rgba(112, 0, 255, 0.2); border-color: var(--neon-blue); }
         }
 
         .btn-wa-animated {
@@ -87,24 +93,17 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
-        .social-row { 
-            display: flex; 
-            gap: 12px; 
-            justify-content: center; 
-            padding: 15px;
-            flex-wrap: wrap;
-        }
+        .social-row { display: flex; gap: 12px; justify-content: center; padding: 15px; flex-wrap: wrap; }
         
         .btn-social {
             width: 50px; height: 50px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 20px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white; font-size: 20px; transition: 0.4s;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: neon-glow-subtle 3s infinite ease-in-out;
         }
 
-        .btn-social:hover { transform: scale(1.1) rotate(5deg); border-color: white; animation: none; box-shadow: 0 0 25px var(--neon-blue); }
+        .btn-social:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--neon-blue); }
         .btn-ig:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
         .btn-fb:hover { background: #1877F2; }
         .btn-toped:hover { background: #42b549; }
@@ -115,15 +114,14 @@
 
         .address-btn {
             display: flex;
-            text-align: left;
-            transition: all 0.3s ease;
-            padding: 12px;
-            border-radius: 16px;
-            border: 1px solid transparent;
-            animation: neon-glow-subtle 4s infinite ease-in-out;
+            padding: 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
             width: 100%;
         }
-        .address-btn:hover { background: rgba(59, 130, 246, 0.1); transform: translateX(5px); animation: none; border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
+        .address-btn:hover { background: rgba(0, 242, 255, 0.08); border-color: var(--neon-blue); transform: translateX(5px); }
     </style>
 </head>
 <body>
@@ -134,98 +132,89 @@
         <h1 class="reveal text-5xl sm:text-6xl md:text-8xl font-bold mb-6 tracking-tight leading-tight">
             Limitless<br><span class="gradient-text">Creation.</span>
         </h1>
-        <p class="reveal max-w-3xl text-gray-400 text-base md:text-lg mb-10 leading-relaxed backdrop-blur-sm p-6 rounded-2xl bg-black/20">
-            Since opening our industries in 2015, we’ve had one goal in mind, Put science to priority and creating without limmitation affordable designs for our growing community of clients. We offer a lowhighend services. Browse our site to see some of our latest work and give us a call today to set up an introductory meeting. 
+        <p class="reveal max-w-3xl text-gray-400 text-base md:text-lg mb-10 leading-relaxed backdrop-blur-md p-8 rounded-3xl bg-black/40 border border-white/5">
+            Since opening our industries in 2015, we’ve had one goal in mind: Putting science as a priority and creating high-end designs without limitation for our growing community.
             <br><br>
-            From hands-on creative work to practical advice, we want to ensure that all of our clients find exactly what they’re looking for. A firm belief in sustainable and functional design defines the kind of services offered here @firstian technology innovation. 
+            From creative work to practical advice, we ensure all our clients find exactly what they’re looking for. A firm belief in sustainable and functional design defines the services offered at <strong>Firstian Technology Innovation</strong>.
         </p>
     </section>
 
     <section id="services" class="py-20 px-4 md:px-12 relative max-w-7xl mx-auto">
         <div class="mb-16 text-center">
             <div class="reveal h-1.5 w-24 bg-blue-600 mx-auto mb-4 rounded-full"></div>
+            <h2 class="reveal text-3xl font-bold tracking-widest uppercase">Our Services</h2>
         </div>
 
-       <a href="https://drive.google.com/file/d/1BlpxtPeNnp4m0__FS1TEVO-1I-UFWuGg/view?usp=drive_link" class="reveal glass-card p-8 rounded-3xl block transition-transform hover:scale-[1.02]">
-    <i data-lucide="layout" class="text-blue-400 mb-6 w-10 h-10"></i>
-    <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Architectural Interior</h3>
-    <ul class="text-sm text-gray-400 space-y-3">
-                    <li>• Site, Contour, View & Circulation Analysis</li>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div onclick="openIG()" class="reveal glass-card card-arch p-8 rounded-3xl cursor-pointer">
+                <i data-lucide="layers" class="text-blue-400 mb-6 w-10 h-10"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase">Architectural Interior</h3>
+                <ul class="text-sm text-gray-300 space-y-2">
+                    <li>• Site & Circulation Analysis</li>
                     <li>• Feng Shui Analysis</li>
-                    <li>• Mesh Modeling Design & Room Concept</li>
+                    <li>• Mesh Modeling Design</li>
                     <li>• Master Plan & Site Plan</li>
-                    <li>• Quantity Material & Product</li>
-                    <li>• CAD Drawing & Construction Detail</li>
+                    <li>• CAD & Construction Detail</li>
                 </ul>
-           </a>
             </div>
 
-
-
-
-
-            
-            <div class="reveal glass-card p-8 rounded-3xl">
-                <i data-lucide="layers" class="text-purple-400 mb-6 w-10 h-10"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Creative Multimedia</h3>
-                <ul class="text-sm text-gray-400 space-y-3">
-                    <li>• Storyboarding, Design & Modeling</li>
+            <div onclick="openYT()" class="reveal glass-card card-multi p-8 rounded-3xl cursor-pointer">
+                <i data-lucide="monitor" class="text-purple-400 mb-6 w-10 h-10"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase">Creative Multimedia</h3>
+                <ul class="text-sm text-gray-300 space-y-2">
+                    <li>• Storyboarding & Modeling</li>
                     <li>• Level & World Design</li>
-                    <li>• Animation, Skinning & Rigid Body</li>
-                    <li>• Face Motion, Physics & Particle Effects</li>
-                    <li>• High-End Rendering & Compositing</li>
-                    <li>• Scripting & Game Development</li>
+                    <li>• Animation & Rigid Body</li>
+                    <li>• VFX & High-End Rendering</li>
+                    <li>• Game Development</li>
                 </ul>
             </div>
 
-            <div class="reveal glass-card p-8 rounded-3xl">
+            <div onclick="openWA()" class="reveal glass-card card-tactical p-8 rounded-3xl cursor-pointer">
                 <i data-lucide="shield-check" class="text-green-400 mb-6 w-10 h-10"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Tactical & Security</h3>
-                <ul class="text-sm text-gray-400 space-y-3">
-                    <li>• Private Investigation & Bodyguard</li>
-                    <li>• Escort & Diplomatic Negotiations</li>
-                    <li>• Paramedic & Fire Rescue Skills</li>
-                    <li>• Martial Arts, Watchman & Patrol</li>
-                    <li>• National KUHP & Identification</li>
-                    <li>• Otonom Robotic Systems Support</li>
+                <h3 class="text-xl font-bold mb-4 uppercase">Tactical & Security</h3>
+                <ul class="text-sm text-gray-300 space-y-2">
+                    <li>• Private Investigation</li>
+                    <li>• Escort & Negotiation</li>
+                    <li>• Paramedic & Fire Rescue</li>
+                    <li>• Martial Arts Patrol</li>
+                    <li>• Robotic Systems Support</li>
                 </ul>
             </div>
 
-            <div class="reveal glass-card p-8 rounded-3xl">
+            <div onclick="openTokopedia()" class="reveal glass-card card-tech p-8 rounded-3xl cursor-pointer">
                 <i data-lucide="cpu" class="text-yellow-400 mb-6 w-10 h-10"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Industrial Tech</h3>
-                <ul class="text-sm text-gray-400 space-y-3">
+                <h3 class="text-xl font-bold mb-4 uppercase">Industrial Tech</h3>
+                <ul class="text-sm text-gray-300 space-y-2">
                     <li>• Digital Design & Algorithm</li>
-                    <li>• Sensoring & Controller Calibration</li>
+                    <li>• Sensor Calibration</li>
                     <li>• Prototype Development</li>
                     <li>• Real Scale Modelling</li>
-                    <li>• Assemble Product & Build Quality</li>
-                    <li>• Customize Tech Hardware/Software</li>
+                    <li>• Custom Tech Solutions</li>
                 </ul>
             </div>
 
-            <div class="reveal glass-card p-8 rounded-3xl">
+            <div onclick="openWA()" class="reveal glass-card card-cakra p-8 rounded-3xl cursor-pointer">
                 <i data-lucide="zap" class="text-orange-400 mb-6 w-10 h-10"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Cakra </h3>
-                <ul class="text-sm text-gray-400 space-y-3">
-                    <li>• Physical, Mental & Spiritual Practices</li>
-                    <li>• Increase Positive Thinking & Concentration</li>
-                    <li>• Effective Thinking Ability & Awareness</li>
-                    <li>• Inner Electrostatic Control</li>
-                    <li>• Self Defence Touchless (Extreme Threat)</li>
-                    <li>• Senses Level & Wellness Mastery</li>
+                <h3 class="text-xl font-bold mb-4 uppercase">Cakra</h3>
+                <ul class="text-sm text-gray-300 space-y-2">
+                    <li>• Spiritual Practices</li>
+                    <li>• Positive Concentration</li>
+                    <li>• Awareness Mastery</li>
+                    <li>• Electrostatic Control</li>
+                    <li>• Wellness Leveling</li>
                 </ul>
             </div>
 
-            <div class="reveal glass-card p-8 rounded-3xl">
+            <div onclick="openYT()" class="reveal glass-card card-prod p-8 rounded-3xl cursor-pointer">
                 <i data-lucide="camera" class="text-pink-400 mb-6 w-10 h-10"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider">Media Production</h3>
-                <ul class="text-sm text-gray-400 space-y-3">
-                    <li>• Photo Themes & Artistic Photography</li>
-                    <li>• Drone Footage & Independent Movie</li>
-                    <li>• Green Screen & Photo Editing</li>
-                    <li>• Artistic Visual Effects</li>
-                    <li>• Movie Production & Editing</li>
+                <h3 class="text-xl font-bold mb-4 uppercase">Media Production</h3>
+                <ul class="text-sm text-gray-300 space-y-2">
+                    <li>• Artistic Photography</li>
+                    <li>• Drone Footage</li>
+                    <li>• Green Screen VFX</li>
+                    <li>• Movie Production</li>
+                    <li>• High-End Video Editing</li>
                 </ul>
             </div>
         </div>
@@ -270,7 +259,6 @@
             <div class="reveal flex flex-col items-center justify-center gap-10">
                 <button onclick="openWA()" class="btn-wa-animated inline-flex items-center gap-4 px-12 py-5 rounded-2xl font-bold uppercase tracking-widest text-white text-lg">
                     <i class="fab fa-whatsapp text-3xl"></i> 
-                  
                 </button>
 
                 <div class="social-row">
@@ -322,7 +310,7 @@
         camera.position.z = 50;
 
         let particles;
-        const particleCount = window.innerWidth < 768 ? 60 : 120; // Fewer particles on mobile
+        const particleCount = window.innerWidth < 768 ? 60 : 120;
         const positions = new Float32Array(particleCount * 3);
         const velocities = [];
 

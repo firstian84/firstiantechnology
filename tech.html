@@ -165,7 +165,6 @@
             border-radius: 18px;
         }
 
-        /* TOMBOL MERAH BARU */
         .btn-red-access {
             background: linear-gradient(45deg, var(--neon-red), #990024);
             box-shadow: 0 0 20px rgba(255, 0, 60, 0.5);
@@ -452,6 +451,10 @@
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 80;
 
+        // Interaction Variables
+        const mouse = new THREE.Vector2(-1000, -1000);
+        const raycaster = new THREE.Raycaster();
+
         const nodeCount = window.innerWidth < 768 ? 40 : 100;
         const nodes = [];
         const nodeGeometry = new THREE.SphereGeometry(0.4, 8, 8);
@@ -495,14 +498,38 @@
             x: Math.PI / 2
         });
 
+        // Mouse Listener
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
         function animate() {
             requestAnimationFrame(animate);
+
+            // Raycasting for interaction
+            raycaster.setFromCamera(mouse, camera);
+            const mouseWorldPos = new THREE.Vector3();
+            raycaster.ray.at(80, mouseWorldPos);
+
             nodes.forEach(node => {
+                // Base auto movement
                 node.position.add(node.velocity);
+
+                // Mouse interaction (Push effect)
+                const distToMouse = node.position.distanceTo(mouseWorldPos);
+                if (distToMouse < 40) {
+                    const direction = new THREE.Vector3().subVectors(node.position, mouseWorldPos).normalize();
+                    const force = (40 - distToMouse) * 0.02;
+                    node.position.addScaledVector(direction, force);
+                }
+
+                // Boundary bounce
                 if(Math.abs(node.position.x) > 80) node.velocity.x *= -1;
                 if(Math.abs(node.position.y) > 80) node.velocity.y *= -1;
                 if(Math.abs(node.position.z) > 80) node.velocity.z *= -1;
             });
+
             updateConnections();
             renderer.render(scene, camera);
         }

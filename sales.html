@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sales Pipeline GPS Secured</title>
+    
+    <style>
+        :root {
+            --bg-color: #0d1117; 
+            --card-bg: #161b22; 
+            --card-bg-interacted: #111418; 
+            --accent-red-main: #ff1a1a; 
+            --accent-red-glow: rgba(255, 26, 26, 0.8);
+            --border-red: #cc0000;
+            --accent-blue-main: #00d2ff;
+            --accent-blue-glow: rgba(0, 210, 255, 0.4);
+            --border-blue: #00a3cc;
+            --accent-yellow: #ff9800;
+            --accent-green: #00ff88;
+            --text-main: #e6edf3;
+            --text-dim: #8b949e;
+        }
+
+        @keyframes issuePulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 152, 0, 0.2); border-color: var(--accent-yellow); }
+            50% { box-shadow: 0 0 25px rgba(255, 152, 0, 0.6); border-color: #ffffff; }
+        }
+
+        @keyframes vPulseRedBg {
+            0% { background-color: var(--card-bg); border-color: var(--accent-red-main); box-shadow: 0 0 5px rgba(255, 26, 26, 0.2); }
+            50% { background-color: #3d0000; border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 26, 26, 0.5); }
+            100% { background-color: var(--card-bg); border-color: var(--accent-red-main); box-shadow: 0 0 5px rgba(255, 26, 26, 0.2); }
+        }
+
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; user-select: none; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            padding: 20px; overflow-x: hidden;
+        }
+
+        .project-header { width: 100%; max-width: 900px; text-align: center; margin-bottom: 10px; padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        #project-name-display { font-size: 0.9rem; color: var(--accent-blue-main); letter-spacing: 3px; font-weight: 600; text-transform: uppercase; text-shadow: 0 0 8px var(--accent-blue-glow); }
+        
+        .progress-container { width: 100%; max-width: 900px; margin: 10px 0; background: #30363d; height: 6px; border-radius: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(to right, var(--accent-red-main), var(--accent-blue-main)); transition: width 0.5s ease-in-out; }
+        .percentage-text { font-size: 0.8rem; font-weight: bold; color: var(--accent-green); margin-top: 5px; font-family: monospace; }
+
+        .admin-controls { margin-bottom: 20px; display: flex; gap: 10px; }
+        .btn-action { background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; text-transform: uppercase; }
+        .btn-confirm { border-color: var(--accent-blue-main); color: var(--accent-blue-main); }
+        .btn-delete:hover { border-color: var(--accent-red-main); color: var(--accent-red-main); }
+
+        .container { width: 100%; max-width: 900px; }
+        h1 { text-align: center; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.4rem; font-weight: 800; background: linear-gradient(to right, var(--accent-red-main), #fff, var(--accent-blue-main)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .workflow-wrapper { position: relative; display: flex; flex-direction: column; gap: 20px; padding-bottom: 40px; }
+        .workflow-wrapper::before { content: ''; position: absolute; left: 25px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--accent-red-main) 0%, var(--border-blue) 100%); z-index: 0; opacity: 0.5; }
+
+        .step-card {
+            background: var(--card-bg); border: 1px solid #30363d; 
+            border-radius: 12px; padding: 15px 15px 15px 65px; position: relative;
+            transition: all 0.3s ease; cursor: pointer; z-index: 1; overflow: hidden;
+        }
+
+        .step-number {
+            position: absolute; left: 12px; top: 15px; width: 32px; height: 32px;
+            background: var(--bg-color); border: 2px solid var(--text-dim);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 800; color: var(--text-dim);
+        }
+
+        .step-card.verification-active { animation: vPulseRedBg 1.2s infinite ease-in-out; border-width: 1.5px; }
+        .step-card.interacted { border-color: var(--accent-blue-main) !important; background: var(--card-bg-interacted) !important; box-shadow: 0 0 15px var(--accent-blue-glow) !important; cursor: default; animation: none !important; }
+        
+        .step-content h3 { font-size: 1.1rem; color: var(--text-main); text-transform: uppercase; }
+        .step-content p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.4; margin-bottom: 5px; }
+
+        .action-row { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .link-input-group { display: flex; flex-direction: row; gap: 6px; }
+        .link-input-small { flex-grow: 1; background: #0d1117; border: 1px solid #30363d; border-radius: 4px; padding: 4px 10px; color: #00d2ff; font-size: 0.7rem; outline: none; height: 28px; }
+        .btn-save-link { background: var(--accent-blue-main); border: none; color: black; font-weight: bold; font-size: 0.65rem; padding: 0 12px; border-radius: 4px; cursor: pointer; }
+
+        .image-preview-container { display: flex; gap: 12px; width: 100%; overflow-x: auto; padding: 5px 0; min-height: 50px; }
+        .preview-img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid var(--accent-blue-main); flex-shrink: 0; }
+
+        .status-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 4px; border: 1px solid #30363d; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+        .timestamp-active { font-size: 0.7rem; color: var(--accent-blue-main); margin-top: 8px; font-family: monospace; font-weight: bold; display: none; }
+        .gps-display { font-size: 0.65rem; color: var(--accent-green); margin-top: 4px; font-family: monospace; display: none; }
+        
+        .step-card.interacted .timestamp-active, 
+        .step-card.interacted .gps-display { display: block; }
+
+        .issue-monitor-section { width: 100%; max-width: 900px; margin-top: 20px; padding-top: 30px; border-top: 2px dashed rgba(255,255,255,0.1); }
+        .issue-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 25px; }
+        .issue-card.has-issue { background: #2a1b00 !important; border-color: var(--accent-yellow) !important; animation: issuePulse 2s infinite ease-in-out; }
+        .issue-input { width: 100%; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 14px; color: white; margin-top: 10px; }
+        .btn-update-issue { background: transparent; color: var(--accent-yellow); border: 1px solid var(--accent-yellow); padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--accent-blue-main); padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; }
+        .modal-box input { width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-blue); color: white; border-radius: 6px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="modal-overlay" id="projectModal">
+    <div class="modal-box">
+        <h2> BARU</h2>
+        <input type="text" id="clientInput" placeholder="NAMA PROSPEK/CLIENT...">
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button class="btn-action" onclick="closeModal()">Batal</button>
+            <button class="btn-action btn-confirm" onclick="confirmProject()">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<div class="project-header">
+    <div id="project-name-display">SYNCING PIPELINE...</div>
+</div>
+
+<div class="container" style="text-align: center; margin-bottom: 10px;">
+    <div class="percentage-text" id="percent-label">COMPLETION: 0%</div>
+    <div class="progress-container">
+        <div class="progress-bar" id="completion-bar"></div>
+    </div>
+</div>
+
+<div class="admin-controls">
+    <button class="btn-action" onclick="openModal()">Proyek Baru</button>
+    <button class="btn-action btn-delete" onclick="deleteLatestProject()">Hapus Proyek</button>
+</div>
+
+<div class="container">
+    <h1>PROGRESS SALES</h1>
+    <div class="workflow-wrapper" id="workflow"></div>
+
+    <div class="issue-monitor-section">
+        <div class="issue-card" id="issue-card-main">
+            <div class="status-badge" style="border-color:var(--accent-yellow); color:var(--accent-yellow)">Sales Objections</div>
+            <h3 id="issue-title">Hambatan Negosiasi</h3>
+            <p id="issue-desc-main">Mengecek hambatan...</p>
+            <input type="text" class="issue-input" id="issue-text-input" placeholder="Tulis alasan klien pending...">
+            <button class="btn-update-issue" onclick="saveIssue()">Update Progress</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CONFIG = {
+        URL: "https://enabled-crayfish-71186.upstash.io",
+        TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
+        PREFIX: "sales_"
+    };
+
+    let currentActiveProject = null;
+
+    const stepsTemplate = [
+        { id: "1", badge: "Discovery", title: "Introduction", desc: "Perkenalan awal atau cold calling." },
+        { id: "2", badge: "Prospecting", title: "Analyse demand", desc: "Menganalisa kriteria prospek." },
+        { id: "3", badge: "Approach", title: "Presentation", desc: "Presentasi profil & solusi." },
+        { id: "V1", badge: "Verification", title: "Site Visit / Meeting", desc: "Kunjungan lapangan/validasi data." },
+        { id: "4", badge: "Proposal", title: "Proposal", desc: "Pengiriman penawaran harga." },
+        { id: "5", badge: "Negotiation", title: "Revision", desc: "Tawar menawar anggaran." },
+        { id: "V2", badge: "Closing", title: "Verifikasi Deal", desc: "Persetujuan final stakeholder." },
+        { id: "6", badge: "Agreement", title: "Contract / PO", desc: "Penandatanganan SPK/Kontrak." },
+        { id: "7", badge: "Finance", title: "Down Payment (DP)", desc: "Konfirmasi pembayaran masuk." }
+    ];
+
+    function getGPS() {
+        return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+                alert("Browser tidak mendukung GPS.");
+                reject("Not Supported");
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                (pos) => resolve(`${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`),
+                (err) => {
+                    let msg = "Gagal mengakses lokasi: ";
+                    if (err.code === 1) msg += "Izin ditolak.";
+                    else if (err.code === 2) msg += "Sinyal hilang.";
+                    else msg += "Timeout.";
+                    alert(msg + "\nAktifkan GPS untuk melanjutkan.");
+                    reject(err);
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        });
+    }
+
+    function getFormattedDate() {
+        return new Date().toLocaleString('id-ID', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }).replace(/\./g, ':');
+    }
+
+    function formatImgUrl(url) {
+        if (!url) return "";
+        if (url.includes("drive.google.com")) {
+            let id = url.split("/file/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
+            return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1000` : url;
+        }
+        return url;
+    }
+
+    function renderWorkflow() {
+        document.getElementById('workflow').innerHTML = stepsTemplate.map(step => `
+            <div class="step-card" id="card-${step.id}" onclick="handleInteraction('${step.id}')">
+                <div class="status-badge">${step.badge}</div>
+                <div class="step-number">${step.id}</div>
+                <div class="step-content">
+                    <h3>${step.title}</h3>
+                    <p>${step.desc}</p>
+                    <div class="gps-display" id="gps-val-${step.id}">📍 Mendeteksi lokasi...</div>
+                    <div class="action-row" onclick="event.stopPropagation()">
+                        <div class="link-input-group">
+                            <input type="text" class="link-input-small" id="l1-${step.id}" placeholder="Link Doc 1">
+                            <input type="text" class="link-input-small" id="l2-${step.id}" placeholder="Link Doc 2">
+                            <button class="btn-save-link" id="btn-save-${step.id}" onclick="saveLinks('${step.id}')">SAVE</button>
+                        </div>
+                        <div class="image-preview-container" id="preview-${step.id}"></div>
+                    </div>
+                    <div class="timestamp-active" id="ts-act-${step.id}"></div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function updateProjectUI() {
+        try {
+            const res = await fetch(`${CONFIG.URL}/keys/${CONFIG.PREFIX}*`, { 
+                headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
+                cache: 'no-store' 
+            });
+            const keys = (await res.json()).result;
+            
+            if (!keys || keys.length === 0) {
+                document.getElementById('project-name-display').innerText = "BELUM ADA PIPELINE";
+                updateProgressBar(0);
+                return;
+            }
+
+            keys.sort((a, b) => b.localeCompare(a));
+            const valRes = await fetch(`${CONFIG.URL}/get/${keys[0]}`, { 
+                headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
+                cache: 'no-store'
+            });
+            
+            const rawData = (await valRes.json()).result;
+            if(!rawData) return;
+            
+            const data = JSON.parse(rawData);
+            currentActiveProject = { key: keys[0], ...data };
+            
+            document.getElementById('project-name-display').innerText = `PROSPEK: ${data.client}`;
+            syncUI(data.steps);
+        } catch (e) { 
+            console.error("Sync Error:", e); 
+        }
+    }
+
+    function updateProgressBar(percent) {
+        document.getElementById('completion-bar').style.width = percent + "%";
+        document.getElementById('percent-label').innerText = `COMPLETION: ${percent}%`;
+    }
+
+    function syncUI(steps) {
+        if(!steps) return;
+        let completedSteps = 0;
+        const totalSteps = stepsTemplate.length;
+
+        stepsTemplate.forEach(step => {
+            const card = document.getElementById(`card-${step.id}`);
+            const data = steps[step.id];
+            
+            if (data?.status === 1) {
+                completedSteps++;
+                card.classList.add('interacted');
+                card.classList.remove('verification-active');
+                document.getElementById(`gps-val-${step.id}`).innerText = `📍 LOC: ${data.gps || 'Unknown'}`;
+                document.getElementById(`ts-act-${step.id}`).innerText = `MODIFIED: ${data.time}`;
+                
+                const previewBox = document.getElementById(`preview-${step.id}`);
+                previewBox.innerHTML = "";
+                [data.link1, data.link2].forEach(link => {
+                    if (link) {
+                        const img = document.createElement('img');
+                        img.src = formatImgUrl(link);
+                        img.className = "preview-img";
+                        img.onclick = () => window.open(link, '_blank');
+                        previewBox.appendChild(img);
+                    }
+                });
+            } else {
+                card.classList.remove('interacted');
+                if (step.id === "V1" || step.id === "V2") {
+                    card.classList.add('verification-active');
+                } else {
+                    card.classList.remove('verification-active');
+                }
+            }
+        });
+
+        const percentage = Math.round((completedSteps / totalSteps) * 100);
+        updateProgressBar(percentage);
+
+        const issue = steps.ISSUE;
+        const issueCard = document.getElementById('issue-card-main');
+        if (issue?.text) {
+            issueCard.classList.add('has-issue');
+            document.getElementById('issue-desc-main').innerText = issue.text;
+        } else {
+            issueCard.classList.remove('has-issue');
+            document.getElementById('issue-desc-main').innerText = "Lancar.";
+        }
+    }
+
+    async function handleInteraction(id) {
+        if (!currentActiveProject || currentActiveProject.steps[id].status === 1) return;
+        try {
+            const loc = await getGPS();
+            currentActiveProject.steps[id] = { status: 1, time: getFormattedDate(), gps: loc };
+            await pushToDB();
+            updateProjectUI();
+        } catch (e) {}
+    }
+
+    async function saveLinks(id) {
+        if (!currentActiveProject) return;
+        try {
+            const loc = await getGPS();
+            const l1 = document.getElementById(`l1-${id}`).value;
+            const l2 = document.getElementById(`l2-${id}`).value;
+            currentActiveProject.steps[id] = { status: 1, time: getFormattedDate(), gps: loc, link1: l1, link2: l2 };
+            await pushToDB();
+            updateProjectUI();
+        } catch (e) {}
+    }
+
+    async function saveIssue() {
+        if (!currentActiveProject) return;
+        const text = document.getElementById('issue-text-input').value.trim();
+        currentActiveProject.steps["ISSUE"] = { text, time: getFormattedDate() };
+        await pushToDB();
+        document.getElementById('issue-text-input').value = "";
+        updateProjectUI();
+    }
+
+    // FUNGSI PUSH TERBARU: Menghitung persentase sebelum dikirim ke Upstash
+    async function pushToDB() {
+        let completedSteps = 0;
+        const totalSteps = stepsTemplate.length;
+        
+        stepsTemplate.forEach(step => {
+            if (currentActiveProject.steps[step.id] && currentActiveProject.steps[step.id].status === 1) {
+                completedSteps++;
+            }
+        });
+
+        const currentProgress = Math.round((completedSteps / totalSteps) * 100);
+
+        await fetch(`${CONFIG.URL}/set/${currentActiveProject.key}`, {
+            method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
+            body: JSON.stringify({ 
+                client: currentActiveProject.client, 
+                steps: currentActiveProject.steps,
+                progress: currentProgress // <--- Persentase sekarang ikut ter-push
+            })
+        });
+    }
+
+    function openModal() { document.getElementById('projectModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('projectModal').style.display = 'none'; }
+
+    async function confirmProject() {
+        const name = document.getElementById('clientInput').value.toUpperCase().trim();
+        if(!name) return;
+        const steps = { ISSUE: { text: "", time: "" } };
+        stepsTemplate.forEach(s => steps[s.id] = { status:0, time:"", gps:"", link1:"", link2:"" });
+        
+        // Push initial data dengan progress 0%
+        await fetch(`${CONFIG.URL}/set/${CONFIG.PREFIX}${name}`, {
+            method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
+            body: JSON.stringify({ client: name, steps: steps, progress: 0 })
+        });
+        closeModal(); 
+        updateProjectUI();
+    }
+
+    async function deleteLatestProject() {
+        if (currentActiveProject && confirm("Hapus Proyek?")) {
+            await fetch(`${CONFIG.URL}/del/${currentActiveProject.key}`, { 
+                method: 'POST', 
+                headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } 
+            });
+            currentActiveProject = null;
+            updateProjectUI();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { 
+        renderWorkflow(); 
+        updateProjectUI(); 
+    });
+
+    setInterval(() => {
+        updateProjectUI();
+    }, 5000);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        :root {
+            --primary: #4facfe;
+            --accent: #ff6b6b;
+            --glass: #ffffff;
+            --success: #2ecc71;
+            --text-main: #333333;
+            --text-sub: #777777;
+            --bg-body: #f4f7f6;
+            --border-color: #eef0f2;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg-body);
+            color: var(--text-main);
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .container { 
+            background: var(--glass); 
+            padding: 25px; 
+            width: 100%;
+            max-width: 420px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            box-sizing: border-box;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        h2 { 
+            color: var(--primary);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin: 0 0 20px 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .form-section {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            background: #fdfdfd; 
+            border: 1.5px solid #f0f0f0;
+            color: var(--text-main);
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 10px rgba(79, 172, 254, 0.1);
+        }
+
+        textarea { resize: vertical; min-height: 90px; }
+
+        .label-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            display: block;
+            line-height: 1.4;
+        }
+
+        .btn { 
+            position: relative;
+            padding: 14px; 
+            border: none; 
+            border-radius: 14px; 
+            width: 85%;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            overflow: hidden;
+            font-size: 13px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-25deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 150%; }
+            100% { left: 150%; }
+        }
+
+        .btn-yt { 
+            background: #ff4d4d; color: #fff; 
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+            animation: pulse-red 2s infinite;
+        }
+
+        .btn-main { 
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); 
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-gps {
+            background: #7e57c2; color: white;
+            animation: pulse-purple 1.5s infinite;
+            margin-top: 10px;
+        }
+
+        .btn-copy {
+            background: #34495e;
+            color: white;
+            font-size: 11px;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .btn-glow {
+            animation: glow-btn 1.5s infinite ease-in-out !important;
+            box-shadow: 0 0 15px rgba(52, 73, 94, 0.6);
+        }
+
+        @keyframes glow-btn {
+            0%, 100% { box-shadow: 0 0 5px rgba(52, 73, 94, 0.5); transform: scale(1); }
+            50% { box-shadow: 0 0 20px rgba(52, 73, 94, 0.9); transform: scale(1.02); }
+        }
+
+        .status-blink {
+            animation: status-glow 1.5s infinite ease-in-out;
+        }
+
+        @keyframes status-glow {
+            0%, 100% { color: var(--text-main); opacity: 1; text-shadow: none; }
+            50% { color: var(--primary); opacity: 0.7; text-shadow: 0 0 10px rgba(79, 172, 254, 0.5); }
+        }
+
+        /* ANIMASI BARU UNTUK TEKS INSTRUKSI */
+        .blink-notice {
+            animation: blink-animation 1.2s steps(5, start) infinite;
+            -webkit-animation: blink-animation 1.2s steps(5, start) infinite;
+            color: var(--accent);
+        }
+
+        @keyframes blink-animation {
+            to { visibility: hidden; }
+        }
+
+        @-webkit-keyframes blink-animation {
+            to { visibility: hidden; }
+        }
+
+        .btn-active-glow {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%) !important;
+            animation: verified-glow 1.2s infinite ease-in-out !important;
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.6) !important;
+        }
+
+        @keyframes verified-glow {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(79, 172, 254, 0.6); }
+            50% { transform: scale(1.03); box-shadow: 0 0 25px rgba(79, 172, 254, 0.9); }
+        }
+
+        .status-box {
+            background: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-top: 12px;
+            font-weight: 700;
+            border: 2px solid #ffeeba;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            animation: glow-blink 1.5s infinite ease-in-out;
+        }
+
+        @keyframes glow-blink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; background: #fff9e6; transform: scale(1.02); }
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes pulse-purple {
+            0% { box-shadow: 0 0 0 0 rgba(126, 87, 194, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(126, 87, 194, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(126, 87, 194, 0); }
+        }
+
+        .hidden { display: none !important; }
+        #gps-status { color: var(--success); font-weight: 700; font-size: 12px; margin: 10px 0; display: block; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="lock-screen">
+        <i class="fab fa-youtube" style="font-size: 60px; color: #ff0000; margin-bottom: 10px;"></i>
+        <p style="font-size: 13px; font-weight: 600; line-height: 1.6;">
+            Subscribe untuk melanjutkan PO. <br> 
+            <span class="blink-notice">#kembali kehalaman ini untuk melanjutkan</span>
+        </p>
+        <a href="https://www.youtube.com/@firstianbudi/videos?sub_confirmation=1" target="_blank" class="btn btn-yt" onclick="unlockContent()">
+            <i class="fab fa-youtube"></i> SUBSCRIBE 
+        </a>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <h2>Project Order</h2>
+        
+        <div id="step-1">
+            <div class="form-section">
+                <input type="text" id="clientName" placeholder="Nama Lengkap Pemesan">
+                <input type="number" id="clientWA" placeholder="Nomor WhatsApp (Aktif)">
+                <input type="text" id="projectNeed" placeholder="Jenis Teknis Proyek">
+                <textarea id="projectDetails" placeholder="Rincian Pekerjaan"></textarea>
+                <input type="number" id="projectBudget" placeholder="Anggaran (Rp)">
+            </div>
+
+            <button id="gps-btn" class="btn btn-gps" onclick="getLocation()">
+                <i class="fas fa-map-marker-alt"></i> Verifikasi GPS
+            </button>
+            <span id="gps-status" class="hidden"></span>
+
+            <button id="submit-btn" class="btn btn-main hidden" onclick="submitProject()" style="margin-top: 15px;">
+                <i class="fas fa-paper-plane"></i> KIRIM PROJECT ORDER
+            </button>
+        </div>
+
+        <div id="step-2" class="hidden">
+            <div class="form-section" style="text-align: center; padding: 40px 20px;">
+                <p id="status-msg" class="status-blink" style="font-weight: 600;">Proses Verifikasi Admin...</p>
+                <div id="final-link" class="hidden">
+                    <a href="#" id="access-btn" target="_blank" class="btn" style="font-size: 12px; margin-top: 20px; pointer-events: none; opacity: 0.6; background: #bdc3c7; color: #fff;">
+                        <i class="fas fa-check-double"></i> P.O DIVERIFIKASI
+                    </a>
+                    
+                    <div class="finance-section" style="margin-top: 20px; border-top: 1px dashed #ddd; padding-top: 15px;">
+                        <span class="label-text">#Lanjutkan Pembayaran ke rekening berikut:</span>
+                        <p style="font-weight: bold; margin: 5px 0;">BCA 3090128077</p>
+                        <button id="copy-btn" class="btn btn-copy btn-glow" onclick="copyAccount()">
+                            <i class="fas fa-copy"></i> COPY NO.REK 
+                        </button>
+                        <div id="fin-msg" class="status-box hidden">
+                            <i class="fas fa-hourglass-half"></i> Menunggu verifikasi finance...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CONFIG = {
+        URL: "https://enabled-crayfish-71186.upstash.io",
+        TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
+        PREFIX: "project_order_",
+        ADMIN_WA: "6287796126529"
+    };
+
+    let userCoords = null;
+
+    function unlockContent() {
+        setTimeout(() => {
+            document.getElementById('lock-screen').classList.add('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+        }, 1000);
+    }
+
+    function getLocation() {
+        const btn = document.getElementById('gps-btn');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendeteksi...';
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                userCoords = { lat: position.coords.latitude, lng: position.coords.longitude };
+                btn.classList.add('hidden');
+                document.getElementById('gps-status').classList.remove('hidden');
+                document.getElementById('gps-status').innerHTML = '<i class=""></i> ';
+                document.getElementById('submit-btn').classList.remove('hidden');
+            }, () => {
+                alert("Gagal akses lokasi. Aktifkan GPS Anda.");
+                btn.innerHTML = '<i class="fas fa-map-marker-alt"></i> Coba Lagi';
+            });
+        }
+    }
+
+    async function copyAccount() {
+        const rek = "3090128077";
+        const wa = document.getElementById('clientWA').value;
+        navigator.clipboard.writeText(rek);
+        alert("Nomor Rekening Berhasil di Copy!");
+        document.getElementById('fin-msg').classList.remove('hidden');
+
+        const copyTimeJkt = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"});
+        try {
+            const resGet = await fetch(`${CONFIG.URL}/get/${CONFIG.PREFIX}${wa}`, {
+                headers: { Authorization: `Bearer ${CONFIG.TOKEN}` }
+            });
+            const dataGet = await resGet.json();
+            if(dataGet.result) {
+                let payload = JSON.parse(dataGet.result);
+                payload.finver = 0; 
+                payload.payment_copied_at = copyTimeJkt;
+                await fetch(`${CONFIG.URL}/set/${CONFIG.PREFIX}${wa}`, {
+                    headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+            }
+        } catch (e) { console.error("Finance update failed"); }
+    }
+
+    async function submitProject() {
+        const name = document.getElementById('clientName').value;
+        const wa = document.getElementById('clientWA').value;
+        const budget = document.getElementById('projectBudget').value;
+
+        if(!name || !wa || !budget || !userCoords) {
+            return alert("Lengkapi semua data dan Verifikasi GPS!");
+        }
+
+        const jktTime = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"});
+        const payload = {
+            id: "PRJ-" + Math.floor(Math.random() * 10000),
+            client: name, contact: wa,
+            project_need: document.getElementById('projectNeed').value,
+            project_details: document.getElementById('projectDetails').value,
+            budget: budget, status: 0, finver: -1, link: "",
+            location: userCoords, submitted_at_jakarta: jktTime
+        };
+
+        try {
+            const res = await fetch(`${CONFIG.URL}/set/${CONFIG.PREFIX}${wa}`, {
+                headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            if(res.ok) {
+                const msg = `*VERIFIKASI PROJECT ORDER*%0A%0ANama: ${name}%0AWA: ${wa}%0ABudget: Rp ${budget}`;
+                window.open(`https://wa.me/${CONFIG.ADMIN_WA}?text=${msg}`, '_blank');
+                document.getElementById('step-1').classList.add('hidden');
+                document.getElementById('step-2').classList.remove('hidden');
+                startTracking(wa);
+            }
+        } catch (e) { alert("Error koneksi!"); }
+    }
+
+    function startTracking(wa) {
+        setInterval(async () => {
+            try {
+                const res = await fetch(`${CONFIG.URL}/get/${CONFIG.PREFIX}${wa}`, {
+                    headers: { Authorization: `Bearer ${CONFIG.TOKEN}` }
+                });
+                const data = await res.json();
+                if (data.result) {
+                    const project = JSON.parse(data.result);
+                    if (project.status == 1) {
+                        document.getElementById('status-msg').innerText = "Verifikasi Selesai";
+                        document.getElementById('status-msg').classList.remove('status-blink');
+                        document.getElementById('final-link').classList.remove('hidden');
+                        document.getElementById('access-btn').href = project.link || `https://wa.me/${CONFIG.ADMIN_WA}`;
+                        
+                        if(project.finver == 1) {
+                            const btn = document.getElementById('access-btn');
+                            btn.classList.add('btn-active-glow');
+                            btn.style.pointerEvents = "auto";
+                            btn.style.opacity = "1";
+                            
+                            document.getElementById('copy-btn').classList.remove('btn-glow');
+
+                            const finMsg = document.getElementById('fin-msg');
+                            finMsg.innerHTML = "<i class='fas fa-check-circle'></i> Pembayaran Terverifikasi!";
+                            finMsg.style.background = "#d4edda";
+                            finMsg.style.color = "#155724";
+                            finMsg.style.animation = "none";
+                            finMsg.style.border = "2px solid #c3e6cb";
+                        }
+                    }
+                }
+            } catch (e) {}
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>

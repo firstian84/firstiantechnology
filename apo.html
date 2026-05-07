@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        :root {
+            --primary: #00a8ff;
+            --bg-body: #0f172a;
+            --glass: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent: #7e57c2;
+            --success: #10b981;
+            --excel: #22c55e;
+            --border: #334155;
+            --hover: #2d3e50;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--glass);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        /* DIGITAL CLOCK STYLE */
+        #digitalClock {
+            font-family: monospace;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
+            background: rgba(0,0,0,0.2);
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .action-btns { display: flex; gap: 10px; }
+
+        h2 { color: var(--primary); margin: 0; font-weight: 700; }
+
+        .btn {
+            border: none; padding: 10px 20px; border-radius: 8px;
+            cursor: pointer; font-weight: 600; transition: 0.3s;
+            display: flex; align-items: center; gap: 8px; color: white;
+        }
+
+        .refresh-btn { background: #334155; }
+        .download-btn { background: var(--excel); }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .table-wrapper { 
+            overflow-x: auto; 
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 1300px; }
+
+        th {
+            background: #1e293b; text-align: left; padding: 18px 15px;
+            font-size: 11px; text-transform: uppercase; color: var(--text-muted);
+            border-bottom: 2px solid var(--border);
+        }
+
+        td { padding: 15px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
+
+        tr:hover { background-color: var(--hover); }
+
+        .details-cell {
+            max-width: 250px;
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .btn-map {
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-family: monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+        }
+
+        .btn-map:hover { background: #5e35b1; box-shadow: 0 0 10px rgba(126, 87, 194, 0.5); }
+
+        .status-badge {
+            padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 700;
+            display: inline-block; text-align: center;
+        }
+
+        .status-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-verified { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        
+        .fin-none { background: rgba(148, 163, 184, 0.1); color: #94a3b8; border: 1px solid #475569; }
+        .fin-wait { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid #f59e0b; }
+        .fin-paid { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
+
+        .btn-edit {
+            background: #334155; border: none; padding: 8px 12px;
+            border-radius: 6px; cursor: pointer; color: var(--primary);
+        }
+
+        .btn-edit:hover { background: var(--primary); color: white; }
+
+        .modal {
+            display: none; position: fixed; z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: var(--glass); width: 90%; max-width: 550px;
+            margin: 50px auto; padding: 30px; border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 10px; background: #0f172a;
+            border: 1px solid var(--border); border-radius: 8px; color: white;
+            box-sizing: border-box;
+        }
+
+        .modal-footer { display: flex; gap: 10px; margin-top: 25px; }
+        .btn-save { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; flex: 2; cursor: pointer; font-weight: 600; }
+        .btn-cancel { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 12px; border-radius: 8px; flex: 1; cursor: pointer; }
+
+        .loading { text-align: center; padding: 50px; color: var(--text-muted); }
+
+        @media screen and (max-width: 768px) {
+            body { padding: 10px; }
+            .admin-container { padding: 15px; border-radius: 12px; }
+            .header { flex-direction: column; gap: 15px; align-items: flex-start; }
+            #digitalClock { width: 100%; text-align: center; box-sizing: border-box; }
+            .action-btns { width: 100%; }
+            .btn { flex: 1; justify-content: center; font-size: 11px; padding: 12px 5px; }
+            th:nth-child(5), td:nth-child(5), th:nth-child(8), td:nth-child(8) { display: none; } 
+            th, td { padding: 10px 5px; font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <div class="header">
+        <div>
+            <h2><i class="fas fa-map-marked-alt"></i> Admin P.O </h2>
+            <div id="digitalClock" style="margin-top: 10px;">Loading time...</div>
+        </div>
+        <div class="action-btns">
+            <button class="btn download-btn" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i> Download
+            </button>
+            <button class="btn refresh-btn" onclick="fetchAllData()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID / Waktu</th>
+                    <th>Client</th>
+                    <th>WhatsApp</th>
+                    <th>Kebutuhan</th>
+                    <th>Project Details</th>
+                    <th>Link</th>
+                    <th>Budget</th>
+                    <th>Lokasi (GPS)</th>
+                    <th>Finance</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+        <div id="loader" class="loading">Memuat data...</div>
+    </div>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div style="border-bottom: 1px solid var(--border); margin-bottom: 20px;">
+            <h3 style="color: var(--primary); margin-top: 0;">Edit Data Order</h3>
+        </div>
+        <input type="hidden" id="editKey">
+        <div class="form-group">
+            <label>Nama Client</label>
+            <input type="text" id="editClient">
+        </div>
+        <div class="form-group">
+            <label>Kebutuhan</label>
+            <input type="text" id="editNeed">
+        </div>
+        <div class="form-group">
+            <label>Project Details</label>
+            <textarea id="editDetails" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Budget (Angka)</label>
+            <input type="number" id="editBudget">
+        </div>
+        <div class="form-group">
+            <label>Link Akses</label>
+            <input type="text" id="editLink">
+        </div>
+        <div class="form-group">
+            <label>Finance Verification (FinVer)</label>
+            <select id="editFinver">
+                <option value="-1">NONE (-1)</option>
+                <option value="0">WAITING (0)</option>
+                <option value="1">PAID (1)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Status Admin</label>
+            <select id="editStatus">
+                <option value="0">PENDING</option>
+                <option value="1">VERIFIED</option>
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal()">Batal</button>
+            <button class="btn-save" onclick="saveData()">Simpan Perubahan</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CONFIG = {
+        URL: "https://enabled-crayfish-71186.upstash.io",
+        TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
+        PREFIX: "project_order_"
+    };
+
+    let allProjectData = [];
+    let currentData = {};
+
+    // REAL-TIME CLOCK
+    function updateClock() {
+        const now = new Date();
+        const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        document.getElementById('digitalClock').innerText = now.toLocaleString('id-ID', options).replace(/\./g, ':');
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    async function fetchAllData() {
+        const tableBody = document.getElementById('tableBody');
+        const loader = document.getElementById('loader');
+        tableBody.innerHTML = '';
+        loader.style.display = 'block';
+        allProjectData = [];
+
+        try {
+            const keysRes = await fetch(`${CONFIG.URL}/keys/${CONFIG.PREFIX}*`, {
+                headers: { Authorization: `Bearer ${CONFIG.TOKEN}` }
+            });
+            const keysData = await keysRes.json();
+            const keys = keysData.result || [];
+
+            for (const key of keys) {
+                const valRes = await fetch(`${CONFIG.URL}/get/${key}`, {
+                    headers: { Authorization: `Bearer ${CONFIG.TOKEN}` }
+                });
+                const valData = await valRes.json();
+                if (valData.result) {
+                    const parsed = JSON.parse(valData.result);
+                    allProjectData.push({ key, ...parsed });
+                    renderRow(key, parsed);
+                }
+            }
+            loader.style.display = 'none';
+        } catch (error) {
+            loader.innerText = "Koneksi database gagal.";
+        }
+    }
+
+    function renderRow(key, data) {
+        const tableBody = document.getElementById('tableBody');
+        const row = document.createElement('tr');
+        
+        const statusClass = data.status == 1 ? 'status-verified' : 'status-pending';
+        const statusText = data.status == 1 ? 'VERIFIED' : 'PENDING';
+
+        // FinVer Logic with payment_copied_at
+        let finClass = "fin-none";
+        let finText = "NONE";
+        let finSubText = "";
+
+        if (data.finver == 0) { 
+            finClass = "fin-wait"; 
+            finText = "WAITING"; 
+        } else if (data.finver == 1) { 
+            finClass = "fin-paid"; 
+            finText = "PAID"; 
+            finSubText = data.payment_copied_at ? `<br><small style="font-size:9px; opacity:0.8;">${data.payment_copied_at}</small>` : "";
+        }
+
+        const waktuSubmit = data.submitted_at_jakarta || "-";
+        const details = data.project_details || "-";
+        const linkHTML = data.link ? `<a href="${data.link}" target="_blank" style="color:var(--primary); font-size:11px;"><i class="fas fa-external-link-alt"></i> Buka</a>` : `<span style="color:var(--text-muted)">-</span>`;
+
+        let locationHTML = `<span style="color:var(--text-muted)">N/A</span>`;
+        if (data.location && data.location.lat) {
+            const latLng = `${data.location.lat.toFixed(5)}, ${data.location.lng.toFixed(5)}`;
+            const mapsUrl = `https://www.google.com/maps?q=${data.location.lat},${data.location.lng}`;
+            locationHTML = `<a href="${mapsUrl}" target="_blank" class="btn-map"><i class="fas fa-map-marker-alt"></i> ${latLng}</a>`;
+        }
+
+        row.innerHTML = `
+            <td><strong>${data.id || '-'}</strong><br><small style="color:var(--text-muted)">${waktuSubmit}</small></td>
+            <td>${data.client || '-'}</td>
+            <td><a href="https://wa.me/${data.contact}" target="_blank" style="color:var(--primary); text-decoration:none;"><i class="fab fa-whatsapp"></i> ${data.contact || '-'}</a></td>
+            <td>${data.project_need || '-'}</td>
+            <td><div class="details-cell" title="${details}">${details}</div></td>
+            <td>${linkHTML}</td>
+            <td>Rp ${parseInt(data.budget || 0).toLocaleString('id-ID')}</td>
+            <td>${locationHTML}</td>
+            <td><span class="status-badge ${finClass}">${finText}${finSubText}</span></td>
+            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+            <td>
+                <button class="btn-edit" onclick='openModal("${key}", ${JSON.stringify(data).replace(/'/g, "\\'")})'>
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    }
+
+    function openModal(key, data) {
+        document.getElementById('editKey').value = key;
+        document.getElementById('editClient').value = data.client || "";
+        document.getElementById('editNeed').value = data.project_need || "";
+        document.getElementById('editDetails').value = data.project_details || "";
+        document.getElementById('editBudget').value = data.budget || 0;
+        document.getElementById('editLink').value = data.link || "";
+        document.getElementById('editStatus').value = data.status || 0;
+        document.getElementById('editFinver').value = data.finver !== undefined ? data.finver : -1;
+        currentData = data;
+        document.getElementById('editModal').style.display = 'block';
+    }
+
+    function closeModal() { document.getElementById('editModal').style.display = 'none'; }
+
+    async function saveData() {
+        const key = document.getElementById('editKey').value;
+        const btnSave = document.querySelector('.btn-save');
+        const selectedFinver = parseInt(document.getElementById('editFinver').value);
+        
+        btnSave.innerText = "Menyimpan...";
+        
+        // Auto-generate timestamp if changing to PAID
+        let paymentTimestamp = currentData.payment_copied_at || null;
+        if (selectedFinver === 1 && currentData.finver !== 1) {
+            const now = new Date();
+            paymentTimestamp = now.toLocaleString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':');
+        }
+
+        const updatedData = {
+            ...currentData,
+            client: document.getElementById('editClient').value,
+            project_need: document.getElementById('editNeed').value,
+            project_details: document.getElementById('editDetails').value,
+            budget: document.getElementById('editBudget').value,
+            link: document.getElementById('editLink').value,
+            status: parseInt(document.getElementById('editStatus').value),
+            finver: selectedFinver,
+            payment_copied_at: paymentTimestamp
+        };
+
+        try {
+            await fetch(`${CONFIG.URL}/set/${key}`, {
+                headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
+                method: 'POST',
+                body: JSON.stringify(updatedData)
+            });
+            closeModal();
+            fetchAllData();
+        } catch (error) {
+            alert("Simpan gagal!");
+        } finally {
+            btnSave.innerText = "Simpan Perubahan";
+        }
+    }
+
+    function exportToExcel() {
+        if (allProjectData.length === 0) return alert("Tidak ada data.");
+        
+        const worksheetData = allProjectData.map(item => ({
+            "ID Project": item.id || "-",
+            "Waktu Submit": item.submitted_at_jakarta || "-",
+            "Nama Client": item.client || "-",
+            "WhatsApp": item.contact || "-",
+            "Kebutuhan": item.project_need || "-",
+            "Budget": parseInt(item.budget || 0),
+            "FinVer": item.finver == 1 ? "PAID" : (item.finver == 0 ? "WAITING" : "NONE"),
+            "Payment Time": item.payment_copied_at || "-",
+            "Admin Status": item.status == 1 ? "VERIFIED" : "PENDING"
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan");
+        XLSX.writeFile(workbook, `Report_Full_${new Date().getTime()}.xlsx`);
+    }
+
+    window.onclick = function(event) { if (event.target == document.getElementById('editModal')) closeModal(); }
+    window.onload = fetchAllData;
+</script>
+</body>
+</html>

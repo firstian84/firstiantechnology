@@ -107,9 +107,6 @@
 
     <div id="cesiumContainer"></div>
 
-    <!-- Menambahkan kembali elemen UI yang hilang agar interaktivitas berjalan -->
-
-
     <div class="map-instruction">
         <div class="instruction-text">KLIK ICON MAP > OTHER > ARCGIS WORLD IMAGERY</div>
     </div>
@@ -149,14 +146,12 @@
 
     const svgDataUri = 'data:image/svg+xml;base64,' + btoa(targetSvg);
 
-    // Animasi marker diperbaiki
     const startTime = Cesium.JulianDate.now();
     const blinkingScale = new Cesium.CallbackProperty((time) => {
         const seconds = Cesium.JulianDate.secondsDifference(time, startTime);
         return 0.8 + Math.abs(Math.sin(seconds * 3.0)) * 0.4;
     }, false);
 
-    // Data Target (Ganti ytId dengan ID video YouTube yang valid jika diperlukan)
     const manualProperties = [
         { name: "TERSANGKA - ALPHA", coords: [-6.224, 106.841], ytId: "..." },
         { name: "TERSANGKA - BRAVO", coords: [-6.175, 106.827], ytId: "..." }
@@ -193,11 +188,25 @@
         const activeCard = document.getElementById(`card-${index}`);
         if(activeCard) activeCard.classList.add('active');
 
-        // Update display koordinat di UI kiri atas
-        const coordDisplay = document.getElementById('coords-display');
-        if(coordDisplay) coordDisplay.innerText = ` ${lat.toFixed(4)} | ${lng.toFixed(4)}`;
+        // Penambahan Frame Kotak Merah Target GPS
+        viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(lng, lat),
+            ellipse: {
+                semiMinorAxis: 100.0,
+                semiMajorAxis: 100.0,
+                material: new Cesium.ColorMaterialProperty(new Cesium.CallbackProperty((time) => {
+                    const seconds = Cesium.JulianDate.secondsDifference(time, startTime);
+                    const opacity = 0.2 + Math.abs(Math.sin(seconds * 2.0)) * 0.4;
+                    return Cesium.Color.RED.withAlpha(opacity);
+                }, false)),
+                outline: true,
+                outlineColor: Cesium.Color.RED,
+                outlineWidth: 2.0,
+                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
+            }
+        });
 
-        // Tambah Tactical Frame Marker
+        // Tactical Marker Utama (SVG yang sudah ada)
         viewer.entities.add({
             position: Cesium.Cartesian3.fromDegrees(lng, lat),
             billboard: {

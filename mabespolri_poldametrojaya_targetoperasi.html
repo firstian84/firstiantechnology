@@ -29,19 +29,18 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; 
         }
 
-        /* --- UI OVERLAY TACTICAL --- */
         .ui-tactical {
             position: absolute; top: 20px; left: 20px; z-index: 20;
             color: var(--primary-red); font-family: 'Courier New', monospace;
             text-shadow: 0 0 10px rgba(255, 59, 59, 0.8); pointer-events: none;
-            background: rgba(0,0,0,0.5); padding: 10px; border-radius: 4px;
+            background: rgba(0,0,0,0.6); padding: 12px; border-radius: 4px;
+            border-left: 3px solid var(--primary-red);
         }
 
         .cesium-viewer-toolbar {
             right: 390px !important; top: 10px !important; z-index: 100 !important;
         }
 
-        /* --- SIDEBAR UI --- */
         .sidebar { 
             position: absolute; right: 0; top: 0; width: 380px; height: 100%;
             background: var(--ui-bg); display: flex; flex-direction: column;
@@ -107,6 +106,11 @@
 
     <div id="cesiumContainer"></div>
 
+    <div class="ui-tactical">
+        <div>LIVE MONITORING SYSTEM</div>
+        <div id="coords-display" style="font-size: 1.2rem; margin-top: 5px;">0.0000 | 0.0000</div>
+    </div>
+
     <div class="map-instruction">
         <div class="instruction-text">KLIK ICON MAP > OTHER > ARCGIS WORLD IMAGERY</div>
     </div>
@@ -147,14 +151,23 @@
     const svgDataUri = 'data:image/svg+xml;base64,' + btoa(targetSvg);
 
     const startTime = Cesium.JulianDate.now();
+
+    // Efek 1: Perubahan ukuran (Scale Pulse)
     const blinkingScale = new Cesium.CallbackProperty((time) => {
         const seconds = Cesium.JulianDate.secondsDifference(time, startTime);
         return 0.8 + Math.abs(Math.sin(seconds * 3.0)) * 0.4;
     }, false);
 
+    // Efek 2: Berkedip Muncul/Hilang (Show/Hide)
+    const blinkingShow = new Cesium.CallbackProperty((time) => {
+        const seconds = Cesium.JulianDate.secondsDifference(time, startTime);
+        // Berkedip setiap 0.4 detik (modulo 2)
+        return Math.floor(seconds * 2.5) % 2 === 0;
+    }, false);
+
     const manualProperties = [
-        { name: "TERSANGKA - ALPHA", coords: [-6.224, 106.841], ytId: "..." },
-        { name: "TERSANGKA - BRAVO", coords: [-6.175, 106.827], ytId: "..." }
+        { name: "TERSANGKA - ALPHA", coords: [-6.224, 106.841], ytId: "dQw4w9WgXcQ" },
+        { name: "TERSANGKA - BRAVO", coords: [-6.175, 106.827], ytId: "dQw4w9WgXcQ" }
     ];
 
     function renderList() {
@@ -188,30 +201,17 @@
         const activeCard = document.getElementById(`card-${index}`);
         if(activeCard) activeCard.classList.add('active');
 
-        // Penambahan Frame Kotak Merah Target GPS
-        viewer.entities.add({
-            position: Cesium.Cartesian3.fromDegrees(lng, lat),
-            ellipse: {
-                semiMinorAxis: 100.0,
-                semiMajorAxis: 100.0,
-                material: new Cesium.ColorMaterialProperty(new Cesium.CallbackProperty((time) => {
-                    const seconds = Cesium.JulianDate.secondsDifference(time, startTime);
-                    const opacity = 0.2 + Math.abs(Math.sin(seconds * 2.0)) * 0.4;
-                    return Cesium.Color.RED.withAlpha(opacity);
-                }, false)),
-                outline: true,
-                outlineColor: Cesium.Color.RED,
-                outlineWidth: 2.0,
-                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
-            }
-        });
+        // Update display koordinat di UI
+        const coordDisplay = document.getElementById('coords-display');
+        if(coordDisplay) coordDisplay.innerText = ` ${lat.toFixed(4)} | ${lng.toFixed(4)}`;
 
-        // Tactical Marker Utama (SVG yang sudah ada)
+        // Tambah Tactical Frame Marker dengan logika berkedip
         viewer.entities.add({
             position: Cesium.Cartesian3.fromDegrees(lng, lat),
             billboard: {
                 image: svgDataUri,
                 scale: blinkingScale,
+                show: blinkingShow, // Memicu efek kedip on/off
                 verticalOrigin: Cesium.VerticalOrigin.CENTER,
                 heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                 disableDepthTestDistance: Number.POSITIVE_INFINITY 
@@ -234,4 +234,4 @@
     window.addEventListener('resize', () => { viewer.forceResize(); });
 </script>
 </body>
-</html>
+    </html>

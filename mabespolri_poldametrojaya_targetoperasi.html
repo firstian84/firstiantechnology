@@ -11,7 +11,7 @@
     <style>
         :root {
             --primary-red: #ff3b3b;
-            --ui-bg: rgba(15, 15, 15, 0.85); 
+            --ui-bg: rgba(15, 15, 15, 0.9); 
             --card-bg: rgba(255, 255, 255, 0.05); 
             --accent-glow: #ff0000;
             --text-main: rgba(255, 255, 255, 0.9);
@@ -19,26 +19,15 @@
             --gmaps-blue: #4285F4;
         }
 
-        body, html { 
-            margin: 0; padding: 0; height: 100%; overflow: hidden; 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background: #000; color: white; 
-        }
-        
-        #cesiumContainer { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; 
-        }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; background: #000; color: white; }
+        #cesiumContainer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
+        /* UI Overlay */
         .ui-tactical {
             position: absolute; top: 20px; left: 20px; z-index: 20;
-            color: var(--primary-red); font-family: 'Courier New', monospace;
-            text-shadow: 0 0 10px rgba(255, 59, 59, 0.8); pointer-events: none;
-            background: rgba(0,0,0,0.6); padding: 12px; border-radius: 4px;
-            border-left: 3px solid var(--primary-red);
-        }
-
-        .cesium-viewer-toolbar {
-            right: 390px !important; top: 10px !important; z-index: 100 !important;
+            color: var(--primary-red); font-family: monospace;
+            background: rgba(0,0,0,0.7); padding: 15px; border-left: 4px solid var(--primary-red);
+            pointer-events: none;
         }
 
         .sidebar { 
@@ -48,56 +37,28 @@
             backdrop-filter: blur(10px);
         }
 
-        .header { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;}
-        .unit-name { font-size: 10px; opacity: 0.8; display: block; text-transform: uppercase; }
-        .polda-name { font-size: 20px; font-weight: 800; display: block; text-transform: uppercase; }
-        .target-name { color: var(--primary-red); font-weight: 800; font-size: 18px; text-shadow: 0 0 10px var(--accent-glow); display: block; margin-top: 5px; }
+        .header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;}
+        .polda-name { font-size: 18px; font-weight: 800; display: block; }
+        .target-name { color: var(--primary-red); font-weight: 800; font-size: 16px; margin-top: 5px; display: block; }
 
         .scroll-container { flex: 1; overflow-y: auto; padding: 15px; }
         .property-card {
-            background: var(--card-bg); border-radius: 12px; margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.1); overflow: hidden; transition: 0.3s;
+            background: var(--card-bg); border-radius: 8px; margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
         }
-        .property-card.active { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.1); }
+        .property-card.active { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.15); }
 
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .card-content { padding: 12px; }
+        .coords-label { color: var(--text-sub); font-size: 11px; display: block; margin-bottom: 10px; }
 
-        .card-content { padding: 15px; }
-        .coords-label { color: var(--text-sub); font-size: 11px; display: block; margin-bottom: 15px; font-family: monospace; }
-
-        .button-group { display: flex; gap: 10px; }
+        .button-group { display: flex; gap: 8px; }
         .btn { 
-            flex: 1; border: none; border-radius: 6px; cursor: pointer; 
-            font-weight: 600; padding: 12px 5px; font-size: 11px; 
-            color: white; text-align: center; text-decoration: none; text-transform: uppercase;
+            flex: 1; border: none; border-radius: 4px; cursor: pointer; 
+            font-weight: 600; padding: 10px; font-size: 11px; color: white;
+            text-align: center; text-decoration: none;
         }
         .btn-go { background: var(--primary-red); }
         .btn-maps { background: var(--gmaps-blue); }
-
-        .map-instruction {
-            position: absolute; top: 15px; right: 440px; z-index: 20;
-            display: flex; align-items: center; pointer-events: none;
-        }
-        .instruction-text {
-            background: rgba(255, 59, 59, 0.9); color: white; padding: 8px 12px;
-            border-radius: 4px; font-size: 10px; font-weight: bold;
-            animation: pulse-glow 2s infinite;
-        }
-
-        @keyframes pulse-glow {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; box-shadow: 0 0 15px var(--primary-red); }
-            100% { opacity: 0.7; }
-        }
-
-        @media (max-width: 768px) {
-            #cesiumContainer { height: 45%; position: relative; }
-            .sidebar { position: relative; width: 100%; height: 55%; border-left: none; border-top: 2px solid var(--primary-red); }
-            .cesium-viewer-toolbar { right: 10px !important; top: 10px !important; }
-            .map-instruction { right: 10px; top: 55px; }
-            .ui-tactical { top: 10px; left: 10px; font-size: 0.8rem; }
-        }
 
         .cesium-viewer-bottom { display: none !important; }
     </style>
@@ -107,24 +68,20 @@
     <div id="cesiumContainer"></div>
 
     <div class="ui-tactical">
-        <div>LIVE MONITORING SYSTEM</div>
-        <div id="coords-display" style="font-size: 1.2rem; margin-top: 5px;">0.0000 | 0.0000</div>
-    </div>
-
-    <div class="map-instruction">
-        <div class="instruction-text">KLIK ICON MAP > OTHER > ARCGIS WORLD IMAGERY</div>
+        <div style="font-size: 10px; opacity: 0.7;">TACTICAL MONITORING</div>
+        <div id="coords-display" style="font-size: 18px; font-weight: bold; letter-spacing: 1px;">0.0000 | 0.0000</div>
     </div>
 
     <div class="sidebar">
         <div class="header">
-            <span class="unit-name">KEPOLISIAN NEGARA REPUBLIK INDONESIA</span>
             <span class="polda-name">POLDA METRO JAYA</span>
-            <span class="target-name">TARGET OPERASI D.P.O</span>
+            <span class="target-name">TARGET OPERASI (DPO)</span>
         </div>
         <div id="propertyList" class="scroll-container"></div>
     </div>
 
 <script>
+    // Inisialisasi Viewer
     const viewer = new Cesium.Viewer('cesiumContainer', {
         terrainProvider: new Cesium.EllipsoidTerrainProvider(),
         animation: false,
@@ -132,62 +89,51 @@
         infoBox: false,
         selectionIndicator: false,
         navigationHelpButton: false,
-        baseLayerPicker: true, 
-        geocoder: true,
-        homeButton: true,
-        sceneModePicker: true
+        baseLayerPicker: true,
+        geocoder: false,
+        homeButton: false
     });
 
+    // Perbaikan SVG: Pastikan warna dan ukuran eksplisit
     const targetSvg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
-        <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="#ff3b3b" stroke-width="6"/>
-        <path d="M 70 10 L 90 10 L 90 30" fill="none" stroke="#ff3b3b" stroke-width="6"/>
-        <path d="M 90 70 L 90 90 L 70 90" fill="none" stroke="#ff3b3b" stroke-width="6"/>
-        <path d="M 30 90 L 10 90 L 10 70" fill="none" stroke="#ff3b3b" stroke-width="6"/>
-        <circle cx="50" cy="50" r="15" fill="none" stroke="#ff3b3b" stroke-width="3" />
-        <circle cx="50" cy="50" r="6" fill="#ff3b3b" />
+        <rect width="100" height="100" fill="none" />
+        <path d="M 5 25 L 5 5 L 25 5" fill="none" stroke="#ff3b3b" stroke-width="8"/>
+        <path d="M 75 5 L 95 5 L 95 25" fill="none" stroke="#ff3b3b" stroke-width="8"/>
+        <path d="M 95 75 L 95 95 L 75 95" fill="none" stroke="#ff3b3b" stroke-width="8"/>
+        <path d="M 25 95 L 5 95 L 5 75" fill="none" stroke="#ff3b3b" stroke-width="8"/>
+        <circle cx="50" cy="50" r="12" fill="#ff3b3b" />
+        <circle cx="50" cy="50" r="25" fill="none" stroke="#ff3b3b" stroke-width="4" />
     </svg>`;
 
     const svgDataUri = 'data:image/svg+xml;base64,' + btoa(targetSvg);
-
     const startTime = Cesium.JulianDate.now();
 
-    // Efek 1: Perubahan ukuran (Scale Pulse)
-    const blinkingScale = new Cesium.CallbackProperty((time) => {
-        const seconds = Cesium.JulianDate.secondsDifference(time, startTime);
-        return 0.8 + Math.abs(Math.sin(seconds * 3.0)) * 0.4;
-    }, false);
-
-    // Efek 2: Berkedip Muncul/Hilang (Show/Hide)
+    // Logika Berkedip (Show/Hide) - Ditingkatkan agar lebih kontras
     const blinkingShow = new Cesium.CallbackProperty((time) => {
         const seconds = Cesium.JulianDate.secondsDifference(time, startTime);
-        // Berkedip setiap 0.4 detik (modulo 2)
-        return Math.floor(seconds * 2.5) % 2 === 0;
+        return Math.floor(seconds * 3.0) % 2 === 0; // Kedip lebih cepat
     }, false);
 
     const manualProperties = [
-        { name: "TERSANGKA - ALPHA", coords: [-6.224, 106.841], ytId: "dQw4w9WgXcQ" },
-        { name: "TERSANGKA - BRAVO", coords: [-6.175, 106.827], ytId: "dQw4w9WgXcQ" }
+        { name: "DPO - ALPHA", coords: [-6.224, 106.841] },
+        { name: "DPO - BRAVO", coords: [-6.175, 106.827] }
     ];
 
     function renderList() {
         const container = document.getElementById('propertyList');
-        container.innerHTML = '';
         manualProperties.forEach((prop, index) => {
             const [lat, lng] = prop.coords;
             const card = document.createElement('div');
             card.className = 'property-card';
             card.id = `card-${index}`;
             card.innerHTML = `
-                <div class="video-wrapper">
-                    <iframe src="https://www.youtube.com/embed/${prop.ytId}?autoplay=0&mute=1" allowfullscreen></iframe>
-                </div>
                 <div class="card-content">
-                    <h3 style="margin:0 0 5px 0; font-size:14px; letter-spacing:1px;">${prop.name}</h3>
-                    <span class="coords-label"> ${lat}, ${lng}</span>
+                    <h3 style="margin:0 0 5px 0; font-size:14px;">${prop.name}</h3>
+                    <span class="coords-label">Lat: ${lat}, Lng: ${lng}</span>
                     <div class="button-group">
-                        <button class="btn btn-go" onclick="focusMap(${lat}, ${lng}, ${index})">POSISI</button>
-                        <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="btn btn-maps">PETA</a>
+                        <button class="btn btn-go" onclick="focusMap(${lat}, ${lng}, ${index})">TRACKING</button>
+                        <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="btn btn-maps">MAPS</a>
                     </div>
                 </div>`;
             container.appendChild(card);
@@ -197,31 +143,34 @@
     function focusMap(lat, lng, index) {
         viewer.entities.removeAll(); 
 
+        // Update UI
         document.querySelectorAll('.property-card').forEach(c => c.classList.remove('active'));
-        const activeCard = document.getElementById(`card-${index}`);
-        if(activeCard) activeCard.classList.add('active');
+        document.getElementById(`card-${index}`).classList.add('active');
+        document.getElementById('coords-display').innerText = `${lat.toFixed(4)} | ${lng.toFixed(4)}`;
 
-        // Update display koordinat di UI
-        const coordDisplay = document.getElementById('coords-display');
-        if(coordDisplay) coordDisplay.innerText = ` ${lat.toFixed(4)} | ${lng.toFixed(4)}`;
-
-        // Tambah Tactical Frame Marker dengan logika berkedip
+        // Buat Marker yang PASTI terlihat
         viewer.entities.add({
             position: Cesium.Cartesian3.fromDegrees(lng, lat),
             billboard: {
                 image: svgDataUri,
-                scale: blinkingScale,
-                show: blinkingShow, // Memicu efek kedip on/off
+                width: 64,  // Ukuran tetap agar tidak terlalu kecil
+                height: 64,
+                show: blinkingShow,
+                // eyeOffset: Memastikan marker berada di depan objek lain
+                eyeOffset: new Cesium.Cartesian3(0, 0, -10),
+                // disableDepthTestDistance: Supaya tidak tertimbun bangunan/tanah
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
                 verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY 
+                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
             }
         });
 
+        // Kamera terbang ke lokasi
         viewer.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 800),
+            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 1000), // Ketinggian 1km
             orientation: {
-                pitch: Cesium.Math.toRadians(-45.0),
+                pitch: Cesium.Math.toRadians(-90.0), // Melihat lurus ke bawah
                 heading: 0.0
             },
             duration: 2
@@ -229,9 +178,8 @@
     }
 
     renderList();
-    viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(106.82, -6.17, 15000) });
-
-    window.addEventListener('resize', () => { viewer.forceResize(); });
+    // Posisi awal kamera (Jakarta)
+    viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(106.82, -6.17, 20000) });
 </script>
 </body>
 </html>

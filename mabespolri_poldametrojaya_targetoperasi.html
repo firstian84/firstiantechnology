@@ -184,7 +184,7 @@
 
         document.querySelectorAll('.property-card').forEach(c => c.classList.remove('active'));
         document.getElementById(`card-${index}`).classList.add('active');
-        document.getElementById('coords-display').innerText = `LAT: ${lat} | LNG: ${lng}`;
+        document.getElementById('coords-display').innerText = ` ${lat} |  ${lng}`;
 
         // Tambah Tactical Frame Marker
         viewer.entities.add({

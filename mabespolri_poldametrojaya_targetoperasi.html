@@ -34,6 +34,7 @@
             position: absolute; top: 20px; left: 20px; z-index: 20;
             color: var(--primary-red); font-family: 'Courier New', monospace;
             text-shadow: 0 0 10px rgba(255, 59, 59, 0.8); pointer-events: none;
+            background: rgba(0,0,0,0.5); padding: 10px; border-radius: 4px;
         }
 
         .cesium-viewer-toolbar {
@@ -78,11 +79,17 @@
         .map-instruction {
             position: absolute; top: 15px; right: 440px; z-index: 20;
             display: flex; align-items: center; pointer-events: none;
-            animation: pulse-glow 2s infinite;
         }
         .instruction-text {
             background: rgba(255, 59, 59, 0.9); color: white; padding: 8px 12px;
             border-radius: 4px; font-size: 10px; font-weight: bold;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; box-shadow: 0 0 15px var(--primary-red); }
+            100% { opacity: 0.7; }
         }
 
         @media (max-width: 768px) {
@@ -100,7 +107,11 @@
 
     <div id="cesiumContainer"></div>
 
-    
+    <!-- Menambahkan kembali elemen UI yang hilang agar interaktivitas berjalan -->
+    <div class="ui-tactical">
+        <div>LIVE TRACKING SYSTEM</div>
+        <div id="coords-display">0.0000 | 0.0000</div>
+    </div>
 
     <div class="map-instruction">
         <div class="instruction-text">KLIK ICON MAP > OTHER > ARCGIS WORLD IMAGERY</div>
@@ -116,7 +127,6 @@
     </div>
 
 <script>
-    // 1. Inisialisasi Cesium
     const viewer = new Cesium.Viewer('cesiumContainer', {
         terrainProvider: new Cesium.EllipsoidTerrainProvider(),
         animation: false,
@@ -130,7 +140,6 @@
         sceneModePicker: true
     });
 
-    // 2. Definisi Frame Box GPS (SVG Tactical)
     const targetSvg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
         <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="#ff3b3b" stroke-width="6"/>
@@ -143,16 +152,17 @@
 
     const svgDataUri = 'data:image/svg+xml;base64,' + btoa(targetSvg);
 
-    // 3. Logika Animasi Skala
+    // Animasi marker diperbaiki
+    const startTime = Cesium.JulianDate.now();
     const blinkingScale = new Cesium.CallbackProperty((time) => {
-        const seconds = Cesium.JulianDate.secondsDifference(time, Cesium.JulianDate.now());
+        const seconds = Cesium.JulianDate.secondsDifference(time, startTime);
         return 0.8 + Math.abs(Math.sin(seconds * 3.0)) * 0.4;
     }, false);
 
-    // Data Target
+    // Data Target (Ganti ytId dengan ID video YouTube yang valid jika diperlukan)
     const manualProperties = [
-        { name: "TERSANGKA - ALPHA", coords: [-6.224, 106.841], ytId: "..." },
-        { name: "TERSANGKA - BRAVO", coords: [-6.175, 106.827], ytId: "..." }
+        { name: "TERSANGKA - ALPHA", coords: [-6.224, 106.841], ytId: "dQw4w9WgXcQ" },
+        { name: "TERSANGKA - BRAVO", coords: [-6.175, 106.827], ytId: "dQw4w9WgXcQ" }
     ];
 
     function renderList() {
@@ -183,8 +193,12 @@
         viewer.entities.removeAll(); 
 
         document.querySelectorAll('.property-card').forEach(c => c.classList.remove('active'));
-        document.getElementById(`card-${index}`).classList.add('active');
-        document.getElementById('coords-display').innerText = ` ${lat} |  ${lng}`;
+        const activeCard = document.getElementById(`card-${index}`);
+        if(activeCard) activeCard.classList.add('active');
+
+        // Update display koordinat di UI kiri atas
+        const coordDisplay = document.getElementById('coords-display');
+        if(coordDisplay) coordDisplay.innerText = ` ${lat.toFixed(4)} | ${lng.toFixed(4)}`;
 
         // Tambah Tactical Frame Marker
         viewer.entities.add({
@@ -193,7 +207,7 @@
                 image: svgDataUri,
                 scale: blinkingScale,
                 verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
+                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                 disableDepthTestDistance: Number.POSITIVE_INFINITY 
             }
         });

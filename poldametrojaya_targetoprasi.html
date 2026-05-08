@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.P.O KRIMINAL POLRI </title>
+    
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-red: #ff3b3b;
+            --ui-bg: rgba(15, 15, 15, 0.85); 
+            --card-bg: rgba(255, 255, 255, 0.05); 
+            --accent-glow: #ff0000;
+            --text-main: rgba(255, 255, 255, 0.9);
+            --text-sub: rgba(255, 255, 255, 0.5);
+            --gmaps-blue: #4285F4;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; height: 100%; overflow: hidden; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            background: #000; color: white; 
+        }
+        
+        #cesiumContainer { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; 
+        }
+
+        /* --- UI OVERLAY TACTICAL --- */
+        .ui-tactical {
+            position: absolute; top: 20px; left: 20px; z-index: 20;
+            color: var(--primary-red); font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px rgba(255, 59, 59, 0.8); pointer-events: none;
+        }
+
+        .cesium-viewer-toolbar {
+            right: 390px !important; top: 10px !important; z-index: 100 !important;
+        }
+
+        /* --- SIDEBAR UI --- */
+        .sidebar { 
+            position: absolute; right: 0; top: 0; width: 380px; height: 100%;
+            background: var(--ui-bg); display: flex; flex-direction: column;
+            border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; 
+            backdrop-filter: blur(10px);
+        }
+
+        .header { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;}
+        .unit-name { font-size: 10px; opacity: 0.8; display: block; text-transform: uppercase; }
+        .polda-name { font-size: 20px; font-weight: 800; display: block; text-transform: uppercase; }
+        .target-name { color: var(--primary-red); font-weight: 800; font-size: 18px; text-shadow: 0 0 10px var(--accent-glow); display: block; margin-top: 5px; }
+
+        .scroll-container { flex: 1; overflow-y: auto; padding: 15px; }
+        .property-card {
+            background: var(--card-bg); border-radius: 12px; margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1); overflow: hidden; transition: 0.3s;
+        }
+        .property-card.active { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.1); }
+
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        .card-content { padding: 15px; }
+        .coords-label { color: var(--text-sub); font-size: 11px; display: block; margin-bottom: 15px; font-family: monospace; }
+
+        .button-group { display: flex; gap: 10px; }
+        .btn { 
+            flex: 1; border: none; border-radius: 6px; cursor: pointer; 
+            font-weight: 600; padding: 12px 5px; font-size: 11px; 
+            color: white; text-align: center; text-decoration: none; text-transform: uppercase;
+        }
+        .btn-go { background: var(--primary-red); }
+        .btn-maps { background: var(--gmaps-blue); }
+
+        .map-instruction {
+            position: absolute; top: 15px; right: 440px; z-index: 20;
+            display: flex; align-items: center; pointer-events: none;
+            animation: pulse-glow 2s infinite;
+        }
+        .instruction-text {
+            background: rgba(255, 59, 59, 0.9); color: white; padding: 8px 12px;
+            border-radius: 4px; font-size: 10px; font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            #cesiumContainer { height: 45%; position: relative; }
+            .sidebar { position: relative; width: 100%; height: 55%; border-left: none; border-top: 2px solid var(--primary-red); }
+            .cesium-viewer-toolbar { right: 10px !important; top: 10px !important; }
+            .map-instruction { right: 10px; top: 55px; }
+            .ui-tactical { top: 10px; left: 10px; font-size: 0.8rem; }
+        }
+
+        .cesium-viewer-bottom { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="cesiumContainer"></div>
+
+    <div class="ui-tactical">
+        <div style="font-weight: bold; letter-spacing: 2px;">SYSTEM: ACTIVE_TRACKING</div>
+        <div id="coords-display">LAT: 0 | LNG: 0</div>
+    </div>
+
+    <div class="map-instruction">
+        <div class="instruction-text">KLIK ICON MAP > OTHER > ARCGIS WORLD IMAGERY</div>
+    </div>
+
+    <div class="sidebar">
+        <div class="header">
+            <span class="unit-name">KEPOLISIAN NEGARA REPUBLIK INDONESIA</span>
+            <span class="polda-name">POLDA METRO JAYA</span>
+            <span class="target-name">TARGET OPERASI D.P.O</span>
+        </div>
+        <div id="propertyList" class="scroll-container"></div>
+    </div>
+
+<script>
+    // 1. Inisialisasi Cesium
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+        terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+        animation: false,
+        timeline: false,
+        infoBox: false,
+        selectionIndicator: false,
+        navigationHelpButton: false,
+        baseLayerPicker: true, 
+        geocoder: true,
+        homeButton: true,
+        sceneModePicker: true
+    });
+
+    // 2. Definisi Frame Box GPS (SVG Tactical)
+    const targetSvg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+        <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+        <path d="M 70 10 L 90 10 L 90 30" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+        <path d="M 90 70 L 90 90 L 70 90" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+        <path d="M 30 90 L 10 90 L 10 70" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+        <circle cx="50" cy="50" r="15" fill="none" stroke="#ff3b3b" stroke-width="3" />
+        <circle cx="50" cy="50" r="6" fill="#ff3b3b" />
+    </svg>`;
+
+    const svgDataUri = 'data:image/svg+xml;base64,' + btoa(targetSvg);
+
+    // 3. Logika Animasi Skala
+    const blinkingScale = new Cesium.CallbackProperty((time) => {
+        const seconds = Cesium.JulianDate.secondsDifference(time, Cesium.JulianDate.now());
+        return 0.8 + Math.abs(Math.sin(seconds * 3.0)) * 0.4;
+    }, false);
+
+    // Data Target
+    const manualProperties = [
+        { name: "TERSANGKA - ALPHA", coords: [-6.224, 106.841], ytId: "..." },
+        { name: "TERSANGKA - BRAVO", coords: [-6.175, 106.827], ytId: "..." }
+    ];
+
+    function renderList() {
+        const container = document.getElementById('propertyList');
+        container.innerHTML = '';
+        manualProperties.forEach((prop, index) => {
+            const [lat, lng] = prop.coords;
+            const card = document.createElement('div');
+            card.className = 'property-card';
+            card.id = `card-${index}`;
+            card.innerHTML = `
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/${prop.ytId}?autoplay=0&mute=1" allowfullscreen></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 style="margin:0 0 5px 0; font-size:14px; letter-spacing:1px;">${prop.name}</h3>
+                    <span class="coords-label">COORDS: ${lat}, ${lng}</span>
+                    <div class="button-group">
+                        <button class="btn btn-go" onclick="focusMap(${lat}, ${lng}, ${index})">LOKASI</button>
+                        <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="btn btn-maps">GOOGLE MAPS</a>
+                    </div>
+                </div>`;
+            container.appendChild(card);
+        });
+    }
+
+    function focusMap(lat, lng, index) {
+        viewer.entities.removeAll(); 
+
+        document.querySelectorAll('.property-card').forEach(c => c.classList.remove('active'));
+        document.getElementById(`card-${index}`).classList.add('active');
+        document.getElementById('coords-display').innerText = `LAT: ${lat} | LNG: ${lng}`;
+
+        // Tambah Tactical Frame Marker
+        viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(lng, lat),
+            billboard: {
+                image: svgDataUri,
+                scale: blinkingScale,
+                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY 
+            }
+        });
+
+        viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 800),
+            orientation: {
+                pitch: Cesium.Math.toRadians(-45.0),
+                heading: 0.0
+            },
+            duration: 2
+        });
+    }
+
+    renderList();
+    viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(106.82, -6.17, 15000) });
+
+    window.addEventListener('resize', () => { viewer.forceResize(); });
+</script>
+</body>
+</html>

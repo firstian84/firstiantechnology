@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T.O POLRI - Mobile Optimized</title>
+    <title>T.O POLRI - TACTICAL MONITORING</title>
     
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
@@ -11,7 +11,7 @@
     <style>
         :root {
             --primary-red: #ff3b3b;
-            --ui-bg: rgba(15, 15, 15, 0.85); 
+            --ui-bg: rgba(10, 10, 10, 0.9); 
             --card-bg: rgba(255, 255, 255, 0.05); 
             --accent-glow: #ff0000;
             --text-main: rgba(255, 255, 255, 0.9);
@@ -29,18 +29,18 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; 
         }
 
-        /* --- FIX TOMBOL CESIUM --- */
+        /* FIX TOMBOL CESIUM UNTUK MOBILE */
         .cesium-viewer-toolbar {
-            right: 390px !important; /* Posisi Desktop (di samping sidebar) */
+            right: 390px !important; 
             top: 10px !important;
             z-index: 100 !important;
         }
 
         .cesium-baseLayerPicker-dropDown {
-            z-index: 1000 !important; /* Supaya menu map tidak tertutup */
+            z-index: 1000 !important;
         }
 
-        /* --- SIDEBAR UI --- */
+        /* SIDEBAR */
         .sidebar { 
             position: absolute; 
             right: 0; top: 0; width: 380px; height: 100%;
@@ -48,67 +48,56 @@
             display: flex; flex-direction: column;
             border-left: 1px solid rgba(255, 255, 255, 0.1); 
             z-index: 10; 
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.8);
         }
 
-        .header { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;}
-        .unit-name { font-size: 10px; opacity: 0.8; display: block; text-transform: uppercase; }
-        .polda-name { font-size: 20px; font-weight: 800; display: block; text-transform: uppercase; }
-        .target-name { color: var(--primary-red); font-weight: 800; font-size: 18px; text-shadow: 0 0 10px var(--accent-glow); display: block; margin-top: 5px; }
+        .header { padding: 25px 20px; border-bottom: 2px solid var(--primary-red); text-align: center;}
+        .unit-name { font-size: 10px; letter-spacing: 2px; opacity: 0.8; display: block; text-transform: uppercase; }
+        .polda-name { font-size: 20px; font-weight: 900; display: block; text-transform: uppercase; margin: 5px 0; }
+        .target-name { color: var(--primary-red); font-weight: 800; font-size: 18px; text-shadow: 0 0 10px var(--accent-glow); display: block; }
 
         .scroll-container { flex: 1; overflow-y: auto; padding: 15px; }
         .property-card {
-            background: var(--card-bg); border-radius: 12px; margin-bottom: 20px;
+            background: var(--card-bg); border-radius: 8px; margin-bottom: 15px;
             border: 1px solid rgba(255,255,255,0.1); overflow: hidden; transition: 0.3s;
         }
-        .property-card.active { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.1); }
+        .property-card.active { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.15); }
 
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
         .card-content { padding: 15px; }
-        .coords-label { color: var(--text-sub); font-size: 11px; display: block; margin-bottom: 15px; font-family: monospace; }
+        .coords-label { color: var(--primary-red); font-size: 11px; display: block; margin-bottom: 12px; font-family: 'Courier New', monospace; font-weight: bold; }
 
-        .button-group { display: flex; gap: 10px; }
+        .button-group { display: flex; gap: 8px; }
         .btn { 
-            flex: 1; border: none; border-radius: 6px; cursor: pointer; 
-            font-weight: 600; padding: 12px 5px; font-size: 11px; 
-            color: white; text-align: center; text-decoration: none; text-transform: uppercase;
+            flex: 1; border: none; border-radius: 4px; cursor: pointer; 
+            font-weight: 700; padding: 12px 5px; font-size: 11px; 
+            color: white; text-align: center; text-decoration: none; text-transform: uppercase; transition: 0.2s;
         }
-        .btn-go { background: var(--primary-red); }
-        .btn-maps { background: var(--gmaps-blue); }
+        .btn-go { background: var(--primary-red); box-shadow: 0 0 10px rgba(255, 59, 59, 0.3); }
+        .btn-maps { background: #333; border: 1px solid #555; }
 
         .map-instruction {
             position: absolute; top: 15px; right: 440px; z-index: 20;
-            display: flex; align-items: center; pointer-events: none;
-            animation: pulse-glow 2s infinite;
+            pointer-events: none; animation: pulse-glow 2s infinite;
         }
         .instruction-text {
-            background: rgba(255, 59, 59, 0.9); color: white; padding: 8px 12px;
-            border-radius: 4px; font-size: 10px; font-weight: bold;
+            background: var(--primary-red); color: white; padding: 8px 12px;
+            border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase;
         }
 
         @keyframes pulse-glow {
-            0%, 100% { opacity: 0.7; } 50% { opacity: 1; }
+            0%, 100% { opacity: 0.6; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1); }
         }
 
-        /* --- RESPONSIVE ANDROID / MOBILE --- */
+        /* RESPONSIVE MOBILE */
         @media (max-width: 768px) {
-            #cesiumContainer { height: 45%; position: relative; }
-            .sidebar { position: relative; width: 100%; height: 55%; border-left: none; border-top: 2px solid var(--primary-red); }
-            
-            /* Geser tombol ke pojok kanan atas layar HP */
-            .cesium-viewer-toolbar {
-                right: 10px !important;
-                top: 10px !important;
-            }
-            
-            .map-instruction { 
-                right: 10px; 
-                top: 55px; /* Di bawah tombol toolbar */
-            }
-
-            .instruction-text { font-size: 9px; }
+            #cesiumContainer { height: 40%; position: relative; }
+            .sidebar { position: relative; width: 100%; height: 60%; border-left: none; border-top: 3px solid var(--primary-red); }
+            .cesium-viewer-toolbar { right: 10px !important; top: 10px !important; }
+            .map-instruction { right: 10px; top: 60px; }
         }
 
         .cesium-viewer-bottom { display: none !important; }
@@ -119,20 +108,19 @@
     <div id="cesiumContainer"></div>
 
     <div class="map-instruction">
-        <div class="instruction-text">KLIK ICON MAP > OTHER > ARCGIS WORLD IMAGERY</div>
+        <div class="instruction-text">GANTI MAP > OTHER > ARCGIS WORLD IMAGERY</div>
     </div>
 
     <div class="sidebar">
         <div class="header">
             <span class="unit-name">KEPOLISIAN NEGARA REPUBLIK INDONESIA</span>
             <span class="polda-name">POLDA METRO JAYA</span>
-            <span class="target-name">TARGET OPERASI D.P.O</span>
+            <span class="target-name">DATA TARGET OPERASI</span>
         </div>
         <div id="propertyList" class="scroll-container"></div>
     </div>
 
 <script>
-    // Inisialisasi Cesium
     const viewer = new Cesium.Viewer('cesiumContainer', {
         terrainProvider: new Cesium.EllipsoidTerrainProvider(),
         animation: false,
@@ -146,10 +134,9 @@
         sceneModePicker: true
     });
 
-    // Data Contoh
     const manualProperties = [
-        { name: "TERSANGKA A", coords: [-6.224, 106.841], ytId: "..." },
-        { name: "TERSANGKA B", coords: [-6.175, 106.827], ytId: "..." }
+        { name: "TARGET ALPHA - WILAYAH JAKARTA", coords: [-6.1754, 106.8272], ytId: "dQw4w9WgXcQ" },
+        { name: "TARGET BRAVO - SUDIPIRO", coords: [-6.2245, 106.8416], ytId: "3_YTe4S-K-s" }
     ];
 
     function renderList() {
@@ -165,11 +152,11 @@
                     <iframe src="https://www.youtube.com/embed/${prop.ytId}?autoplay=0&mute=1" allowfullscreen></iframe>
                 </div>
                 <div class="card-content">
-                    <h3 style="margin:0 0 5px 0; font-size:14px;">${prop.name}</h3>
-                    <span class="coords-label">LAT: ${lat}, LNG: ${lng}</span>
+                    <h3 style="margin:0 0 8px 0; font-size:14px;">${prop.name}</h3>
+                    <span class="coords-label">COORDINATE: ${lat}, ${lng}</span>
                     <div class="button-group">
-                        <button class="btn btn-go" onclick="focusMap(${lat}, ${lng}, ${index})">LOKASI</button>
-                        <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="btn btn-maps">GOOGLE MAPS</a>
+                        <button class="btn btn-go" onclick="focusMap(${lat}, ${lng}, ${index})">PELACAKAN</button>
+                        <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="btn btn-maps">GMAPS</a>
                     </div>
                 </div>`;
             container.appendChild(card);
@@ -177,31 +164,53 @@
     }
 
     function focusMap(lat, lng, index) {
-        // Hapus marker lama jika ada
         viewer.entities.removeAll(); 
 
-        // Highlight Card
         document.querySelectorAll('.property-card').forEach(c => c.classList.remove('active'));
         document.getElementById(`card-${index}`).classList.add('active');
 
-        // Tambah Marker
-        viewer.entities.add({
-            position: Cesium.Cartesian3.fromDegrees(lng, lat),
-            point: { pixelSize: 15, color: Cesium.Color.RED, outlineColor: Cesium.Color.WHITE, outlineWidth: 3 }
+        // LOGIKA ANIMASI BLOK MERAH BERKEDIP
+        let alpha = 1.0;
+        let delta = -0.02;
+
+        const pulseBox = viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(lng, lat, 20), // Ketinggian kotak di atas tanah
+            box: {
+                dimensions: new Cesium.Cartesian3(50.0, 50.0, 50.0), // Ukuran Kotak
+                material: new Cesium.ColorMaterialProperty(new Cesium.CallbackProperty(() => {
+                    alpha += delta;
+                    if (alpha <= 0.2 || alpha >= 1.0) delta *= -1;
+                    return Cesium.Color.RED.withAlpha(alpha);
+                }, false)),
+                outline: true,
+                outlineColor: Cesium.Color.WHITE,
+                outlineWidth: 2.0
+            }
         });
 
-        // Terbang ke lokasi
+        // Tambahan Circle Scanner di bawah kotak
+        viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(lng, lat),
+            ellipse: {
+                semiMinorAxis: 70.0,
+                semiMajorAxis: 70.0,
+                material: Cesium.Color.RED.withAlpha(0.2),
+                outline: true,
+                outlineColor: Cesium.Color.RED,
+                outlineWidth: 1
+            }
+        });
+
         viewer.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 1000),
-            duration: 2
+            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 800),
+            duration: 2.5,
+            pitch: Cesium.Math.toRadians(-45)
         });
     }
 
-    // Jalankan saat load
     renderList();
     viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(106.82, -6.17, 15000) });
 
-    // Fix untuk mobile resize
     window.addEventListener('resize', () => {
         viewer.forceResize();
     });

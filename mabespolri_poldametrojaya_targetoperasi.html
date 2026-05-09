@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TARGET OPERASI</title>
+    <title>TARGET OPERASI POLRI</title>
     
+    <!-- CesiumJS Resources -->
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
     
     <style>
         :root {
             --primary-red: #ff3b3b;
-            --ui-bg: rgba(10, 10, 10, 0.9); 
+            --ui-bg: rgba(0, 0, 0, 0.3); 
             --card-bg: rgba(255, 255, 255, 0.05); 
             --accent-glow: #ff0000;
             --text-main: #ffffff;
@@ -29,6 +30,7 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; 
         }
 
+        /* Instruksi Ganti Basemap */
         .map-instruction {
             position: absolute; top: 15px; right: 440px; z-index: 20;
             display: flex; align-items: center; pointer-events: none;
@@ -42,14 +44,28 @@
             box-shadow: 0 0 15px var(--accent-glow);
         }
 
+        /* Sidebar UI */
         .sidebar { 
             position: absolute; right: 0; top: 0; width: 380px; height: 100%;
             background: var(--ui-bg); display: flex; flex-direction: column;
             border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; 
-            backdrop-filter: blur(15px); box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.8);
         }
 
-        .header { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .header { 
+            padding: 25px 20px; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            text-align: center; 
+        }
+
+        /* Styling Logo Polri */
+        .polri-logo {
+            width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+          
+        }
+
         .header .unit-name { font-size: 9px; opacity: 0.7; display: block; letter-spacing: 2px; margin-bottom: 4px; }
         .header .polda-name { font-size: 24px; font-weight: 900; display: block; color: var(--text-main); }
         .header .target-tag { color: var(--primary-red); font-weight: 800; font-size: 28px; text-shadow: 0 0 10px var(--accent-glow); }
@@ -58,6 +74,7 @@
         .scroll-container::-webkit-scrollbar { width: 4px; }
         .scroll-container::-webkit-scrollbar-thumb { background: var(--primary-red); }
 
+        /* Card Style */
         .property-card {
             background: var(--card-bg); border-radius: 8px; margin-bottom: 20px;
             border: 1px solid rgba(255,255,255,0.1); overflow: hidden; transition: 0.4s;
@@ -76,6 +93,7 @@
         .card-content h3 { margin: 0 0 10px 0; font-size: 12px; line-height: 1.4; color: var(--text-main); font-weight: 500; }
         .coords-label { color: var(--text-sub); font-size: 10px; font-family: monospace; display: block; margin-bottom: 15px; }
 
+        /* Buttons */
         .btn { 
             flex: 1; border: none; border-radius: 4px; cursor: pointer; 
             font-weight: 700; padding: 12px; font-size: 10px; 
@@ -109,12 +127,17 @@
 
     <div id="cesiumContainer"></div>
 
+    <!-- Instruksi Overlay -->
     <div class="map-instruction">
         <div class="instruction-text">GANTI BASEMAP > OTHER > ARCGIS WORLD IMAGERY</div>
     </div>
 
+    <!-- Sidebar Panel -->
     <div class="sidebar">
         <div class="header">
+            <!-- Menambahkan Gambar Lambang Polri -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Lambang_Polri.png" alt="Lambang POLRI" class="polri-logo">
+            
             <span class="unit-name">KEPOLISIAN NEGARA REPUBLIK INDONESIA</span>
             <span class="polda-name">POLDA METRO JAYA</span>
             <span class="target-tag">TARGET OPERASI</span>
@@ -123,7 +146,7 @@
     </div>
 
 <script>
-    // 1. Inisialisasi Viewer
+    // 1. Inisialisasi Viewer Cesium
     const viewer = new Cesium.Viewer('cesiumContainer', {
         terrainProvider: new Cesium.EllipsoidTerrainProvider(),
         animation: false,
@@ -137,16 +160,15 @@
         sceneModePicker: true
     });
 
-    // 2. Data Terintegrasi
+    // 2. Database Target (Manual)
     const manualProperties = [
-        { name: "TERSANGKA A", coords: [-6.279543, 106.817916], ytId: "..." },
-        { name: "TERSANGKA B", coords: [-6.249918, 106.822152], ytId: "..." },
-       
+        { name: "TARGET OPERASI A", coords: [-6.279543, 106.817916], ytId: "..." },
+        { name: "TARGET OPERASI B ", coords: [-6.249918, 106.822152], ytId: "..." }
     ];
 
     let activeIndex = null;
 
-    // 3. Render Sidebar
+    // 3. Render Daftar Target ke Sidebar
     function renderList() {
         const container = document.getElementById('propertyList');
         container.innerHTML = '';
@@ -156,25 +178,26 @@
             card.id = `card-${index}`;
             card.innerHTML = `
                 <div class="video-wrapper">
-                    <iframe src="https://www.youtube.com/embed/${prop.ytId}?mute=1&loop=1&playlist=${prop.ytId}" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/${prop.ytId}?autoplay=1&mute=1&loop=1&playlist=${prop.ytId}" allowfullscreen></iframe>
                 </div>
                 <div class="card-content">
                     <h3>${prop.name}</h3>
                     <span class="coords-label">COORDS: ${prop.coords[0].toFixed(6)}, ${prop.coords[1].toFixed(6)}</span>
                     <div style="display:flex; gap:8px;">
-                        <button class="btn btn-track" onclick="focusTarget(${prop.coords[0]}, ${prop.coords[1]}, ${index})">POSISI</button>
-                        <a href="https://www.google.com/maps?q=${prop.coords[0]},${prop.coords[1]}" target="_blank" class="btn btn-maps">LOKASI</a>
+                        <button class="btn btn-track" onclick="focusTarget(${prop.coords[0]}, ${prop.coords[1]}, ${index})">LIHAT POSISI</button>
+                        <a href="https://www.google.com/maps?q=${prop.coords[0]},${prop.coords[1]}" target="_blank" class="btn btn-maps">GOOGLE MAPS</a>
                     </div>
                 </div>`;
             container.appendChild(card);
         });
     }
 
-    // 4. Fungsi Fokus & Garis Merah 3D Melengkung
+    // 4. Fungsi Navigasi Kamera & Marker 3D
     function focusTarget(lat, lng, index) {
         viewer.entities.removeAll(); 
         activeIndex = index;
         
+        // Update UI Card
         document.querySelectorAll('.property-card').forEach(c => c.classList.remove('active'));
         const activeCard = document.getElementById(`card-${index}`);
         activeCard.classList.add('active');
@@ -182,7 +205,7 @@
 
         const destination = Cesium.Cartesian3.fromDegrees(lng, lat);
 
-        // --- GARIS MERAH 3D MELENGKUNG (ARC) ---
+        // --- GARIS PENGHUBUNG 3D ---
         viewer.entities.add({
             polyline: {
                 positions: new Cesium.CallbackProperty(() => {
@@ -192,14 +215,13 @@
                     const startPos = viewer.scene.globe.pick(ray, viewer.scene) || viewer.camera.position;
                     return [startPos, destination];
                 }, false),
-                width: 3,
-                arcType: Cesium.ArcType.GEODESIC, // Membuat lengkungan sesuai bola bumi
-                material: Cesium.Color.RED,       // Merah Polos tanpa glow
-                clampToGround: false
+                width: 2,
+                material: Cesium.Color.RED.withAlpha(0.5),
+                arcType: Cesium.ArcType.GEODESIC
             }
         });
 
-        // --- TARGET MARKER (SVG TACTICAL) ---
+        // --- TARGET MARKER (SVG TACTICAL CROSSHAIR) ---
         const targetSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
             <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="#ff3b3b" stroke-width="6"/>
             <path d="M 70 10 L 90 10 L 90 30" fill="none" stroke="#ff3b3b" stroke-width="6"/>
@@ -215,24 +237,31 @@
                 image: 'data:image/svg+xml;base64,' + btoa(targetSvg),
                 scale: new Cesium.CallbackProperty((time) => {
                     const sec = Cesium.JulianDate.secondsDifference(time, Cesium.JulianDate.now());
-                    return 0.8 + Math.abs(Math.sin(sec * 4)) * 0.4;
+                    return 0.8 + Math.abs(Math.sin(sec * 4)) * 0.4; // Animasi Berdenyut
                 }, false),
                 verticalOrigin: Cesium.VerticalOrigin.CENTER,
                 heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
             }
         });
 
-        // --- ANIMASI KAMERA ---
+        // --- ANIMASI FLY-TO KAMERA ---
         viewer.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 500),
-            orientation: { pitch: Cesium.Math.toRadians(-35.0), heading: 0.0 },
-            duration: 2
+            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 400),
+            orientation: { 
+                pitch: Cesium.Math.toRadians(-30.0), 
+                heading: 0.0 
+            },
+            duration: 2.5
         });
     }
 
+    // Inisialisasi awal
     renderList();
-    // Posisi awal Jakarta
-    viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(106.82, -6.21, 25000) });
+    
+    // Set tampilan awal ke Jakarta
+    viewer.camera.setView({ 
+        destination: Cesium.Cartesian3.fromDegrees(106.82, -6.17, 30000) 
+    });
 </script>
 </body>
 </html>

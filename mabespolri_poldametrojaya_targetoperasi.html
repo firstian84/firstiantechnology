@@ -56,7 +56,27 @@
             padding: 25px 20px; 
             border-bottom: 1px solid rgba(255,255,255,0.1); 
             text-align: center; 
-            flex-shrink: 0; /* Penting: Agar header tidak menyusut saat scroll di Android */
+            flex-shrink: 0;
+        }
+
+        /* Styling Pencarian */
+        .search-box {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--primary-red);
+            border-radius: 4px;
+            color: white;
+            font-size: 12px;
+            box-sizing: border-box;
+            outline: none;
+            box-shadow: 0 0 5px rgba(255, 59, 59, 0.2);
         }
 
         /* Styling Logo Polri */
@@ -74,7 +94,7 @@
             flex: 1; 
             overflow-y: auto; 
             padding: 15px;
-            -webkit-overflow-scrolling: touch; /* Scroll halus di perangkat sentuh */
+            -webkit-overflow-scrolling: touch;
         }
         .scroll-container::-webkit-scrollbar { width: 4px; }
         .scroll-container::-webkit-scrollbar-thumb { background: var(--primary-red); }
@@ -128,7 +148,7 @@
                 height: 60%; 
                 border-left: none; 
                 border-top: 2px solid var(--primary-red); 
-                background: rgba(0,0,0,0.8); /* Overlay lebih gelap di mobile */
+                background: rgba(0,0,0,0.8);
             }
             .cesium-viewer-toolbar { right: 10px !important; }
             .map-instruction { right: 10px; top: 50px; }
@@ -143,12 +163,10 @@
 
     <div id="cesiumContainer"></div>
 
-    <!-- Instruksi Overlay -->
     <div class="map-instruction">
         <div class="instruction-text">GANTI BASEMAP > OTHER > ARCGIS WORLD IMAGERY</div>
     </div>
 
-    <!-- Sidebar Panel -->
     <div class="sidebar">
         <div class="header">
             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Lambang_Polri.png" alt="Lambang POLRI" class="polri-logo">
@@ -156,7 +174,12 @@
             <span class="polda-name">POLDA METRO JAYA</span>
             <span class="target-tag">TARGET OPERASI</span>
         </div>
-        <!-- Wadah scroll di bawah header -->
+
+        <!-- FITUR CARI NOMOR PELAPOR -->
+        <div class="search-box">
+            <input type="text" id="pelaporSearch" placeholder="Cari Nomor Pelapor (Contoh: 0857...)" onkeyup="filterPelapor()">
+        </div>
+
         <div id="propertyList" class="scroll-container"></div>
     </div>
 
@@ -180,12 +203,14 @@
         { 
             name: "WAKTU : 10052026 - 10.30 <br> T.O :  YUSUF <br> KUHP : 368 <br> PELAPOR : 085782375574  ", 
             coords: [-6.116531515275683, 106.8934121286276], 
-            ytId: "BkcucgopvGk"
+            ytId: "BkcucgopvGk",
+            pelapor: "085782375574"
         },
         { 
-            name: "TARGET OPERASI B", 
+            name: "TARGET OPERASI B <br> PELAPOR : 08123456789", 
             coords: [-6.249918, 106.822152], 
-            ytId: "" // Masukkan ID YouTube jika ada
+            ytId: "",
+            pelapor: "08123456789"
         }
     ];
 
@@ -199,6 +224,7 @@
             const card = document.createElement('div');
             card.className = 'property-card';
             card.id = `card-${index}`;
+            card.setAttribute('data-pelapor', prop.pelapor); // Data attribute untuk filter
             card.innerHTML = `
                 <div class="video-wrapper">
                     <iframe src="https://www.youtube.com/embed/${prop.ytId}?autoplay=1&mute=1&loop=1&playlist=${prop.ytId}" allowfullscreen></iframe>
@@ -215,12 +241,26 @@
         });
     }
 
+    // FUNGSI CARI NOMOR PELAPOR
+    function filterPelapor() {
+        const input = document.getElementById('pelaporSearch').value.toLowerCase();
+        const cards = document.getElementsByClassName('property-card');
+        
+        for (let i = 0; i < cards.length; i++) {
+            const noPelapor = cards[i].getAttribute('data-pelapor');
+            if (noPelapor && noPelapor.toLowerCase().includes(input)) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+
     // 4. Fungsi Navigasi Kamera & Marker 3D
     function focusTarget(lat, lng, index) {
         viewer.entities.removeAll(); 
         activeIndex = index;
         
-        // Update UI Card
         document.querySelectorAll('.property-card').forEach(c => c.classList.remove('active'));
         const activeCard = document.getElementById(`card-${index}`);
         activeCard.classList.add('active');
@@ -228,7 +268,6 @@
 
         const destination = Cesium.Cartesian3.fromDegrees(lng, lat);
 
-        // --- GARIS PENGHUBUNG 3D ---
         viewer.entities.add({
             polyline: {
                 positions: new Cesium.CallbackProperty(() => {
@@ -246,7 +285,6 @@
             }
         });
 
-        // --- TARGET MARKER (SVG TACTICAL CROSSHAIR) ---
         const targetSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
             <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="#ff3b3b" stroke-width="6"/>
             <path d="M 70 10 L 90 10 L 90 30" fill="none" stroke="#ff3b3b" stroke-width="6"/>
@@ -269,7 +307,6 @@
             }
         });
 
-        // --- ANIMASI FLY-TO KAMERA ---
         viewer.camera.flyTo({
             destination: Cesium.Cartesian3.fromDegrees(lng, lat, 400),
             orientation: { 
@@ -280,10 +317,8 @@
         });
     }
 
-    // Inisialisasi awal
     renderList();
     
-    // Set tampilan awal ke Jakarta
     viewer.camera.setView({ 
         destination: Cesium.Cartesian3.fromDegrees(106.82, -6.17, 30000) 
     });

@@ -12,12 +12,12 @@
     <style>
         :root {
             --primary-red: #ff3b3b;
-            /* MENGUBAH BACKGROUND MENJADI TRANSPARAN (Nilai Alpha/Opacity diturunkan) */
-            --ui-bg: rgba(5, 5, 5, 0.85); /* Dinaikkan sedikit ke 0.85 agar teks tetap kontras saat ditumpuk */
-            --card-bg: rgba(0, 0, 0, 0.6); 
+            /* MENGUBAH BACKGROUND MENJADI SANGAT TRANSPARAN */
+            --ui-bg: rgba(5, 5, 5, 0.4); 
+            --card-bg: rgba(0, 0, 0, 0.3); 
             --accent-glow: #ff0000;
             --text-main: #ffffff;
-            --text-sub: rgba(255, 255, 255, 0.82); /* Meningkatkan kontras teks sub karena bg transparan */
+            --text-sub: rgba(255, 255, 255, 0.9); /* Dinaikkan kontrasnya karena bg semakin transparan */
             --gmaps-blue: #4285F4;
             --gmaps-green: #34A853;
         }
@@ -26,19 +26,15 @@
             margin: 0; padding: 0; height: 100%; overflow: hidden; 
             font-family: 'Segoe UI', Roboto, sans-serif; 
             background: #000; color: white; 
-            /* Mencegah gesture default browser yang merusak interaksi map */
             touch-action: none;
         }
         
-        /* Mengatur ukuran peta agar memenuhi layar di belakang UI transparan */
         #cesiumContainer { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; 
             transition: 0.3s;
-            /* Memastikan container cesium menerima semua event interaksi peta */
             pointer-events: auto;
         }
 
-        /* Instruksi Ganti Basemap */
         .map-instruction {
             position: absolute; top: 15px; right: 430px; z-index: 20;
             display: flex; align-items: center; pointer-events: none;
@@ -52,22 +48,20 @@
             box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* Sidebar UI dibuat transparan dengan efek Blur di latar belakangnya */
+        /* SIDEBAR DENGAN FILTER BLUR 0.1px */
         .sidebar { 
             position: absolute; right: 0; top: 0; width: 380px; height: 100%;
             background: var(--ui-bg); 
             
             display: flex; flex-direction: column;
             border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            /* Memaksa elemen UI menerima sentuhan dan mengisolasinya dari peta di bawahnya */
+            box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(0.1px);
+            -webkit-backdrop-filter: blur(0.1px);
             pointer-events: auto;
             touch-action: pan-y;
         }
 
-        /* Menghilangkan background statis hitam pekat pada header */
         .sidebar-sticky-top {
             flex-shrink: 0;
             background: transparent;
@@ -94,7 +88,7 @@
             flex: 1; 
             overflow-y: auto; 
             padding: 20px 15px;
-            -webkit-overflow-scrolling: touch; /* Membantu scroll halus di perangkat iOS/Android lama */
+            -webkit-overflow-scrolling: touch;
             touch-action: pan-y;
         }
         .scroll-container::-webkit-scrollbar { width: 4px; }
@@ -115,17 +109,17 @@
             display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;
         }
         .btn-inv {
-            background: rgba(0, 0, 0, 0.65); border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(0, 0, 0, 0.75); border: 1px solid rgba(255, 255, 255, 0.25);
             padding: 15px 10px; font-size: 10px; font-weight: 700; border-radius: 4px;
             color: #fff; cursor: pointer; transition: 0.2s; text-transform: uppercase;
             text-align: center; line-height: 1.3;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(0.1px);
+            -webkit-backdrop-filter: blur(0.1px);
         }
         .btn-inv:hover { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.3); }
         .btn-inv.active { background: var(--primary-red); border-color: var(--primary-red); box-shadow: 0 0 8px rgba(255, 59, 59, 0.6); }
 
-        /* DOWNBAR COMPONENT dibuat transparan dengan efek Blur */
+        /* DOWNBAR COMPONENT DENGAN FILTER BLUR 0.1px */
         .downbar-container {
             position: absolute;
             left: 0;
@@ -135,16 +129,15 @@
             background: var(--ui-bg);
 
             border-top: 2px solid var(--primary-red);
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.3);
             z-index: 15;
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
             padding: 15px 20px;
             overflow: hidden;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            /* Memaksa elemen UI menerima sentuhan dan mengisolasinya dari peta */
+            backdrop-filter: blur(0.1px);
+            -webkit-backdrop-filter: blur(0.1px);
             pointer-events: auto;
         }
 
@@ -178,10 +171,9 @@
             padding-bottom: 10px;
         }
 
-        /* Card list item di dalam downbar menggunakan background gelap transparan */
         .downbar-card-item {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 15px;
             border-radius: 6px;
             display: flex;
@@ -192,7 +184,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
         .downbar-card-item:hover {
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.6);
             border-color: rgba(255, 59, 59, 0.6);
         }
 
@@ -211,7 +203,7 @@
         .downbar-info-text {
             font-size: 11px; line-height: 1.5; color: var(--text-sub);
             flex: 1;
-            text-shadow: 0 1px 3px rgba(0,0,0,1); /* Memberikan bayangan teks agar terbaca jelas di atas peta */
+            text-shadow: 0 1px 4px rgba(0,0,0,1), 0 1px 8px rgba(0,0,0,1); /* Mempertebal bayangan teks agar tetap terbaca jelas */
         }
         .downbar-info-text strong { color: #fff; font-size: 14px; display: block; margin-bottom: 3px; text-shadow: 0 2px 4px #000; }
 
@@ -261,16 +253,15 @@
         }
 
         .cesium-viewer-bottom { display: none !important; }
-        /* Menggeser kontrol Cesium ke kiri agar pas di samping sidebar transparan */
         .cesium-viewer-toolbar { right: 390px !important; }
 
         @media (max-width: 768px) {
-            body, html { overflow: auto !important; } /* Izinkan scroll body global pada mobile jika konten menumpuk */
+            body, html { overflow: auto !important; }
             #cesiumContainer { height: 50%; width: 100%; position: relative; }
             .downbar-container { width: 100%; position: relative; height: auto; min-height: 250px; border-left: none; }
             .sidebar { 
                 position: relative; width: 100%; height: auto; border-left: none; 
-                border-top: 2px solid var(--primary-red); background: rgba(5,5,5,0.95);
+                border-top: 2px solid var(--primary-red); background: rgba(5,5,5,0.9);
             }
             .downbar-flex-layout { flex-direction: column; gap: 15px; }
             .video-box-gdrive { width: 100%; }
@@ -295,7 +286,7 @@
     <div class="downbar-container" id="downbarArea">
         <div class="downbar-header-title" id="downbarTitle">PILIH DATA PADA SIDEBAR</div>
         <div class="downbar-content-area" id="downbarContent">
-            <div style="color: var(--text-main); font-size: 12px; font-style: italic; text-shadow: 0 1px 2px #000;">Silakan pilih salah satu opsi fitur pilihan di sebelah kanan untuk memuat data analisis operasional ke dalam panel informasi ini.</div>
+            <div style="color: var(--text-main); font-size: 12px; font-style: italic; text-shadow: 0 1px 4px #000;">Silakan pilih salah satu opsi fitur pilihan di sebelah kanan untuk memuat data analisis operasional ke dalam panel informasi ini.</div>
         </div>
     </div>
     
@@ -343,12 +334,10 @@
         sceneModePicker: true
     });
 
-    // Perbaikan Interaksi Mobile: Menghentikan propagasi event Cesium ke UI HTML luar
     const stopPropagationElements = ['.sidebar', '.downbar-container'];
     stopPropagationElements.forEach(selector => {
         const el = document.querySelector(selector);
         if (el) {
-            // Hentikan bubble event klik dan sentuhan agar tidak memicu deteksi peta Cesium
             el.addEventListener('click', function(e) { e.stopPropagation(); }, false);
             el.addEventListener('touchstart', function(e) { e.stopPropagation(); }, { passive: true });
             el.addEventListener('touchend', function(e) { e.stopPropagation(); }, { passive: true });
@@ -356,7 +345,7 @@
         }
     });
 
-    // 2. Database Internal Sistem dengan Penambahan Koordinat Kejadian
+    // 2. Database Internal Sistem
     const dbPenipuMedia = [
         { 
             id: "m1",
@@ -404,7 +393,7 @@
         videoUrl: "https://drive.google.com/file/d/1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX/preview"
     };
 
-    // 3. Fungsi Utama Pengendali Tampilan Downbar Terintegrasi
+    // 3. Pengendali Tampilan Downbar
     function showModule(type, btnElement) {
         document.querySelectorAll('.btn-inv').forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
@@ -470,7 +459,6 @@
         }
     }
 
-    // Sub-render Penipu Media
     function renderMediaData(data) {
         const wrapper = document.getElementById('mediaContainer');
         if(!wrapper) return;
@@ -499,7 +487,6 @@
         renderMediaData(filtered);
     }
 
-    // Sub-render Penipu Langsung
     function renderLangsungData(data) {
         const wrapper = document.getElementById('langsungContainer');
         if(!wrapper) return;
@@ -528,7 +515,7 @@
         renderLangsungData(filtered);
     }
 
-    // 4. Integrasi Interaksi Peta Cesium & Fungsi Buka Google Maps
+    // 4. Integrasi Interaksi Peta Cesium
     let targetEntity = null;
 
     function focusTargetMap(lng, lat, title) {
@@ -583,6 +570,7 @@
         });
     }
 
+    // Fungsi Buka Google Maps
     function openGoogleMaps(lng, lat) {
         const gmapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
         window.open(gmapsUrl, '_blank');

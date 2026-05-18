@@ -12,11 +12,12 @@
     <style>
         :root {
             --primary-red: #ff3b3b;
-            --ui-bg: rgba(5, 5, 5, 0.95); 
-            --card-bg: rgba(255, 255, 255, 0.05); 
+            /* MENGUBAH BACKGROUND MENJADI TRANSPARAN (Nilai Alpha/Opacity diturunkan) */
+            --ui-bg: rgba(5, 5, 5, 0.65); 
+            --card-bg: rgba(0, 0, 0, 0.5); 
             --accent-glow: #ff0000;
             --text-main: #ffffff;
-            --text-sub: rgba(255, 255, 255, 0.6);
+            --text-sub: rgba(255, 255, 255, 0.82); /* Meningkatkan kontras teks sub karena bg transparan */
             --gmaps-blue: #4285F4;
             --gmaps-green: #34A853;
         }
@@ -27,14 +28,15 @@
             background: #000; color: white; 
         }
         
+        /* Mengatur ukuran peta agar memenuhi layar di belakang UI transparan */
         #cesiumContainer { 
-            position: absolute; top: 0; left: 0; width: calc(100% - 380px); height: calc(100% - 320px); z-index: 1; 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; 
             transition: 0.3s;
         }
 
         /* Instruksi Ganti Basemap */
         .map-instruction {
-            position: absolute; top: 15px; right: 440px; z-index: 20;
+            position: absolute; top: 15px; right: 430px; z-index: 20;
             display: flex; align-items: center; pointer-events: none;
             animation: pulse-glow 2s infinite;
         }
@@ -46,19 +48,21 @@
             box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* Sidebar UI */
+        /* Sidebar UI dibuat transparan dengan efek Blur di latar belakangnya */
         .sidebar { 
             position: absolute; right: 0; top: 0; width: 380px; height: 100%;
-            background: var(--ui-bg); display: flex; flex-direction: column;
+            background: var(--ui-bg); 
+           
+            display: flex; flex-direction: column;
             border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
         }
 
-        /* Pembungkus Header Tetap Statis di Atas */
+        /* Menghilangkan background statis hitam pekat pada header */
         .sidebar-sticky-top {
             flex-shrink: 0;
-            background: rgba(10, 10, 10, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .header { 
@@ -66,18 +70,17 @@
             text-align: center; 
         }
 
-        /* Styling Logo Polri */
         .polri-logo {
             width: 160px;
             height: auto;
             margin-bottom: 8px;
+            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.7));
         }
 
-        .header .unit-name { font-size: 9px; opacity: 0.7; display: block; letter-spacing: 3px; margin-bottom: 4px; text-transform: uppercase;}
+        .header .unit-name { font-size: 9px; opacity: 0.9; display: block; letter-spacing: 3px; margin-bottom: 4px; text-transform: uppercase; font-weight: 600;}
         .header .polda-name { font-size: 24px; font-weight: 900; display: block; color: var(--text-main); }
         .header .target-tag { color: var(--primary-red); font-weight: 800; font-size: 24px; text-shadow: 0 0 10px var(--accent-glow); }
 
-        /* Wadah Scroll Sidebar */
         .scroll-container { 
             flex: 1; 
             overflow-y: auto; 
@@ -87,9 +90,8 @@
         .scroll-container::-webkit-scrollbar { width: 4px; }
         .scroll-container::-webkit-scrollbar-thumb { background: var(--primary-red); }
 
-        /* Modul Fitur Pilihan */
         .investigasi-module {
-            background: rgba(255, 255, 255, 0.02);
+            background: transparent;
             padding: 5px 0px 25px 0px;
             flex-shrink: 0;
         }
@@ -97,29 +99,32 @@
             font-size: 11px; font-weight: 800; color: var(--primary-red);
             text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;
             display: flex; align-items: center; gap: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
         .inv-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;
         }
         .btn-inv {
-            background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.65); border: 1px solid rgba(255, 255, 255, 0.25);
             padding: 15px 10px; font-size: 10px; font-weight: 700; border-radius: 4px;
             color: #fff; cursor: pointer; transition: 0.2s; text-transform: uppercase;
             text-align: center; line-height: 1.3;
+            backdrop-filter: blur(4px);
         }
-        .btn-inv:hover { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.1); }
-        .btn-inv.active { background: var(--primary-red); border-color: var(--primary-red); box-shadow: 0 0 8px rgba(255, 59, 59, 0.4); }
+        .btn-inv:hover { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.3); }
+        .btn-inv.active { background: var(--primary-red); border-color: var(--primary-red); box-shadow: 0 0 8px rgba(255, 59, 59, 0.6); }
 
-        /* DOWNBAR COMPONENT */
+        /* DOWNBAR COMPONENT dibuat transparan dengan efek Blur */
         .downbar-container {
             position: absolute;
             left: 0;
             bottom: 0;
             width: calc(100% - 380px);
             height: 320px;
-            background: rgba(5, 5, 5, 0.98);
+            background: var(--ui-bg);
+
             border-top: 2px solid var(--primary-red);
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.9);
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
             z-index: 15;
             display: flex;
             flex-direction: column;
@@ -136,11 +141,11 @@
             font-weight: 800;
             margin-bottom: 15px;
             flex-shrink: 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
 
-        /* Konten Internal Downbar yang Dinamis */
         .downbar-content-area {
             flex: 1;
             overflow-y: auto;
@@ -149,7 +154,6 @@
         .downbar-content-area::-webkit-scrollbar { width: 4px; }
         .downbar-content-area::-webkit-scrollbar-thumb { background: var(--primary-red); }
 
-        /* MERUBAH GRID MENJADI LIST KE BAWAH */
         .downbar-grid-view {
             display: flex;
             flex-direction: column;
@@ -157,9 +161,10 @@
             padding-bottom: 10px;
         }
 
+        /* Card list item di dalam downbar menggunakan background gelap transparan */
         .downbar-card-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 15px;
             border-radius: 6px;
             display: flex;
@@ -167,10 +172,11 @@
             align-items: center;
             cursor: pointer;
             transition: background 0.2s, border-color 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
         .downbar-card-item:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: rgba(255, 59, 59, 0.4);
+            background: rgba(0, 0, 0, 0.75);
+            border-color: rgba(255, 59, 59, 0.6);
         }
 
         .downbar-photo-thumb {
@@ -181,17 +187,17 @@
 
         .downbar-photo-large {
             width: 140px; height: 85px; object-fit: cover;
-            border-radius: 4px; border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 4px; border: 1px solid rgba(255,255,255,0.25);
             flex-shrink: 0;
         }
 
         .downbar-info-text {
             font-size: 11px; line-height: 1.5; color: var(--text-sub);
             flex: 1;
+            text-shadow: 0 1px 3px rgba(0,0,0,1); /* Memberikan bayangan teks agar terbaca jelas di atas peta */
         }
-        .downbar-info-text strong { color: #fff; font-size: 14px; display: block; margin-bottom: 3px;}
+        .downbar-info-text strong { color: #fff; font-size: 14px; display: block; margin-bottom: 3px; text-shadow: 0 2px 4px #000; }
 
-        /* Tombol Aksi Lokasi Google Maps */
         .btn-gmaps {
             background: var(--gmaps-green);
             color: #fff;
@@ -210,12 +216,11 @@
             box-shadow: 0 0 10px rgba(52, 168, 83, 0.4);
         }
 
-        /* Pencarian Internal di Downbar */
         .downbar-search-wrapper {
             margin-bottom: 15px; display: flex; gap: 8px; max-width: 400px;
         }
         .downbar-search-wrapper input {
-            flex: 1; background: #000; border: 1px solid var(--primary-red);
+            flex: 1; background: rgba(0, 0, 0, 0.7); border: 1px solid var(--primary-red);
             padding: 8px 12px; color: #fff; font-size: 12px; border-radius: 4px; outline: none;
         }
         .downbar-search-wrapper button {
@@ -223,7 +228,6 @@
             border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; text-transform: uppercase;
         }
 
-        /* Flex layout untuk Hadiah/Agen/Bantuan */
         .downbar-flex-layout {
             display: flex; gap: 25px; align-items: flex-start;
         }
@@ -240,7 +244,8 @@
         }
 
         .cesium-viewer-bottom { display: none !important; }
-        .cesium-viewer-toolbar { right: 0px !important; }
+        /* Menggeser kontrol Cesium ke kiri agar pas di samping sidebar transparan */
+        .cesium-viewer-toolbar { right: 390px !important; }
 
         @media (max-width: 768px) {
             #cesiumContainer { height: 40%; width: 100%; }
@@ -272,7 +277,7 @@
     <div class="downbar-container" id="downbarArea">
         <div class="downbar-header-title" id="downbarTitle">PILIH DATA PADA SIDEBAR</div>
         <div class="downbar-content-area" id="downbarContent">
-            <div style="color: var(--text-sub); font-size: 12px; font-style: italic;">Silakan pilih salah satu opsi fitur pilihan di sebelah kanan untuk memuat data analisis operasional ke dalam panel informasi ini.</div>
+            <div style="color: var(--text-main); font-size: 12px; font-style: italic; text-shadow: 0 1px 2px #000;">Silakan pilih salah satu opsi fitur pilihan di sebelah kanan untuk memuat data analisis operasional ke dalam panel informasi ini.</div>
         </div>
     </div>
     
@@ -417,7 +422,7 @@
         } else if (type === 'agen') {
             title.innerHTML = "Jasa Agen Lapangan";
             content.innerHTML = `
-                <div class="downbar-info-text" style="font-size: 13px; max-width: 800px; background: rgba(255,255,255,0.02); padding: 15px; border-left: 3px solid var(--primary-red); border-radius: 4px;">
+                <div class="downbar-info-text" style="font-size: 13px; max-width: 800px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid var(--primary-red); border-radius: 4px;">
                     <strong>OPERASI INTELIJEN & DETEKTIF SWASTA:</strong><br><br>
                     Penyediaan unit detektif khusus lapangan yang andal untuk melakukan penelusuran identitas asli pelaku siber, pemantauan aset tanah sengketa fisik, pencarian data primer, serta investigasi rekam jejak internal sindikat secara tertutup dan rahasia tanpa terdeteksi pihak luar.
                 </div>
@@ -426,7 +431,7 @@
         } else if (type === 'bantuan') {
             title.innerHTML = "Bantuan Penemu";
             content.innerHTML = `
-                <div class="downbar-info-text" style="font-size: 13px; max-width: 800px; background: rgba(37, 211, 102, 0.05); padding: 15px; border-left: 3px solid #25D366; border-radius: 4px;">
+                <div class="downbar-info-text" style="font-size: 13px; max-width: 800px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid #25D366; border-radius: 4px;">
                     <strong style="color: #25D366;">PROTEKSI INFORMAL DAN ENKRIPSI DATA DATA SAKSI:</strong><br><br>
                     Layanan pengaduan darurat khusus bagi para informan maupun saksi kunci tindak pidana. Seluruh data parameter identitas fisik, IP Address, and nomor kontak pelapor dilindungi secara penuh menggunakan protokol terenkripsi end-to-end, dijamin **100% Anonim** demi keselamatan saksi beserta keluarga.
                 </div>
@@ -439,7 +444,7 @@
         const wrapper = document.getElementById('mediaContainer');
         if(!wrapper) return;
         if(data.length === 0) {
-            wrapper.innerHTML = `<div style="color:var(--primary-red); font-size:11px;">Nomor telepon target tidak terdaftar dalam database penipuan siber.</div>`;
+            wrapper.innerHTML = `<div style="color:var(--primary-red); font-size:11px; font-weight: bold; text-shadow: 0 1px 2px #000;">Nomor telepon target tidak terdaftar dalam database penipuan siber.</div>`;
             return;
         }
         wrapper.innerHTML = data.map(item => `
@@ -449,7 +454,7 @@
                     <strong>${item.telp}</strong>
                     <span>Status: Terlapor</span><br>
                     <span>Keterangan: ${item.desk}</span><br>
-                    <span style="color:var(--primary-red); font-weight:bold;">Koordinat Kejadian: ${item.lat}, ${item.lng} (${item.lokasi})</span>
+                    <span style="color:#ff5252; font-weight:bold;">Koordinat Kejadian: ${item.lat}, ${item.lng} (${item.lokasi})</span>
                 </div>
                 <button class="btn-gmaps" onclick="event.stopPropagation(); openGoogleMaps(${item.lng}, ${item.lat})">LOKASI</button>
             </div>
@@ -468,7 +473,7 @@
         const wrapper = document.getElementById('langsungContainer');
         if(!wrapper) return;
         if(data.length === 0) {
-            wrapper.innerHTML = `<div style="color:var(--primary-red); font-size:11px;">Nama tersangka atau kasus tidak ditemukan dalam daftar pencarian orang.</div>`;
+            wrapper.innerHTML = `<div style="color:var(--primary-red); font-size:11px; font-weight: bold; text-shadow: 0 1px 2px #000;">Nama tersangka atau kasus tidak ditemukan dalam daftar pencarian orang.</div>`;
             return;
         }
         wrapper.innerHTML = data.map(item => `
@@ -476,9 +481,9 @@
                 <img src="${item.foto}" class="downbar-photo-thumb" alt="DPO Target">
                 <div class="downbar-info-text">
                     <strong>${item.nama}</strong>
-                    <span style="color: var(--primary-red); font-weight:bold;">Status: DPO BURONAN</span><br>
+                    <span style="color: #ff5252; font-weight:bold;">Status: DPO BURONAN</span><br>
                     <span>Kasus: ${item.kasus}</span><br>
-                    <span style="color:var(--primary-red); font-weight:bold;">Koordinat Kejadian: ${item.lat}, ${item.lng} (${item.lokasi})</span>
+                    <span style="color:#ff5252; font-weight:bold;">Koordinat Kejadian: ${item.lat}, ${item.lng} (${item.lokasi})</span>
                 </div>
                 <button class="btn-gmaps" onclick="event.stopPropagation(); openGoogleMaps(${item.lng}, ${item.lat})">LOKASI</button>
             </div>
@@ -496,14 +501,12 @@
     let targetEntity = null;
 
     function focusTargetMap(lng, lat, title) {
-        // Hapus entity sebelumnya jika ada
         if (targetEntity) {
             viewer.entities.remove(targetEntity);
         }
 
         const position = Cesium.Cartesian3.fromDegrees(lng, lat, 0);
 
-        // String SVG Target Frame Box sesuai permintaan
         const targetSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
             <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="#ff3b3b" stroke-width="6"/>
             <path d="M 70 10 L 90 10 L 90 30" fill="none" stroke="#ff3b3b" stroke-width="6"/>
@@ -513,15 +516,13 @@
             <circle cx="50" cy="50" r="5" fill="#ff3b3b" />
         </svg>`;
 
-        // Tambahkan Objek Kustom Berupa Billboard SVG dengan Animasi Pulse Kustom berbasis Waktu Realtime
         targetEntity = viewer.entities.add({
             position: position,
             name: title,
             billboard: {
                 image: 'data:image/svg+xml;base64,' + btoa(targetSvg),
-                // CallbackProperty untuk menghitung animasi denyut ukuran secara halus (realtime)
                 scale: new Cesium.CallbackProperty(() => {
-                    const timeFactor = Date.now() * 0.004; // Kontrol kecepatan kedipan
+                    const timeFactor = Date.now() * 0.004;
                     return 0.7 + Math.abs(Math.sin(timeFactor)) * 0.4; 
                 }, false),
                 verticalOrigin: Cesium.VerticalOrigin.CENTER,
@@ -535,24 +536,22 @@
                 outlineWidth: 4,
                 style: Cesium.LabelStyle.FILL_AND_OUTLINE,
                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                pixelOffset: new Cesium.Cartesian2(0, -40), // Jarak teks vertikal dari pusat billboard
+                pixelOffset: new Cesium.Cartesian2(0, -40),
                 heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
             }
         });
 
-        // Animasi Terbang (Fly-To) Mengarah ke Target Koordinat Kejadian
         viewer.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 1500.0), // Ketinggian kamera (1.5 Km)
+            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 1500.0),
             orientation: {
                 heading: Cesium.Math.toRadians(0.0),
-                pitch: Cesium.Math.toRadians(-45.0), // Sudut kemiringan kamera (oblique)
+                pitch: Cesium.Math.toRadians(-45.0),
                 roll: 0.0
             },
-            duration: 2.0 // Durasi terbang 2 detik
+            duration: 2.0
         });
     }
 
-    // Fungsi membuka Google Maps dengan parameter koordinat eksisting
     function openGoogleMaps(lng, lat) {
         const gmapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
         window.open(gmapsUrl, '_blank');

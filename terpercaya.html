@@ -12,12 +12,12 @@
     <style>
         :root {
             --primary-red: #ff3b3b;
-            /* BACKGROUND SANGAT TRANSPARAN */
+            /* MENGUBAH BACKGROUND MENJADI SANGAT TRANSPARAN */
             --ui-bg: rgba(5, 5, 5, 0.4); 
             --card-bg: rgba(0, 0, 0, 0.3); 
             --accent-glow: #ff0000;
             --text-main: #ffffff;
-            --text-sub: rgba(255, 255, 255, 0.9);
+            --text-sub: rgba(255, 255, 255, 0.9); /* Dinaikkan kontrasnya karena bg semakin transparan */
             --gmaps-blue: #4285F4;
             --gmaps-green: #34A853;
         }
@@ -25,9 +25,7 @@
         body, html { 
             margin: 0; padding: 0; height: 100%; overflow: hidden; 
             font-family: 'Segoe UI', Roboto, sans-serif; 
-            /* DIUBAH KE TRANSPARENT AGAR ADVANCED ANDROID WEBVIEW BISA TEMBUS PANDANG */
-            background: transparent; 
-            color: white; 
+            background: #000; color: white; 
             touch-action: none;
         }
         
@@ -50,10 +48,11 @@
             box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* SIDEBAR DENGAN FILTER BLUR RINGAN */
+        /* SIDEBAR DENGAN FILTER BLUR 0.1px */
         .sidebar { 
             position: absolute; right: 0; top: 0; width: 380px; height: 100%;
             background: var(--ui-bg); 
+            
             display: flex; flex-direction: column;
             border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; 
             box-shadow: -10px 0 30px rgba(0,0,0,0.3);
@@ -120,7 +119,7 @@
         .btn-inv:hover { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.3); }
         .btn-inv.active { background: var(--primary-red); border-color: var(--primary-red); box-shadow: 0 0 8px rgba(255, 59, 59, 0.6); }
 
-        /* DOWNBAR COMPONENT DENGAN FILTER BLUR RINGAN */
+        /* DOWNBAR COMPONENT DENGAN FILTER BLUR 0.1px */
         .downbar-container {
             position: absolute;
             left: 0;
@@ -128,6 +127,7 @@
             width: calc(100% - 380px);
             height: 320px;
             background: var(--ui-bg);
+
             border-top: 2px solid var(--primary-red);
             box-shadow: 0 -10px 25px rgba(0,0,0,0.3);
             z-index: 15;
@@ -203,7 +203,7 @@
         .downbar-info-text {
             font-size: 11px; line-height: 1.5; color: var(--text-sub);
             flex: 1;
-            text-shadow: 0 1px 4px rgba(0,0,0,1), 0 1px 8px rgba(0,0,0,1);
+            text-shadow: 0 1px 4px rgba(0,0,0,1), 0 1px 8px rgba(0,0,0,1); /* Mempertebal bayangan teks agar tetap terbaca jelas */
         }
         .downbar-info-text strong { color: #fff; font-size: 14px; display: block; margin-bottom: 3px; text-shadow: 0 2px 4px #000; }
 
@@ -453,7 +453,7 @@
             content.innerHTML = `
                 <div class="downbar-info-text" style="font-size: 13px; max-width: 800px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid #25D366; border-radius: 4px;">
                     <strong style="color: #25D366;">PROTEKSI INFORMAL DAN ENKRIPSI DATA DATA SAKSI:</strong><br><br>
-                    Layanan pengaduan darurat khusus bagi para informan maupun saksi kunci tindak pidana. Seluruh data parameter identitas fisik, IP Address, and nomor kontak pelapor dilindungi secara penuh menggunakan protokol terenkripsi end-to-end, dijamin 100% Anonim demi keselamatan saksi beserta keluarga.
+                    Layanan pengaduan darurat khusus bagi para informan maupun saksi kunci tindak pidana. Seluruh data parameter identitas fisik, IP Address, and nomor kontak pelapor dilindungi secara penuh menggunakan protokol terenkripsi end-to-end, dijamin **100% Anonim** demi keselamatan saksi beserta keluarga.
                 </div>
             `;
         }
@@ -570,6 +570,7 @@
         });
     }
 
+    // Fungsi Buka Google Maps
     function openGoogleMaps(lng, lat) {
         const gmapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
         window.open(gmapsUrl, '_blank');

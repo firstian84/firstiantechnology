@@ -9,116 +9,124 @@
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
     
+   
     <style>
         :root {
             --primary-red: #ff3b3b;
             /* MENGUBAH BACKGROUND MENJADI SANGAT TRANSPARAN */
-            --ui-bg: rgba(5, 5, 5, 0.4); 
-            --card-bg: rgba(0, 0, 0, 0.3); 
+            --ui-bg: rgba(5, 5, 5, 0.4);
+            --card-bg: rgba(0, 0, 0, 0.3);
             --accent-glow: #ff0000;
             --text-main: #ffffff;
-            --text-sub: rgba(255, 255, 255, 0.9); /* Dinaikkan kontrasnya karena bg semakin transparan */
+            --text-sub: rgba(255, 255, 255, 0.9);
+            /* Dinaikkan kontrasnya karena bg semakin transparan */
             --gmaps-blue: #4285F4;
             --gmaps-green: #34A853;
         }
-
-        body, html { 
-            margin: 0; padding: 0; height: 100%; overflow: hidden; 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background: #000; color: white; 
+        body, html {
+            margin: 0;
+            padding: 0; height: 100%; overflow: hidden;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: #000; color: white;
             touch-action: none;
         }
-        
-        #cesiumContainer { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; 
+       
+        #cesiumContainer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
             transition: 0.3s;
             pointer-events: auto;
         }
-
         .map-instruction {
-            position: absolute; top: 15px; right: 430px; z-index: 20;
+            position: absolute;
+            top: 15px; right: 430px; z-index: 20;
             display: flex; align-items: center; pointer-events: none;
             animation: pulse-glow 2s infinite;
         }
-
         .instruction-text {
-            background: var(--primary-red); color: white; padding: 8px 15px;
+            background: var(--primary-red);
+            color: white; padding: 8px 15px;
             border-radius: 4px; font-size: 11px; font-weight: 800;
             text-transform: uppercase; letter-spacing: 1px;
             box-shadow: 0 0 15px var(--accent-glow);
         }
-
         /* SIDEBAR DENGAN FILTER BLUR 0.1px */
-        .sidebar { 
-            position: absolute; right: 0; top: 0; width: 380px; height: 100%;
-            background: var(--ui-bg); 
-            
+        .sidebar {
+            position: absolute;
+            right: 0; top: 0; width: 380px; height: 100%;
+            background: var(--ui-bg);
+           
             display: flex; flex-direction: column;
-            border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; 
+            border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10;
             box-shadow: -10px 0 30px rgba(0,0,0,0.3);
             backdrop-filter: blur(0.1px);
             -webkit-backdrop-filter: blur(0.1px);
             pointer-events: auto;
             touch-action: pan-y;
         }
-
         .sidebar-sticky-top {
             flex-shrink: 0;
             background: transparent;
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
-
-        .header { 
-            padding: 25px 20px; 
-            text-align: center; 
+        .header {
+            padding: 25px 20px;
+            text-align: center;
         }
-
         .polri-logo {
             width: 160px;
             height: auto;
             margin-bottom: 8px;
             filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.7));
         }
-
-        .header .unit-name { font-size: 9px; opacity: 0.9; display: block; letter-spacing: 3px; margin-bottom: 4px; text-transform: uppercase; font-weight: 600;}
-        .header .polda-name { font-size: 24px; font-weight: 900; display: block; color: var(--text-main); }
-        .header .target-tag { color: var(--primary-red); font-weight: 800; font-size: 24px; text-shadow: 0 0 10px var(--accent-glow); }
-
-        .scroll-container { 
-            flex: 1; 
-            overflow-y: auto; 
+        .header .unit-name { font-size: 9px;
+            opacity: 0.9; display: block; letter-spacing: 3px; margin-bottom: 4px; text-transform: uppercase;
+            font-weight: 600;}
+        .header .polda-name { font-size: 24px; font-weight: 900; display: block; color: var(--text-main);
+        }
+        .header .target-tag { color: var(--primary-red); font-weight: 800; font-size: 24px;
+            text-shadow: 0 0 10px var(--accent-glow); }
+        .scroll-container {
+            flex: 1;
+            overflow-y: auto;
             padding: 20px 15px;
             -webkit-overflow-scrolling: touch;
             touch-action: pan-y;
         }
-        .scroll-container::-webkit-scrollbar { width: 4px; }
-        .scroll-container::-webkit-scrollbar-thumb { background: var(--primary-red); }
-
+        .scroll-container::-webkit-scrollbar { width: 4px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb { background: var(--primary-red);
+        }
         .investigasi-module {
             background: transparent;
             padding: 5px 0px 25px 0px;
             flex-shrink: 0;
         }
         .inv-title {
-            font-size: 11px; font-weight: 800; color: var(--primary-red);
+            font-size: 11px;
+            font-weight: 800; color: var(--primary-red);
             text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;
             display: flex; align-items: center; gap: 6px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
         .inv-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;
         }
         .btn-inv {
-            background: rgba(0, 0, 0, 0.75); border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             padding: 15px 10px; font-size: 10px; font-weight: 700; border-radius: 4px;
-            color: #fff; cursor: pointer; transition: 0.2s; text-transform: uppercase;
+            color: #fff; cursor: pointer;
+            transition: 0.2s; text-transform: uppercase;
             text-align: center; line-height: 1.3;
             backdrop-filter: blur(0.1px);
             -webkit-backdrop-filter: blur(0.1px);
         }
-        .btn-inv:hover { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.3); }
-        .btn-inv.active { background: var(--primary-red); border-color: var(--primary-red); box-shadow: 0 0 8px rgba(255, 59, 59, 0.6); }
-
+        .btn-inv:hover { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.3);
+        }
+        .btn-inv.active { background: var(--primary-red); border-color: var(--primary-red);
+            box-shadow: 0 0 8px rgba(255, 59, 59, 0.6); }
         /* DOWNBAR COMPONENT DENGAN FILTER BLUR 0.1px */
         .downbar-container {
             position: absolute;
@@ -127,7 +135,6 @@
             width: calc(100% - 380px);
             height: 320px;
             background: var(--ui-bg);
-
             border-top: 2px solid var(--primary-red);
             box-shadow: 0 -10px 25px rgba(0,0,0,0.3);
             z-index: 15;
@@ -140,7 +147,6 @@
             -webkit-backdrop-filter: blur(0.1px);
             pointer-events: auto;
         }
-
         .downbar-header-title {
             font-size: 12px;
             text-transform: uppercase;
@@ -153,7 +159,6 @@
             padding-bottom: 8px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
-
         .downbar-content-area {
             flex: 1;
             overflow-y: auto;
@@ -161,16 +166,16 @@
             -webkit-overflow-scrolling: touch;
             touch-action: pan-y;
         }
-        .downbar-content-area::-webkit-scrollbar { width: 4px; }
-        .downbar-content-area::-webkit-scrollbar-thumb { background: var(--primary-red); }
-
+        .downbar-content-area::-webkit-scrollbar { width: 4px;
+        }
+        .downbar-content-area::-webkit-scrollbar-thumb { background: var(--primary-red);
+        }
         .downbar-grid-view {
             display: flex;
             flex-direction: column;
             gap: 12px;
             padding-bottom: 10px;
         }
-
         .downbar-card-item {
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -187,26 +192,28 @@
             background: rgba(0, 0, 0, 0.6);
             border-color: rgba(255, 59, 59, 0.6);
         }
-
         .downbar-photo-thumb {
-            width: 65px; height: 65px; object-fit: cover; 
+            width: 65px;
+            height: 65px; object-fit: cover;
             border-radius: 4px; border: 1px solid var(--primary-red);
             flex-shrink: 0;
         }
-
         .downbar-photo-large {
-            width: 140px; height: 85px; object-fit: cover;
+            width: 140px;
+            height: 85px; object-fit: cover;
             border-radius: 4px; border: 1px solid rgba(255,255,255,0.25);
             flex-shrink: 0;
         }
-
         .downbar-info-text {
-            font-size: 11px; line-height: 1.5; color: var(--text-sub);
+            font-size: 11px;
+            line-height: 1.5; color: var(--text-sub);
             flex: 1;
-            text-shadow: 0 1px 4px rgba(0,0,0,1), 0 1px 8px rgba(0,0,0,1); /* Mempertebal bayangan teks agar tetap terbaca jelas */
+            text-shadow: 0 1px 4px rgba(0,0,0,1), 0 1px 8px rgba(0,0,0,1);
+            /* Mempertebal bayangan teks agar tetap terbaca jelas */
         }
-        .downbar-info-text strong { color: #fff; font-size: 14px; display: block; margin-bottom: 3px; text-shadow: 0 2px 4px #000; }
-
+        .downbar-info-text strong { color: #fff;
+            font-size: 14px; display: block; margin-bottom: 3px; text-shadow: 0 2px 4px #000;
+        }
         .btn-gmaps {
             background: var(--gmaps-green);
             color: #fff;
@@ -224,53 +231,84 @@
             background: #2b8c44;
             box-shadow: 0 0 10px rgba(52, 168, 83, 0.4);
         }
-
         .downbar-search-wrapper {
-            margin-bottom: 15px; display: flex; gap: 8px; max-width: 400px;
+            margin-bottom: 15px;
+            display: flex; gap: 8px; max-width: 400px;
         }
         .downbar-search-wrapper input {
-            flex: 1; background: rgba(0, 0, 0, 0.7); border: 1px solid var(--primary-red);
+            flex: 1;
+            background: rgba(0, 0, 0, 0.7); border: 1px solid var(--primary-red);
             padding: 8px 12px; color: #fff; font-size: 12px; border-radius: 4px; outline: none;
         }
         .downbar-search-wrapper button {
-            background: var(--gmaps-blue); border: none; color: white; padding: 0 15px;
+            background: var(--gmaps-blue);
+            border: none; color: white; padding: 0 15px;
             border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; text-transform: uppercase;
         }
-
         .downbar-flex-layout {
-            display: flex; gap: 25px; align-items: flex-start;
+            display: flex;
+            gap: 25px; align-items: flex-start;
         }
         .video-box-gdrive {
-            width: 340px; flex-shrink: 0;
+            width: 340px;
+            flex-shrink: 0;
         }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; width: 100%; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000;
+            width: 100%; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15);
+        }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%;
+            height: 100%; border: none; }
         @keyframes pulse-glow {
-            0% { opacity: 0.6; transform: translateX(0); }
-            50% { opacity: 1; transform: translateX(5px); }
-            100% { opacity: 0.6; transform: translateX(0); }
+            0% { opacity: 0.6;
+                transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(5px);
+            }
+            100% { opacity: 0.6; transform: translateX(0);
+            }
+        }
+        
+        /* CSS BARU UNTUK KEPENTINGAN TEKS BERKEDIP MERAH */
+        .blink-red-text {
+            color: #ff3b3b !important;
+            animation: blink-animation 1.2s steps(2, start) infinite;
+            text-shadow: 0 0 8px rgba(255, 59, 59, 0.5);
+        }
+        @keyframes blink-animation {
+            to { visibility: hidden; }
         }
 
-        .cesium-viewer-bottom { display: none !important; }
-        .cesium-viewer-toolbar { right: 390px !important; }
-
+        .cesium-viewer-bottom { display: none !important;
+        }
+        .cesium-viewer-toolbar { right: 390px !important;
+        }
         @media (max-width: 768px) {
-            body, html { overflow: auto !important; }
-            #cesiumContainer { height: 50%; width: 100%; position: relative; }
-            .downbar-container { width: 100%; position: relative; height: auto; min-height: 250px; border-left: none; }
-            .sidebar { 
-                position: relative; width: 100%; height: auto; border-left: none; 
+            body, html { overflow: auto !important;
+        }
+            #cesiumContainer { height: 50%; width: 100%; position: relative;
+        }
+            .downbar-container { width: 100%; position: relative; height: auto;
+                min-height: 250px; border-left: none; }
+            .sidebar {
+                position: relative;
+                width: 100%; height: auto; border-left: none;
                 border-top: 2px solid var(--primary-red); background: rgba(5,5,5,0.9);
             }
-            .downbar-flex-layout { flex-direction: column; gap: 15px; }
-            .video-box-gdrive { width: 100%; }
-            .cesium-viewer-toolbar { right: 10px !important; top: 10px !important; }
-            .map-instruction { right: 10px; top: 50px; }
-            .polri-logo { width: 120px; }
-            .header .unit-name   { font-size: 6px; }
-            .header .polda-name { font-size: 18px; }
-            .header .target-tag { font-size: 22px; }
+            .downbar-flex-layout { flex-direction: column; gap: 15px;
+            }
+            .video-box-gdrive { width: 100%;
+            }
+            .cesium-viewer-toolbar { right: 10px !important; top: 10px !important;
+            }
+            .map-instruction { right: 10px; top: 50px;
+            }
+            .polri-logo { width: 120px;
+            }
+            .header .unit-name { font-size: 6px;
+            }
+            .header .polda-name { font-size: 18px;
+            }
+            .header .target-tag { font-size: 22px;
+            }
         }
     </style>
 </head>
@@ -386,21 +424,17 @@
             lng: 115.188919, lat: -8.650052, lokasi: "Denpasar, Bali"
         }
     ];
-
-    const dbHadiahPenemuan = {
+  const dbHadiahPenemuan = {
         judul: "#PEMILIK DEPOSIT KE DEVELOPER SESUAI KESEPAKATAN HADIAH <br>#10% DARI NILAI HADIAH MENJADI ROYALTI DEVELOPER <br>#JIKA TIDAK DITEMUKAN DALAM 1TAHUN DEPOSIT DIKEMBALIKAN- <br>KE OWNER DAN NILAI HADIAH 10% MENJADI FEE ADD SENSE DEVELOPER <br>#ASET SELAMA 3TAHUN TIDAK DITEMUKAN KESEPAKATAN BERAKHIR <br>#JIKA ASET DITEMUKAN NILAI HADIAH 10% MENJADI OPRASIONAL DEVELOPER",
-        desk: "PROJECT-01<br>Laporan informasi mengenai pelarian DPO utama untuk penemuan data aset hak milik a/n...   . <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 5.000.000</strong> #Dengan potongan 20% sebagai royalti developer. <br>  <strong> diterima sebesar = Rp 4.000.000</strong> ",
+        desk: "PROJECT-01<br>Laporan informasi mengenai pelarian DPO utama untuk penemuan data aset hak milik a/n... . <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 5.000.000</strong> #Dengan potongan 20% sebagai royalti developer. <br> <strong> diterima sebesar = Rp 4.000.000</strong> ",
         videoUrl: "https://drive.google.com/file/d/1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX/preview"
     };
-
     // 3. Pengendali Tampilan Downbar
     function showModule(type, btnElement) {
         document.querySelectorAll('.btn-inv').forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
-
         const title = document.getElementById('downbarTitle');
         const content = document.getElementById('downbarContent');
-
         if (type === 'media') {
             title.innerHTML = "Daftar Pelaku Media";
             content.innerHTML = `
@@ -408,10 +442,10 @@
                     <input type="text" id="srcMedia" placeholder="Cari / input nomor telepon pelapor..." onkeyup="searchMediaAction()">
                     <button onclick="searchMediaAction()">CARI</button>
                 </div>
+               
                 <div class="downbar-grid-view" id="mediaContainer"></div>
             `;
             renderMediaData(dbPenipuMedia);
-
         } else if (type === 'langsung') {
             title.innerHTML = "Daftar Pelaku Langsung";
             content.innerHTML = `
@@ -419,32 +453,35 @@
                     <input type="text" id="srcLangsung" placeholder="Cari nama tersangka atau nama kasus..." onkeyup="searchLangsungAction()">
                     <button onclick="searchLangsungAction()">CARI</button>
                 </div>
+               
                 <div class="downbar-grid-view" id="langsungContainer"></div>
             `;
             renderLangsungData(dbPenipuLangsung);
-
         } else if (type === 'hadiah') {
             title.innerHTML = "kesepakatan hadiah";
             content.innerHTML = `
                 <div class="downbar-flex-layout">
                     <div class="downbar-info-text" style="font-size:12px;">
-                        <strong>${dbHadiahPenemuan.judul}</strong><br><br>
+                        <strong class="blink-red-text">${dbHadiahPenemuan.judul}</strong><br><br>
                         ${dbHadiahPenemuan.desk}
+           
                     </div>
                     <div class="video-box-gdrive">
                         <div class="video-wrapper">
                             <iframe src="${dbHadiahPenemuan.videoUrl}" allow="autoplay" allowfullscreen></iframe>
+              
                         </div>
                     </div>
                 </div>
             `;
-
         } else if (type === 'agen') {
             title.innerHTML = "kesepakatan Jasa Agen Lapangan";
             content.innerHTML = `
                 <div class="downbar-info-text" style="font-size: 13px; max-width: 800px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid var(--primary-red); border-radius: 4px;">
-                    <strong>#JASA AGEN PENEMU 50% DARI HARGA BARANG DIJUAL <br>#50% DARI NILAI JASA AGEN MERUPAKAN ROYALTI DEVELOPER <br>#PEMILIK DEPOSIT 50% DARI HARGA BARANG DIJUAL KE DEVELOPER <br>#JIKA DITEMUKAN DEPOSIT MENJADI OPRASIONAL DEVELOPER <br>#JIKA TIDAK DITEMUKAN, DEPOSIT DARI HARGA BARANG DIJUAL <br>#DIKEMBALIKAN 50% KARENA 50% SISA NILAINYA TERPAKAI UNTUK <br>OPERASIONAL TEKNOLOGI</strong><br><br>
-                    Laporan informasi mengenai pelarian DPO utama untuk penemuan data aset hak milik a/n...   . <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 100.000.000</strong> #Dengan potongan 50% sebagai royalti developer. <br>  <strong> diterima sebesar = Rp 50.000.000</strong>.
+                    <strong class="blink-red-text">#JASA AGEN PENEMU 50% DARI HARGA BARANG DIJUAL <br>#50% DARI NILAI JASA AGEN MERUPAKAN ROYALTI DEVELOPER <br>#PEMILIK DEPOSIT 50% DARI HARGA BARANG DIJUAL KE DEVELOPER <br>#JIKA DITEMUKAN DEPOSIT MENJADI OPRASIONAL DEVELOPER <br>#JIKA TIDAK DITEMUKAN, DEPOSIT DARI HARGA BARANG DIJUAL <br>#DIKEMBALIKAN 50% KARENA 50% SISA NILAINYA TERPAKAI UNTUK <br>OPERASIONAL TEKNOLOGI</strong><br><br>
+                    Laporan informasi mengenai pelarian DPO utama untuk penemuan data aset hak milik a/n... .
+                    <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 100.000.000</strong> #Dengan potongan 50% sebagai royalti developer.
+                    <br> <strong> diterima sebesar = Rp 50.000.000</strong>.
                 </div>
             `;
 

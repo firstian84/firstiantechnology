@@ -28,7 +28,7 @@
             background: #000; color: white;
             touch-action: none;
         }
-       
+        
         #cesiumContainer {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
@@ -53,7 +53,7 @@
             position: absolute;
             right: 0; top: 0; width: 380px; height: 100%;
             background: var(--ui-bg);
-           
+            
             display: flex; flex-direction: column;
             border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10;
             box-shadow: -10px 0 30px rgba(0,0,0,0.3);
@@ -195,12 +195,20 @@
             height: 65px; object-fit: cover;
             border-radius: 4px; border: 1px solid var(--primary-red);
             flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .downbar-photo-thumb:hover {
+            transform: scale(1.05);
         }
         .downbar-photo-large {
             width: 140px;
             height: 85px; object-fit: cover;
             border-radius: 4px; border: 1px solid rgba(255,255,255,0.25);
             flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .downbar-photo-large:hover {
+            transform: scale(1.03);
         }
         .downbar-info-text {
             font-size: 11px;
@@ -269,7 +277,7 @@
             }
         }
         
-        /* CSS BARU UNTUK KEPENTINGAN TEKS BERKEDIP MERAH */
+        /* CSS KEPENTINGAN TEKS BERKEDIP MERAH */
         .blink-red-text {
             color: #ff3b3b !important;
             animation: blink-animation 1.2s steps(2, start) infinite;
@@ -283,11 +291,85 @@
         }
         .cesium-viewer-toolbar { right: 390px !important;
         }
+        
+        /* CSS KOMPONEN MODAL POPUP MEDIA/IMAGE */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .custom-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .custom-modal-wrapper {
+            position: relative;
+            max-width: 90%;
+            max-height: 85%;
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid var(--primary-red);
+            box-shadow: 0 0 30px var(--accent-glow);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: scale(0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .custom-modal-overlay.active .custom-modal-wrapper {
+            transform: scale(1);
+        }
+        .custom-modal-close {
+            position: absolute;
+            top: -15px; right: -15px;
+            width: 32px; height: 32px;
+            background: var(--primary-red);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            color: #fff; font-size: 16px; font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            z-index: 10001;
+        }
+        .custom-modal-media-content {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        .custom-modal-iframe-content {
+            width: 80vw;
+            height: 45vw;
+            max-width: 1000px;
+            max-height: 562px;
+            border: none;
+            border-radius: 4px;
+        }
+        .custom-modal-caption {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px #000;
+        }
+
         @media (max-width: 768px) {
             body, html { overflow: auto !important;
-        }
+            }
             #cesiumContainer { height: 50%; width: 100%; position: relative;
-        }
+            }
             .downbar-container { width: 100%; position: relative; height: auto;
                 min-height: 250px; border-left: none; }
             .sidebar {
@@ -310,6 +392,10 @@
             .header .polda-name { font-size: 18px;
             }
             .header .target-tag { font-size: 22px;
+            }
+            .custom-modal-iframe-content {
+                width: 90vw;
+                height: 50.62vw;
             }
         }
     </style>
@@ -356,6 +442,14 @@
         </div>
     </div>
 
+    <div class="custom-modal-overlay" id="mediaModal" onclick="closeMediaModal()">
+        <div class="custom-modal-wrapper" onclick="event.stopPropagation()">
+            <button class="custom-modal-close" onclick="closeMediaModal()">&times;</button>
+            <div id="modalMediaContainer"></div>
+            <div class="custom-modal-caption" id="modalMediaCaption"></div>
+        </div>
+    </div>
+
 <script>
     // 1. Inisialisasi Viewer Cesium
     const viewer = new Cesium.Viewer('cesiumContainer', {
@@ -371,7 +465,7 @@
         sceneModePicker: true
     });
 
-    const stopPropagationElements = ['.sidebar', '.downbar-container'];
+    const stopPropagationElements = ['.sidebar', '.downbar-container', '.custom-modal-overlay'];
     stopPropagationElements.forEach(selector => {
         const el = document.querySelector(selector);
         if (el) {
@@ -382,27 +476,27 @@
         }
     });
 
-    // 2. Database Internal Sistem
+    // 2. Database Internal Sistem (Foto diperbarui menggunakan path/link internal Google Drive seperti modul penemuan)
     const dbPenipuMedia = [
         { 
             id: "m1",
             telp: "081299887766", 
             desk: "Sindikat Fake Giveaway & Undian Berhadiah Atas Nama Perusahaan",
-            foto: "https://placehold.co/300x110/050505/ff3b3b?text=Foto+Barang+Bukti",
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
             lng: 106.827153, lat: -6.175392, lokasi: "Monas, Jakarta Pusat"
         },
         { 
             id: "m2",
             telp: "085711223344", 
             desk: "Modus Penipuan APK Kurir J&T Palsu via Aplikasi WhatsApp",
-            foto: "https://placehold.co/300x110/050505/ff3b3b?text=Foto+Barang+Bukti",
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
             lng: 112.621391, lat: -7.983908, lokasi: "Alun-Alun Malang, Jawa Timur"
         },
         { 
             id: "m3",
             telp: "089677889900", 
             desk: "Situs E-Commerce Fiktif / Penjualan Gadget Murah BM Palsu",
-            foto: "https://placehold.co/300x110/050505/ff3b3b?text=Foto+Barang+Bukti",
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
             lng: 110.367180, lat: -7.795580, lokasi: "Malioboro, Yogyakarta"
         }
     ];
@@ -411,15 +505,19 @@
         { 
             id: "l1",
             nama: "Hendra Lesmana", 
+            telp: "082111223344",
+            pelapor: "081199887711",
             kasus: "Penggelapan Dana Sertifikat Ruko & Mafia Tanah Wilayah", 
-            foto: "https://placehold.co/45x45/050505/ff3b3b?text=DPO",
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w500",
             lng: 107.619123, lat: -6.917464, lokasi: "Gedung Sate, Bandung"
         },
         { 
             id: "l2",
             nama: "Dewi Sartika", 
+            telp: "081355667788",
+            pelapor: "087822334455",
             kasus: "Investasi Bodong Berkedok Sembako Murah Skala Besar", 
-            foto: "https://placehold.co/45x45/050505/ff3b3b?text=DPO",
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w500",
             lng: 115.188919, lat: -8.650052, lokasi: "Denpasar, Bali"
         }
     ];
@@ -429,6 +527,29 @@
         desk: "PROJECT-01<br>Laporan informasi mengenai pelarian DPO utama untuk penemuan data aset hak milik a/n... . <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 5.000.000</strong> #Dengan potongan 20% sebagai royalti developer. <br> <strong> diterima sebesar = Rp 4.000.000</strong> ",
         videoUrl: "https://drive.google.com/file/d/1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX/preview"
     };
+
+    // Fungsi Pengendali Popup Modal Gambar/Video
+    function openMediaModal(url, title, type = 'image') {
+        const container = document.getElementById('modalMediaContainer');
+        const caption = document.getElementById('modalMediaCaption');
+        const modal = document.getElementById('mediaModal');
+        
+        if (type === 'video') {
+            container.innerHTML = `<iframe src="${url}" class="custom-modal-iframe-content" allow="autoplay" allowfullscreen></iframe>`;
+        } else {
+            container.innerHTML = `<img src="${url}" class="custom-modal-media-content" alt="Preview Aset">`;
+        }
+        
+        caption.innerHTML = title;
+        modal.classList.add('active');
+    }
+
+    function closeMediaModal() {
+        const modal = document.getElementById('mediaModal');
+        const container = document.getElementById('modalMediaContainer');
+        modal.classList.remove('active');
+        setTimeout(() => { container.innerHTML = ''; }, 300);
+    }
 
     // 3. Pengendali Tampilan Downbar
     function showModule(type, btnElement) {
@@ -452,8 +573,8 @@
             title.innerHTML = "Daftar Pelaku Langsung";
             content.innerHTML = `
                 <div class="downbar-search-wrapper">
-                    <input type="text" id="srcLangsung" placeholder="Cari nama sertifikat / pelapor / kasus..." onkeyup="searchLangsungAction()">
-                    <input type="text" id="srcPelakuLangsung" placeholder="Cari nama pelaku..." onkeyup="searchLangsungAction()">
+                    <input type="text" id="srcLangsungPelapor" placeholder="Cari / input nomor telepon pelapor..." onkeyup="searchLangsungAction()">
+                    <input type="text" id="srcPelakuLangsungTelp" placeholder="Cari nomor telepon pelaku..." onkeyup="searchLangsungAction()">
                     <button onclick="searchLangsungAction()">CARI</button>
                 </div>
                 
@@ -468,9 +589,9 @@
                         <strong class="blink-red-text">${dbHadiahPenemuan.judul}</strong><br><br>
                         ${dbHadiahPenemuan.desk}
                     </div>
-                    <div class="video-box-gdrive">
-                        <div class="video-wrapper">
-                            <iframe src="${dbHadiahPenemuan.videoUrl}" allow="autoplay" allowfullscreen></iframe>
+                    <div class="video-box-gdrive" onclick="openMediaModal('${dbHadiahPenemuan.videoUrl}', 'KESEPAKATAN HADIAH PENENUAN', 'video')">
+                        <div class="video-wrapper" style="cursor:pointer;">
+                            <iframe src="${dbHadiahPenemuan.videoUrl}" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
                         </div>
                     </div>
                 </div>
@@ -485,9 +606,9 @@
                         <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 100.000.000</strong> #Dengan potongan 50% sebagai royalti developer.
                         <br> <strong> diterima sebesar = Rp 50.000.000</strong>.
                     </div>
-                    <div class="video-box-gdrive">
-                        <div class="video-wrapper">
-                            <iframe src="${dbHadiahPenemuan.videoUrl}" allow="autoplay" allowfullscreen></iframe>
+                    <div class="video-box-gdrive" onclick="openMediaModal('${dbHadiahPenemuan.videoUrl}', 'JASA AGEN LAPANGAN', 'video')">
+                        <div class="video-wrapper" style="cursor:pointer;">
+                            <iframe src="${dbHadiahPenemuan.videoUrl}" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
                         </div>
                     </div>
                 </div>
@@ -500,9 +621,9 @@
                         <strong style="color: #25D366;">OPERASI BANTUAN UNTUK TUJUAN KHUSUS</strong><br><br>
                         Layanan pencarian, pengawasan, pengawalan khusus dengan operasional agen lapangan berikut multi teknologi untuk mendukung TUJUAN pengguna tercapai. Seluruh proses kegiatan menggunakan parameter data otentik yang terukur dengan PROTOKOL KERAHASIAAN.
                     </div>
-                    <div class="video-box-gdrive">
-                        <div class="video-wrapper">
-                            <iframe src="${dbHadiahPenemuan.videoUrl}" allow="autoplay" allowfullscreen></iframe>
+                    <div class="video-box-gdrive" onclick="openMediaModal('${dbHadiahPenemuan.videoUrl}', 'BANTUAN PENEMU', 'video')">
+                        <div class="video-wrapper" style="cursor:pointer;">
+                            <iframe src="${dbHadiahPenemuan.videoUrl}" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
                         </div>
                     </div>
                 </div>
@@ -519,7 +640,7 @@
         }
         wrapper.innerHTML = data.map(item => `
             <div class="downbar-card-item" onclick="focusTargetMap(${item.lng}, ${item.lat}, '${item.telp}')">
-                <img src="${item.foto}" class="downbar-photo-large" alt="Bukti Target">
+                <img src="${item.foto}" class="downbar-photo-large" alt="Bukti Target" onclick="event.stopPropagation(); openMediaModal('${item.foto}', 'TARGET MEDIA: ${item.telp}')">
                 <div class="downbar-info-text">
                     <strong>${item.telp}</strong>
                     <span>Status: Terlapor / Pelaku</span><br>
@@ -537,8 +658,6 @@
         
         let filtered = dbPenipuMedia;
         
-        // Logika diperbaiki: Jika kolom pencarian diisi, ia mencari kecocokan pada field 'telp' 
-        // tanpa menyebabkan bentrok silang antar filter ganda.
         if (queryPelapor || queryPelaku) {
             const finalQuery = queryPelapor || queryPelaku;
             filtered = filtered.filter(i => i.telp.includes(finalQuery));
@@ -551,16 +670,17 @@
         const wrapper = document.getElementById('langsungContainer');
         if(!wrapper) return;
         if(data.length === 0) {
-            wrapper.innerHTML = `<div style="color:var(--primary-red); font-size:11px; font-weight: bold; text-shadow: 0 1px 2px #000;">Nama tersangka atau kasus tidak ditemukan dalam daftar pencarian orang.</div>`;
+            wrapper.innerHTML = `<div style="color:var(--primary-red); font-size:11px; font-weight: bold; text-shadow: 0 1px 2px #000;">Nama tersangka, nomor telepon, atau data tidak ditemukan dalam daftar pencarian orang.</div>`;
             return;
         }
         wrapper.innerHTML = data.map(item => `
             <div class="downbar-card-item" onclick="focusTargetMap(${item.lng}, ${item.lat}, '${item.nama}')">
-                <img src="${item.foto}" class="downbar-photo-thumb" alt="DPO Target">
+                <img src="${item.foto}" class="downbar-photo-thumb" alt="DPO Target" onclick="event.stopPropagation(); openMediaModal('${item.foto}', 'DPO BURONAN: ${item.nama}')">
                 <div class="downbar-info-text">
                     <strong>${item.nama}</strong>
                     <span style="color: #ff5252; font-weight:bold;">Status: DPO BURONAN</span><br>
                     <span>Kasus: ${item.kasus}</span><br>
+                    <span>No. Telp Pelaku: ${item.telp || '-'} | No. Telp Pelapor: ${item.pelapor || '-'}</span><br>
                     <span style="color:#ff5252; font-weight:bold;">Koordinat Kejadian: ${item.lat}, ${item.lng} (${item.lokasi})</span>
                 </div>
                 <button class="btn-gmaps" onclick="event.stopPropagation(); openGoogleMaps(${item.lng}, ${item.lat})">LOKASI</button>
@@ -569,16 +689,17 @@
     }
 
     function searchLangsungAction() {
-        const queryKasus = document.getElementById('srcLangsung').value.trim().toLowerCase();
-        const queryPelaku = document.getElementById('srcPelakuLangsung').value.trim().toLowerCase();
+        const queryPelapor = document.getElementById('srcLangsungPelapor').value.trim();
+        const queryPelakuTelp = document.getElementById('srcPelakuLangsungTelp').value.trim();
         
         let filtered = dbPenipuLangsung;
         
-        if (queryKasus) {
-            filtered = filtered.filter(i => i.kasus.toLowerCase().includes(queryKasus) || i.nama.toLowerCase().includes(queryKasus));
-        }
-        if (queryPelaku) {
-            filtered = filtered.filter(i => i.nama.toLowerCase().includes(queryPelaku));
+        if (queryPelapor || queryPelakuTelp) {
+            const finalQuery = queryPelapor || queryPelakuTelp;
+            filtered = filtered.filter(i => 
+                (i.pelapor && i.pelapor.includes(finalQuery)) || 
+                (i.telp && i.telp.includes(finalQuery))
+            );
         }
         
         renderLangsungData(filtered);

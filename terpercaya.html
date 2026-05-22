@@ -309,8 +309,8 @@
                     FITUR PILIHAN
                 </div>
                 <div class="inv-grid">
-                    <button class="btn-inv" onclick="showModule('media', this)">Penipu Media</button>
-                    <button class="btn-inv" onclick="showModule('langsung', this)">Penipu Langsung</button>
+                    <button class="btn-inv" onclick="showModule('media', this)">Pelaku Media</button>
+                    <button class="btn-inv" onclick="showModule('langsung', this)">Pelaku Langsung</button>
                     <button class="btn-inv" onclick="showModule('hadiah', this)">Hadiah Penemuan</button>
                     <button class="btn-inv" onclick="showModule('agen', this)">Jasa Agen</button>
                 </div>
@@ -388,8 +388,8 @@
     ];
 
     const dbHadiahPenemuan = {
-        judul: "SISTEM REWARD INFORMASI DAN TRACKING KOORDINAT",
-        desk: "Laporan informasi yang akurat mengenai titik koordinat pelarian DPO utama atau penemuan data aset tersembunyi milik tersangka sindikat akan diberikan komisi apresiasi finansial sebesar <strong>10%</strong> dari nilai total aset setelah melalui validasi berkala oleh unit intelijen lapangan.",
+        judul: "#PEMILIK DEPOSIT KE DEVELOPER SESUAI KESEPAKATAN HADIAH <br>#10% DARI NILAI HADIAH MENJADI ROYALTI DEVELOPER <br>#JIKA TIDAK DITEMUKAN DALAM 1TAHUN DEPOSIT DIKEMBALIKAN- <br>KE OWNER DAN NILAI HADIAH 10% MENJADI FEE ADD SENSE DEVELOPER <br>#ASET SELAMA 3TAHUN TIDAK DITEMUKAN KESEPAKATAN BERAKHIR <br>#JIKA ASET DITEMUKAN NILAI HADIAH 10% MENJADI OPRASIONAL DEVELOPER",
+        desk: "PROJECT-01<br>Laporan informasi mengenai pelarian DPO utama untuk penemuan data aset hak milik a/n...   . <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 5.000.000</strong> #Dengan potongan 20% sebagai royalti developer. <br>  <strong> diterima sebesar = Rp 4.000.000</strong> ",
         videoUrl: "https://drive.google.com/file/d/1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX/preview"
     };
 
@@ -402,7 +402,7 @@
         const content = document.getElementById('downbarContent');
 
         if (type === 'media') {
-            title.innerHTML = "Daftar Penipu Media";
+            title.innerHTML = "Daftar Pelaku Media";
             content.innerHTML = `
                 <div class="downbar-search-wrapper">
                     <input type="text" id="srcMedia" placeholder="Cari / input nomor telepon pelapor..." onkeyup="searchMediaAction()">
@@ -413,7 +413,7 @@
             renderMediaData(dbPenipuMedia);
 
         } else if (type === 'langsung') {
-            title.innerHTML = "Daftar Penipu Langsung";
+            title.innerHTML = "Daftar Pelaku Langsung";
             content.innerHTML = `
                 <div class="downbar-search-wrapper">
                     <input type="text" id="srcLangsung" placeholder="Cari nama tersangka atau nama kasus..." onkeyup="searchLangsungAction()">
@@ -424,7 +424,7 @@
             renderLangsungData(dbPenipuLangsung);
 
         } else if (type === 'hadiah') {
-            title.innerHTML = "daftar pencarian berhadiah";
+            title.innerHTML = "kesepakatan hadiah";
             content.innerHTML = `
                 <div class="downbar-flex-layout">
                     <div class="downbar-info-text" style="font-size:12px;">
@@ -440,11 +440,11 @@
             `;
 
         } else if (type === 'agen') {
-            title.innerHTML = "Jasa Agen Lapangan";
+            title.innerHTML = "kesepakatan Jasa Agen Lapangan";
             content.innerHTML = `
                 <div class="downbar-info-text" style="font-size: 13px; max-width: 800px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid var(--primary-red); border-radius: 4px;">
-                    <strong>OPERASI INTELIJEN & DETEKTIF SWASTA:</strong><br><br>
-                    Penyediaan unit detektif khusus lapangan yang andal untuk melakukan penelusuran identitas asli pelaku siber, pemantauan aset tanah sengketa fisik, pencarian data primer, serta investigasi rekam jejak internal sindikat secara tertutup dan rahasia tanpa terdeteksi pihak luar.
+                    <strong>#JASA AGEN PENEMU 50% DARI HARGA BARANG DIJUAL <br>#50% DARI NILAI JASA AGEN MERUPAKAN ROYALTI DEVELOPER <br>#PEMILIK DEPOSIT 50% DARI HARGA BARANG DIJUAL KE DEVELOPER <br>#JIKA DITEMUKAN DEPOSIT MENJADI OPRASIONAL DEVELOPER <br>#JIKA TIDAK DITEMUKAN, DEPOSIT DARI HARGA BARANG DIJUAL <br>#DIKEMBALIKAN 50% KARENA 50% SISA NILAINYA TERPAKAI UNTUK <br>OPERASIONAL TEKNOLOGI</strong><br><br>
+                    Laporan informasi mengenai pelarian DPO utama untuk penemuan data aset hak milik a/n...   . <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 100.000.000</strong> #Dengan potongan 50% sebagai royalti developer. <br>  <strong> diterima sebesar = Rp 50.000.000</strong>.
                 </div>
             `;
 
@@ -452,8 +452,8 @@
             title.innerHTML = "Bantuan Penemu";
             content.innerHTML = `
                 <div class="downbar-info-text" style="font-size: 13px; max-width: 800px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid #25D366; border-radius: 4px;">
-                    <strong style="color: #25D366;">PROTEKSI INFORMAL DAN ENKRIPSI DATA DATA SAKSI:</strong><br><br>
-                    Layanan pengaduan darurat khusus bagi para informan maupun saksi kunci tindak pidana. Seluruh data parameter identitas fisik, IP Address, and nomor kontak pelapor dilindungi secara penuh menggunakan protokol terenkripsi end-to-end, dijamin **100% Anonim** demi keselamatan saksi beserta keluarga.
+                    <strong style="color: #25D366;">OPERASI BANTUAN UNTUK TUJUAN KHUSUS</strong><br><br>
+                    Layanan pencarian, pengawasan, pengawalan khusus dengan operasional agen lapangan berikut multi teknologi untuk mendukung TUJUAN pengguna tercapai. Seluruh proses kegiatan menggunakan parameter data otentik yang terukur dengan PROTOKOL KERAHASIAAN.
                 </div>
             `;
         }

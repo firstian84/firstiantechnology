@@ -280,9 +280,15 @@
         /* CSS KEPENTINGAN TEKS BERKEDIP MERAH */
         .blink-red-text {
             color: #ff3b3b !important;
-            animation: blink-animation 1.2s steps(2, start) infinite;
+            animation: blink-animation 5.0s steps(5, start) infinite;
             text-shadow: 0 0 8px rgba(255, 59, 59, 0.5);
         }
+        
+        /* BARU: CSS UNTUK BERKEDIP TANPA MERUBAH WARNA ASLI TEKS HILANG/BANTUAN */
+        .blink-text {
+            animation: blink-animation 5.0s steps(5, start) infinite;
+        }
+
         @keyframes blink-animation {
             to { visibility: hidden; }
         }
@@ -444,7 +450,7 @@
 
     <div class="custom-modal-overlay" id="mediaModal" onclick="closeMediaModal()">
         <div class="custom-modal-wrapper" onclick="event.stopPropagation()">
-            <button class="custom-modal-close" onclick="closeMediaModal()">&times;</button>
+            <button class="custom-modal-close" onclick="closeMediaModal()">×</button>
             <div id="modalMediaContainer"></div>
             <div class="custom-modal-caption" id="modalMediaCaption"></div>
         </div>
@@ -523,9 +529,10 @@
     ];
 
     const dbHadiahPenemuan = {
-        judul: "#PEMILIK DEPOSIT KE DEVELOPER SESUAI KESEPAKATAN HADIAH <br>#10% DARI NILAI HADIAH MENJADI ROYALTI DEVELOPER <br>#JIKA TIDAK DITEMUKAN DALAM 1TAHUN DEPOSIT DIKEMBALIKAN- <br>KE OWNER DAN NILAI HADIAH 10% MENJADI FEE ADD SENSE DEVELOPER <br>#ASET SELAMA 3TAHUN TIDAK DITEMUKAN KESEPAKATAN BERAKHIR <br>#JIKA ASET DITEMUKAN NILAI HADIAH 10% MENJADI OPRASIONAL DEVELOPER",
-        desk: "PROJECT-01<br>Laporan informasi mengenai pelarian DPO utama untuk penemuan data aset hak milik a/n... . <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 5.000.000</strong> #Dengan potongan 20% sebagai royalti developer. <br> <strong> diterima sebesar = Rp 4.000.000</strong> ",
-        videoUrl: "https://drive.google.com/file/d/1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX/preview"
+        judul: "#PEMILIK DEPOSIT KE DEVELOPER SESUAI KESEPAKATAN HADIAH <br>#MEMBAYARKAN ADDSENSE Rp300.000 KE DEVELOPER <br>#JIKA TIDAK DITEMUKAN DALAM 1TAHUN DEPOSIT DIKEMBALIKAN- <br>KE OWNER 100% <br>#ASET SELAMA 3TAHUN TIDAK DITEMUKAN KESEPAKATAN BERAKHIR",
+        desk: "PROJECT-01<br>Laporan informasi mengenai barang hilang untuk penemuan data aset hak milik a/n... . <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 5.000.000</strong>",
+        videoUrl: "https://drive.google.com/file/d/1NYYRWi_JdWZDa7X5cenjWBK3bDzlr5ae/preview"
+    
     };
 
     // Fungsi Pengendali Popup Modal Gambar/Video
@@ -601,14 +608,13 @@
             content.innerHTML = `
                 <div class="downbar-flex-layout">
                     <div class="downbar-info-text" style="font-size: 13px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid var(--primary-red); border-radius: 4px;">
-                        <strong class="blink-red-text">#JASA AGEN PENEMU 50% DARI HARGA BARANG DIJUAL <br>#50% DARI NILAI JASA AGEN MERUPAKAN ROYALAI DEVELOPER <br>#PEMILIK DEPOSIT 50% DARI HARGA BARANG DIJUAL KE DEVELOPER <br>#JIKA DITEMUKAN DEPOSIT MENJADI OPRASIONAL DEVELOPER <br>#JIKA TIDAK DITEMUKAN, DEPOSIT DARI HARGA BARANG DIJUAL <br>#DIKEMBALIKAN 50% KARENA 50% SISA NILAINYA TERPAKAI UNTUK <br>OPERASIONAL TEKNOLOGI</strong><br><br>
+                        <strong class="blink-red-text">#JASA AGEN PENEMU Rp50.000.000 <br>#25% DARI NILAI JASA AGEN MERUPAKAN OPERASIONAL TEKNOLOGI LAPANGAN <br>#25% DARI NILAI JASA AGEN MERUPAKAN OPERASIONAL LAPANGAN <br>#JIKA ASET DITEMUKAN, DEPOSIT SELURUHNYA MENJADI OPRASIONAL DEVELOPER <br>#JIKA TIDAK DITEMUKAN, DEPOSIT Rp50.000.000 DIKEMBALIKAN Rp25.000.000 <br> KARENA 50% SISA NILAINYA TERPAKAI UNTUK OPERASIONAL TEKNOLOGI<br> YANG DILAPORKAN SECARA ILMIAH BERIKUT DOKUMEN KERJA</strong><br><br>
                         Laporan informasi mengenai pelarian DPO utama untuk penemuan data aset hak milik a/n... .
-                        <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 100.000.000</strong> #Dengan potongan 50% sebagai royalti developer.
-                        <br> <strong> diterima sebesar = Rp 50.000.000</strong>.
+                        <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 25.000.000</strong>
                     </div>
                     <div class="video-box-gdrive" onclick="openMediaModal('${dbHadiahPenemuan.videoUrl}', 'JASA AGEN LAPANGAN', 'video')">
                         <div class="video-wrapper" style="cursor:pointer;">
-                            <iframe src="${dbHadiahPenemuan.videoUrl}" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
+                           <iframe src="https://drive.google.com/file/d/1NYYRWi_JdWZDa7X5cenjWBK3bDzlr5ae/preview" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
                         </div>
                     </div>
                 </div>
@@ -616,15 +622,17 @@
         } else if (type === 'bantuan') {
             title.innerHTML = "Bantuan Penemu";
             content.innerHTML = `
-                <div class="downbar-flex-layout">
-                    <div class="downbar-info-text" style="font-size: 13px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid #25D366; border-radius: 4px;">
-                        <strong style="color: #25D366;">OPERASI BANTUAN UNTUK TUJUAN KHUSUS</strong><br><br>
-                        Layanan pencarian, pengawasan, pengawalan khusus dengan operasional agen lapangan berikut multi teknologi untuk mendukung TUJUAN pengguna tercapai. Seluruh proses kegiatan menggunakan parameter data otentik yang terukur dengan PROTOKOL KERAHASIAAN.
-                    </div>
-                    <div class="video-box-gdrive" onclick="openMediaModal('${dbHadiahPenemuan.videoUrl}', 'BANTUAN PENEMU', 'video')">
-                        <div class="video-wrapper" style="cursor:pointer;">
-                            <iframe src="${dbHadiahPenemuan.videoUrl}" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
-                        </div>
+               <div class="downbar-flex-layout">
+    <div class="downbar-info-text" style="font-size: 13px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid #25D366; border-radius: 4px;">
+        <strong class="blink-text" style="color: #25D366;">OPERASI BANTUAN UNTUK TUJUAN KHUSUS <br>#JABOTABEK Rp100.000.000 <br>#PULAU JAWA Rp200.000.000 <br>#LUAR PULAU JAWA Rp300.000.000 </strong><br><br>
+        Layanan pencarian, pengawasan, pengawalan khusus dengan operasional agen lapangan berikut multi teknologi untuk mendukung TUJUAN pengguna tercapai. Seluruh proses kegiatan menggunakan parameter data otentik yang terukur dengan PROTOKOL KERAHASIAAN.
+    </div>
+    <div class="video-box-gdrive" onclick="openMediaModal('https://drive.google.com/file/d/1NYYRWi_JdWZDa7X5cenjWBK3bDzlr5ae/preview', 'BANTUAN PENEMU', 'video')">
+        <div class="video-wrapper" style="cursor:pointer;">
+            <iframe src="https://drive.google.com/file/d/1NYYRWi_JdWZDa7X5cenjWBK3bDzlr5ae/preview" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
+        </div>
+    </div>
+</div>
                     </div>
                 </div>
             `;

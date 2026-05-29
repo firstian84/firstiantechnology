@@ -245,7 +245,8 @@
             flex: 1;
             min-width: 260px;
             background: rgba(0, 0, 0, 0.7); border: 1px solid var(--primary-red);
-            padding: 8px 12px; color: #fff; font-size: 12px; border-radius: 4px; outline: none;
+            padding: 8px 12px; color: #fff; font-size: 12px; border-radius: 4px;
+            outline: none;
         }
         .downbar-search-wrapper button {
             background: var(--gmaps-blue);
@@ -266,15 +267,16 @@
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%;
             height: 100%; border: none; }
         @media (max-width: 768px) {
-            .downbar-search-wrapper { max-width: 100%; }
+            .downbar-search-wrapper { max-width: 100%;
+            }
         }
         @keyframes pulse-glow {
             0% { opacity: 0.6;
                 transform: translateX(0); }
             50% { opacity: 1; transform: translateX(5px);
-            }
+                }
             100% { opacity: 0.6; transform: translateX(0);
-            }
+                }
         }
         
         /* CSS KEPENTINGAN TEKS BERKEDIP MERAH */
@@ -290,7 +292,8 @@
         }
 
         @keyframes blink-animation {
-            to { visibility: hidden; }
+            to { visibility: hidden;
+            }
         }
 
         .cesium-viewer-bottom { display: none !important;
@@ -298,7 +301,7 @@
         .cesium-viewer-toolbar { right: 390px !important;
         }
         
-        /* CSS KOMPONEN MODAL POPUP MEDIA/IMAGE */
+        /* CSS KOMKOMPONEN MODAL POPUP MEDIA/IMAGE */
         .custom-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -341,7 +344,8 @@
             background: var(--primary-red);
             border: 2px solid #fff;
             border-radius: 50%;
-            color: #fff; font-size: 16px; font-weight: bold;
+            color: #fff; font-size: 16px;
+            font-weight: bold;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
             z-index: 10001;
@@ -438,10 +442,10 @@
                     FITUR PILIHAN
                 </div>
                 <div class="inv-grid">
-                    <button class="btn-inv" onclick="showModule('media', this)">Pelaku Media</button>
-                    <button class="btn-inv" onclick="showModule('langsung', this)">Pelaku Langsung</button>
-                    <button class="btn-inv" onclick="showModule('hadiah', this)">Hadiah Penemuan</button>
-                    <button class="btn-inv" onclick="showModule('agen', this)">Jasa Agen</button>
+                    <button class="btn-inv" id="btnMedia" onclick="showModule('media', this)">Pelaku Media (0)</button>
+                    <button class="btn-inv" id="btnLangsung" onclick="showModule('langsung', this)">Pelaku Langsung (0)</button>
+                    <button class="btn-inv" id="btnHadiah" onclick="showModule('hadiah', this)">Hadiah Penemuan (0)</button>
+                    <button class="btn-inv" id="btnAgen" onclick="showModule('agen', this)">Jasa Agen</button>
                 </div>
                 <button class="btn-inv" style="width: 100%; margin-top: 6px;" onclick="showModule('bantuan', this)">Bantuan Penemu</button>
             </div>
@@ -482,59 +486,125 @@
         }
     });
 
-    // 2. Database Internal Sistem (Foto diperbarui menggunakan path/link internal Google Drive seperti modul penemuan)
+    // 2. Database Internal Sistem (Diperbanyak sesuai instruksi tanpa merubah struktur field)
     const dbPenipuMedia = [
         { 
-            id: "m1",
-            telp: "081299887766", 
+            id: "m1", telp: "081299887766", 
             desk: "Sindikat Fake Giveaway & Undian Berhadiah Atas Nama Perusahaan",
             foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
             lng: 106.827153, lat: -6.175392, lokasi: "Monas, Jakarta Pusat"
         },
         { 
-            id: "m2",
-            telp: "085711223344", 
+            id: "m2", telp: "085711223344", 
             desk: "Modus Penipuan APK Kurir J&T Palsu via Aplikasi WhatsApp",
             foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
             lng: 112.621391, lat: -7.983908, lokasi: "Alun-Alun Malang, Jawa Timur"
         },
         { 
-            id: "m3",
-            telp: "089677889900", 
+            id: "m3", telp: "089677889900", 
             desk: "Situs E-Commerce Fiktif / Penjualan Gadget Murah BM Palsu",
             foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
             lng: 110.367180, lat: -7.795580, lokasi: "Malioboro, Yogyakarta"
+        },
+        { 
+            id: "m4", telp: "082212345678", 
+            desk: "Modus Love Scamming dan Pemerasan Berkedok Foto/Video Korban",
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
+            lng: 106.816666, lat: -6.200000, lokasi: "Sudirman, Jakarta Selatan"
+        },
+        { 
+            id: "m5", telp: "081398765432", 
+            desk: "Penipuan Investasi Kripto Bodong via Grup Telegram / Signal Palsu",
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
+            lng: 107.610000, lat: -6.900000, lokasi: "Dago, Bandung"
+        },
+        { 
+            id: "m6", telp: "087811223355", 
+            desk: "Phishing Link Perubahan Tarif Transfer Bank / Rekayasa Social Engineering",
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
+            lng: 112.750830, lat: -7.250445, lokasi: "Gubeng, Surabaya"
+        },
+        { 
+            id: "m7", telp: "085244556677", 
+            desk: "Sindikat Modus Menang Lelang Pegadaian Fiktif Melalui Media Sosial",
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
+            lng: 119.414017, lat: -5.147665, lokasi: "Losari, Makassar"
+        },
+        { 
+            id: "m8", telp: "081900998877", 
+            desk: "Penipuan Berkedok Isian Kuisioner dan Like-Subcribe Video Berbayar",
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w600",
+            lng: 114.591020, lat: -3.316694, lokasi: "Banjarmasin, Kalimantan Selatan"
         }
     ];
 
     const dbPenipuLangsung = [
         { 
-            id: "l1",
-            nama: "Hendra Lesmana", 
-            telp: "082111223344",
-            pelapor: "081199887711",
+            id: "l1", nama: "Hendra Lesmana", telp: "082111223344", pelapor: "081199887711",
             kasus: "Penggelapan Dana Sertifikat Ruko & Mafia Tanah Wilayah", 
             foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w500",
             lng: 107.619123, lat: -6.917464, lokasi: "Gedung Sate, Bandung"
         },
         { 
-            id: "l2",
-            nama: "Dewi Sartika", 
-            telp: "081355667788",
-            pelapor: "087822334455",
+            id: "l2", nama: "Dewi Sartika", telp: "081355667788", pelapor: "087822334455",
             kasus: "Investasi Bodong Berkedok Sembako Murah Skala Besar", 
             foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w500",
             lng: 115.188919, lat: -8.650052, lokasi: "Denpasar, Bali"
+        },
+        { 
+            id: "l3", nama: "Ahmad Subarjo", telp: "085288990011", pelapor: "081233445566",
+            kasus: "Penggelapan Mobil Rental / Jaringan Penadah Lintas Provinsi", 
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w500",
+            lng: 106.845600, lat: -6.214600, lokasi: "Manggarai, Jakarta Selatan"
+        },
+        { 
+            id: "l4", nama: "Rian Hidayat", telp: "087755661122", pelapor: "089512345678",
+            kasus: "Penipuan Rekrutmen Kerja / Sektor Penyedia Dokumen Medis Palsu", 
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w500",
+            lng: 110.420300, lat: -6.993200, lokasi: "Simpang Lima, Semarang"
+        },
+        { 
+            id: "l5", nama: "Siti Aminah", telp: "082344559900", pelapor: "081377889922",
+            kasus: "Kasus Arisan Bodong Online dan Pelarian Dana Anggota Mitra", 
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w500",
+            lng: 104.756554, lat: -2.990934, lokasi: "Ampera, Palembang"
+        },
+        { 
+            id: "l6", nama: "Budi Santoso", telp: "081122334455", pelapor: "081299001122",
+            kasus: "Pemalsuan BPKB / Kendaraan Mewah Ilegal Klaster Daerah", 
+            foto: "https://drive.google.com/thumbnail?id=1_XgE9E8GvAxhv1zY0pIpxxxXxxxxX&sz=w500",
+            lng: 117.153600, lat: -0.502100, lokasi: "Samarinda, Kalimantan Timur"
         }
     ];
-    const dbHadiahPenemuan = {
-        judul: "#PEMILIK DEPOSIT KE DEVELOPER SESUAI KESEPAKATAN HADIAH <br>#MEMBAYARKAN ADDSENSE Rp300.000 KE DEVELOPER <br>#JIKA TIDAK DITEMUKAN DALAM 1TAHUN DEPOSIT DIKEMBALIKAN- <br>KE OWNER 100% <br>#ASET SELAMA 3TAHUN TIDAK DITEMUKAN KESEPAKATAN BERAKHIR",
-        desk: "PROJECT-01<br>Laporan informasi mengenai barang hilang untuk penemuan data aset hak milik a/n... . <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 5.000.000</strong>",
-        videoUrl: "https://drive.google.com/file/d/1AGRbr7tKOHnGu3EzbFvgXKAQaBw95nO1/preview"
-    
-    };
 
-    // Fungsi Pengendali Popup Modal Gambar/Video
+    // Ditambahkan list data project hadiah
+    const dbHadiahPenemuanList = [
+        {
+            judul: "#PEMILIK DEPOSIT KE DEVELOPER SESUAI KESEPAKATAN HADIAH <br>#MEMBAYARKAN ADDSENSE Rp300.000 KE DEVELOPER <br>#JIKA TIDAK DITEMUKAN DALAM 1TAHUN DEPOSIT DIKEMBALIKAN- <br>KE OWNER 100% <br>#ASET SELAMA 3TAHUN TIDAK DITEMUKAN KESEPAKATAN BERAKHIR",
+            desk: "PROJECT-01<br>Laporan informasi mengenai barang hilang untuk penemuan data aset hak milik a/n... . <br><br>-6.235947977883453, 106.7850643077447 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 5.000.000</strong>",
+            videoUrl: "https://drive.google.com/file/d/1AGRbr7tKOHnGu3EzbFvgXKAQaBw95nO1/preview"
+        },
+        {
+            judul: "#PROJECT-02 KESEPAKATAN KLAIM ASET MOTOR RACING",
+            desk: "Laporan informasi penemuan unit motor sport rakitan khusus nomor rangka ... . <br><br>-6.124567, 106.654321 <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 3.500.000</strong>",
+            videoUrl: "https://drive.google.com/file/d/1AGRbr7tKOHnGu3EzbFvgXKAQaBw95nO1/preview"
+        }
+    ];
+
+    // Ambil index pertama sebagai fallback default sistem utama agar variabel bawaan tidak rusak
+    const dbHadiahPenemuan = dbHadiahPenemuanList[0];
+
+    // Fungsi Pengisi Angka Jumlah Data Secara Otomatis Pada Masing-masing Tombol Menu
+    function updateSidebarCounters() {
+        document.getElementById('btnMedia').innerText = `Pelaku Media (${dbPenipuMedia.length})`;
+        document.getElementById('btnLangsung').innerText = `Pelaku Langsung (${dbPenipuLangsung.length})`;
+        document.getElementById('btnHadiah').innerText = `Hadiah Penemuan (${dbHadiahPenemuanList.length})`;
+    }
+
+    // Jalankan counter saat window load pertama kali
+    window.addEventListener('DOMContentLoaded', updateSidebarCounters);
+
+    // 3. Fungsi Pengendali Popup Modal Gambar/Video
     function openMediaModal(url, title, type = 'image') {
         const container = document.getElementById('modalMediaContainer');
         const caption = document.getElementById('modalMediaCaption');
@@ -557,12 +627,13 @@
         setTimeout(() => { container.innerHTML = ''; }, 300);
     }
 
-    // 3. Pengendali Tampilan Downbar
+    // 4. Pengendali Tampilan Downbar
     function showModule(type, btnElement) {
         document.querySelectorAll('.btn-inv').forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
         const title = document.getElementById('downbarTitle');
         const content = document.getElementById('downbarContent');
+        
         if (type === 'media') {
             title.innerHTML = "Daftar Pelaku Media";
             content.innerHTML = `
@@ -571,7 +642,6 @@
                     <input type="text" id="srcPelakuMedia" placeholder="Cari nomor telepon pelaku..." onkeyup="searchMediaAction()">
                     <button onclick="searchMediaAction()">CARI</button>
                 </div>
-                
                 <div class="downbar-grid-view" id="mediaContainer"></div>
             `;
             renderMediaData(dbPenipuMedia);
@@ -583,25 +653,31 @@
                     <input type="text" id="srcPelakuLangsungTelp" placeholder="Cari nomor telepon pelaku..." onkeyup="searchLangsungAction()">
                     <button onclick="searchLangsungAction()">CARI</button>
                 </div>
-                
                 <div class="downbar-grid-view" id="langsungContainer"></div>
             `;
             renderLangsungData(dbPenipuLangsung);
         } else if (type === 'hadiah') {
             title.innerHTML = "kesepakatan hadiah";
-            content.innerHTML = `
-                <div class="downbar-flex-layout">
-                    <div class="downbar-info-text" style="font-size:12px;">
-                        <strong class="blink-red-text">${dbHadiahPenemuan.judul}</strong><br><br>
-                        ${dbHadiahPenemuan.desk}
-                    </div>
-                    <div class="video-box-gdrive" onclick="openMediaModal('${dbHadiahPenemuan.videoUrl}', 'KESEPAKATAN HADIAH PENENUAN', 'video')">
-                        <div class="video-wrapper" style="cursor:pointer;">
-                            <iframe src="${dbHadiahPenemuan.videoUrl}" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
+            // Render seluruh list hadiah penemuan yang ada dalam database baru
+            let HTMLContent = `<div style="display:flex; flex-direction:column; gap:20px;">`;
+            dbHadiahPenemuanList.forEach((item, idx) => {
+                HTMLContent += `
+                    <div class="downbar-flex-layout" style="${idx > 0 ? 'border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;' : ''}">
+                        <div class="downbar-info-text" style="font-size:12px;">
+                            <strong class="blink-red-text">${item.judul}</strong><br><br>
+                            ${item.desk}
+                        </div>
+                        <div class="video-box-gdrive" onclick="openMediaModal('${item.videoUrl}', 'KESEPAKATAN HADIAH PENENUAN', 'video')">
+                            <div class="video-wrapper" style="cursor:pointer;">
+                                <iframe src="${item.videoUrl}" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
+            });
+            HTMLContent += `</div>`;
+            content.innerHTML = HTMLContent;
+            
         } else if (type === 'agen') {
             title.innerHTML = "kesepakatan Jasa Agen Lapangan";
             content.innerHTML = `
@@ -613,7 +689,7 @@
                     </div>
                     <div class="video-box-gdrive" onclick="openMediaModal('${dbHadiahPenemuan.videoUrl}', 'JASA AGEN LAPANGAN', 'video')">
                         <div class="video-wrapper" style="cursor:pointer;">
-                           <iframe src="https://drive.google.com/file/d/1AGRbr7tKOHnGu3EzbFvgXKAQaBw95nO1/preview" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
+                            <iframe src="https://drive.google.com/file/d/1AGRbr7tKOHnGu3EzbFvgXKAQaBw95nO1/preview" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
                         </div>
                     </div>
                 </div>
@@ -622,16 +698,15 @@
             title.innerHTML = "Bantuan Penemu";
             content.innerHTML = `
                <div class="downbar-flex-layout">
-    <div class="downbar-info-text" style="font-size: 13px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid #25D366; border-radius: 4px;">
-        <strong class="blink-text" style="color: #25D366;">OPERASI BANTUAN UNTUK TUJUAN KHUSUS <br>#JABOTABEK Rp100.000.000 <br>#PULAU JAWA Rp200.000.000 <br>#LUAR PULAU JAWA Rp300.000.000 </strong><br><br>
-        Layanan pencarian, pengawasan, pengawalan khusus dengan operasional agen lapangan berikut multi teknologi untuk mendukung TUJUAN pengguna tercapai. Seluruh proses kegiatan menggunakan parameter data otentik yang terukur dengan PROTOKOL KERAHASIAAN.
-    </div>
-    <div class="video-box-gdrive" onclick="openMediaModal('https://drive.google.com/file/d/1AGRbr7tKOHnGu3EzbFvgXKAQaBw95nO1/preview', 'BANTUAN PENEMU', 'video')">
-        <div class="video-wrapper" style="cursor:pointer;">
-            <iframe src="https://drive.google.com/file/d/1AGRbr7tKOHnGu3EzbFvgXKAQaBw95nO1/preview" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
-        </div>
-    </div>
-</div>
+                    <div class="downbar-info-text" style="font-size: 13px; background: rgba(0,0,0,0.4); padding: 15px; border-left: 3px solid #25D366; border-radius: 4px;">
+                        <strong class="blink-text" style="color: #25D366;">OPERASI BANTUAN UNTUK TUJUAN KHUSUS <br>#JABOTABEK Rp100.000.000 <br>#PULAU JAWA Rp200.000.000 <br>#LUAR PULAU JAWA Rp300.000.000 </strong><br><br>
+                        Layanan pencarian, pengawasan, pengawalan khusus dengan operasional agen lapangan berikut multi teknologi untuk mendukung TUJUAN pengguna tercapai.
+                        Seluruh proses kegiatan menggunakan parameter data otentik yang terukur dengan PROTOKOL KERAHASIAAN.
+                    </div>
+                    <div class="video-box-gdrive" onclick="openMediaModal('https://drive.google.com/file/d/1AGRbr7tKOHnGu3EzbFvgXKAQaBw95nO1/preview', 'BANTUAN PENEMU', 'video')">
+                        <div class="video-wrapper" style="cursor:pointer;">
+                            <iframe src="https://drive.google.com/file/d/1AGRbr7tKOHnGu3EzbFvgXKAQaBw95nO1/preview" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
+                        </div>
                     </div>
                 </div>
             `;
@@ -650,8 +725,9 @@
                 <img src="${item.foto}" class="downbar-photo-large" alt="Bukti Target" onclick="event.stopPropagation(); openMediaModal('${item.foto}', 'TARGET MEDIA: ${item.telp}')">
                 <div class="downbar-info-text">
                     <strong>${item.telp}</strong>
-                    <span>Status: Terlapor / Pelaku</span><br>
-                    <span>Keterangan: ${item.desk}</span><br>
+                    <span style="color: #ff5252; font-weight:bold;">Status: Terlapor / Pelaku</span><br>
+                    <span>Kasus: ${item.desk}</span><br>
+                    <span>No. Telp Pelaku: ${item.telp || '-'} | No. Telp Pelapor: ${item.pelapor || '-'}</span><br>
                     <span style="color:#ff5252; font-weight:bold;">Koordinat Kejadian: ${item.lat}, ${item.lng} (${item.lokasi})</span>
                 </div>
                 <button class="btn-gmaps" onclick="event.stopPropagation(); openGoogleMaps(${item.lng}, ${item.lat})">LOKASI</button>
@@ -712,16 +788,14 @@
         renderLangsungData(filtered);
     }
 
-    // 4. Integrasi Interaksi Peta Cesium
+    // 5. Integrasi Interaksi Peta Cesium
     let targetEntity = null;
-
     function focusTargetMap(lng, lat, title) {
         if (targetEntity) {
             viewer.entities.remove(targetEntity);
         }
 
         const position = Cesium.Cartesian3.fromDegrees(lng, lat, 0);
-
         const targetSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
             <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="#ff3b3b" stroke-width="6"/>
             <path d="M 70 10 L 90 10 L 90 30" fill="none" stroke="#ff3b3b" stroke-width="6"/>
@@ -730,7 +804,6 @@
             <circle cx="50" cy="50" r="12" fill="none" stroke="#ff3b3b" stroke-width="3" />
             <circle cx="50" cy="50" r="5" fill="#ff3b3b" />
         </svg>`;
-
         targetEntity = viewer.entities.add({
             position: position,
             name: title,
@@ -755,7 +828,6 @@
                 heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
             }
         });
-
         viewer.camera.flyTo({
             destination: Cesium.Cartesian3.fromDegrees(lng, lat, 1500.0),
             orientation: {

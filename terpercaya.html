@@ -421,8 +421,7 @@
     <div class="downbar-container" id="downbarArea">
         <div class="downbar-header-title" id="downbarTitle">PILIH DATA PADA SIDEBAR</div>
         <div class="downbar-content-area" id="downbarContent">
-            <div style="color: var(--text-main); font-size: 12px; font-style: italic; text-shadow: 0 1px 4px #000;">Silakan pilih salah satu 
-            opsi fitur pilihan di sebelah kanan untuk memuat data analisis operasional ke dalam panel informasi ini.</div>
+            <div style="color: var(--text-main); font-size: 12px; font-style: italic; text-shadow: 0 1px 4px #000;">Silakan pilih salah satu opsi fitur pilihan di sebelah kanan untuk memuat data analisis operasional ke dalam panel informasi ini.</div>
         </div>
     </div>
     
@@ -512,24 +511,33 @@
         { 
            "id": "m3", 
             "telp": "081218996313", 
-            "pelapor": "",
+            "pelapor": "laki-laki",
             "desk": "kasir indomaret kembalikan vocer game minta OTP",
             "foto": "https://img.youtube.com/vi/wJScIElSOYo/hqdefault.jpg",
             "lng": 112.73775582892155, 
             "lat":  -7.361908164145374, 
             "lokasi": "sidoarjo"  
-         },
+        },
         { 
            "id": "m4", 
             "telp": "081290029216", 
-            "pelapor": "",
+            "pelapor": "laki-laki",
             "desk": "polisi mencari tersangka pencurian",
             "foto": "https://img.youtube.com/vi/j7CFTTg79hY/hqdefault.jpg",
             "lng": 0, 
             "lat":  0, 
             "lokasi": ""  
+          },
+        { 
+           "id": "m5", 
+            "telp": "081282443317", 
+            "pelapor": "perempuan",
+            "desk": "modus random",
+            "foto": "https://img.youtube.com/vi/89F2twS9IEQ/hqdefault.jpg",
+            "lng": 0, 
+            "lat":  0, 
+            "lokasi": ""  
         }
-    
     ];
 
     const dbPenipuLangsung = [
@@ -543,8 +551,8 @@
             lat: -6.917464, 
             lokasi: ""
         },
-      {
-               id: "l1", 
+        {
+            id: "l1", 
             telp: "", 
             pelapor: "jatim toys",
             kasus: "", 
@@ -552,9 +560,7 @@
             lng: 107.619123, 
             lat: -6.917464, 
             lokasi: ""
-      }
-         
-      
+        }
     ];
 
     const dbHadiahPenemuanList = [
@@ -587,13 +593,17 @@
         
         let finalUrl = url;
         let isVideo = type === 'video';
-        if (url.includes('youtube.com/') || url.includes('youtu.be/')) {
+        
+        if (url.includes('youtube.com/') || url.includes('youtu.be/') || url.includes('img.youtube.com/')) {
             isVideo = true;
             if (url.includes('youtube.com/embed/')) {
                 finalUrl = url;
             } else {
                 let videoId = '';
-                if(url.includes('v=')) {
+                if(url.includes('vi/')) {
+                    // Ekstraksi ID untuk URL gambar thumbnail YouTube (img.youtube.com/vi/ID_VIDEO/...)
+                    videoId = url.split('vi/')[1].split('/')[0];
+                } else if(url.includes('v=')) {
                     videoId = url.split('v=')[1].split('&')[0];
                 } else if(url.includes('youtu.be/')) {
                     videoId = url.split('youtu.be/')[1].split('?')[0];
@@ -603,7 +613,7 @@
         }
 
         if (isVideo) {
-            container.innerHTML = `<iframe src="${finalUrl}" class="custom-modal-iframe-content" allow="autoplay" allowfullscreen></iframe>`;
+            container.innerHTML = `<iframe src="${finalUrl}" class="custom-modal-iframe-content" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } else {
             container.innerHTML = `<img src="${finalUrl}" class="custom-modal-media-content" alt="Preview Aset">`;
         }
@@ -659,7 +669,7 @@
                             ${item.desk}
                         </div>
                         <div class="video-box-gdrive" onclick="openMediaModal('${item.videoUrl}', 'KESEPAKATAN HADIAH PENENUAN', 'video')">
-                           <div class="video-wrapper" style="cursor:pointer;">
+                            <div class="video-wrapper" style="cursor:pointer;">
                                 <iframe src="${item.videoUrl}" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
                             </div>
                         </div>
@@ -713,7 +723,7 @@
         }
         wrapper.innerHTML = data.map(item => `
             <div class="downbar-card-item" onclick="focusTargetMap(${item.lng}, ${item.lat}, '${item.telp}')">
-                <img src="${item.foto}" class="downbar-photo-large" alt="Bukti Target" onclick="event.stopPropagation(); openMediaModal('${item.id === "m1" ? "https://www.youtube.com/embed/3Zl_kcoccxI?autoplay=1&mute=1" : item.foto}', 'TARGET MEDIA: ${item.telp}')">
+                <img src="${item.foto}" class="downbar-photo-large" alt="Bukti Target" onclick="event.stopPropagation(); openMediaModal('${item.foto}', 'TARGET MEDIA: ${item.telp}')">
                 <div class="downbar-info-text">
                     <strong>Telp Pelaku: ${item.telp || '-'}</strong>
                     <span>Telp Pelapor: ${item.pelapor || '-'}</span><br>

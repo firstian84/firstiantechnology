@@ -421,7 +421,8 @@
     <div class="downbar-container" id="downbarArea">
         <div class="downbar-header-title" id="downbarTitle">PILIH DATA PADA SIDEBAR</div>
         <div class="downbar-content-area" id="downbarContent">
-            <div style="color: var(--text-main); font-size: 12px; font-style: italic; text-shadow: 0 1px 4px #000;">Silakan pilih salah satu opsi fitur pilihan di sebelah kanan untuk memuat data analisis operasional ke dalam panel informasi ini.</div>
+            <div style="color: var(--text-main); font-size: 12px; font-style: italic; text-shadow: 0 1px 4px #000;">Silakan pilih salah satu 
+            opsi fitur pilihan di sebelah kanan untuk memuat data analisis operasional ke dalam panel informasi ini.</div>
         </div>
     </div>
     
@@ -491,7 +492,7 @@
         { 
             "id": "m1", 
             "telp": "081299887766", 
-            "pelapor": "-",
+            "pelapor": "",
             "desk": "jasa tiket integrasi",
             "foto": "https://img.youtube.com/vi/3Zl_kcoccxI/hqdefault.jpg",
             "lng": 115.16750, 
@@ -499,19 +500,25 @@
             "lokasi": "bali"
         },
         { 
-        
+         
         }
+      
     ];
 
     const dbPenipuLangsung = [
         { 
-            id: "l1", telp: "...", pelapor: "...",
-            kasus: "...", 
-            foto: "...",
-            lng: 107.619123, lat: -6.917464, lokasi: "..."
+            id: "l1", 
+            telp: "087766554433", 
+            pelapor: "089988776655",
+            kasus: "Pencurian aset digital dan penipuan konvensional di lapangan", 
+            foto: "https://via.placeholder.com/65",
+            lng: 107.619123, 
+            lat: -6.917464, 
+            lokasi: "Bandung"
         },
+      
         { 
-           
+         
         }
     ];
 
@@ -523,12 +530,10 @@
         },
         {
             judul: "",
-             desk: "PROJECT-02<br>Laporan informasi mengenai barang hilang untuk penemuan data aset hak milik a/n... . <br><br>-..., ... <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 0.000.000</strong>",
+            desk: "PROJECT-02<br>Laporan informasi mengenai barang hilang untuk penemuan data aset hak milik a/n... . <br><br>-..., ... <br><br>Diberikan komisi apresiasi finansial sebesar <strong>Rp 0.000.000</strong>",
             videoUrl: "https://drive.google.com/file/d/1AGRbr7tKOHnGu3EzbFvgXKAQaBw95nO1/preview"
-        },
-      
+        }
     ];
-
     const dbHadiahPenemuan = dbHadiahPenemuanList[0];
 
     function updateSidebarCounters() {
@@ -547,7 +552,6 @@
         
         let finalUrl = url;
         let isVideo = type === 'video';
-        
         if (url.includes('youtube.com/') || url.includes('youtu.be/')) {
             isVideo = true;
             if (url.includes('youtube.com/embed/')) {
@@ -620,7 +624,7 @@
                             ${item.desk}
                         </div>
                         <div class="video-box-gdrive" onclick="openMediaModal('${item.videoUrl}', 'KESEPAKATAN HADIAH PENENUAN', 'video')">
-                            <div class="video-wrapper" style="cursor:pointer;">
+                           <div class="video-wrapper" style="cursor:pointer;">
                                 <iframe src="${item.videoUrl}" allow="autoplay" allowfullscreen style="pointer-events:none;"></iframe>
                             </div>
                         </div>
@@ -687,14 +691,16 @@
     }
 
     function searchMediaAction() {
-        const queryPelapor = document.getElementById('srcMedia').value.trim();
-        const queryPelaku = document.getElementById('srcPelakuMedia').value.trim();
+        const queryPelapor = document.getElementById('srcMedia').value.trim().toLowerCase();
+        const queryPelaku = document.getElementById('srcPelakuMedia').value.trim().toLowerCase();
         
         let filtered = dbPenipuMedia;
         
-        if (queryPelapor || queryPelaku) {
-            const finalQuery = queryPelapor || queryPelaku;
-            filtered = filtered.filter(i => i.telp.includes(finalQuery));
+        if (queryPelapor) {
+            filtered = filtered.filter(i => i.pelapor && i.pelapor.toLowerCase().includes(queryPelapor));
+        }
+        if (queryPelaku) {
+            filtered = filtered.filter(i => i.telp && i.telp.toLowerCase().includes(queryPelaku));
         }
         
         renderMediaData(filtered);
@@ -722,17 +728,16 @@
     }
 
     function searchLangsungAction() {
-        const queryPelapor = document.getElementById('srcLangsungPelapor').value.trim();
-        const queryPelakuTelp = document.getElementById('srcPelakuLangsungTelp').value.trim();
+        const queryPelapor = document.getElementById('srcLangsungPelapor').value.trim().toLowerCase();
+        const queryPelakuTelp = document.getElementById('srcPelakuLangsungTelp').value.trim().toLowerCase();
         
         let filtered = dbPenipuLangsung;
         
-        if (queryPelapor || queryPelakuTelp) {
-            const finalQuery = queryPelapor || queryPelakuTelp;
-            filtered = filtered.filter(i => 
-                (i.pelapor && i.pelapor.includes(finalQuery)) || 
-                (i.telp && i.telp.includes(finalQuery))
-            );
+        if (queryPelapor) {
+            filtered = filtered.filter(i => i.pelapor && i.pelapor.toLowerCase().includes(queryPelapor));
+        }
+        if (queryPelakuTelp) {
+            filtered = filtered.filter(i => i.telp && i.telp.toLowerCase().includes(queryPelakuTelp));
         }
         
         renderLangsungData(filtered);

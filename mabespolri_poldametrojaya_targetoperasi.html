@@ -11,13 +11,11 @@
     <style>
         :root {
             --primary-red: #ff3b3b;
-            /* MENGUBAH BACKGROUND MENJADI SANGAT TRANSPARAN */
             --ui-bg: rgba(5, 5, 5, 0.4);
             --card-bg: rgba(0, 0, 0, 0.3);
             --accent-glow: #ff0000;
             --text-main: #ffffff;
             --text-sub: rgba(255, 255, 255, 0.9);
-            /* Dinaikkan kontrasnya karena bg semakin transparan */
             --gmaps-blue: #4285F4;
             --gmaps-green: #34A853;
         }
@@ -48,12 +46,10 @@
             text-transform: uppercase; letter-spacing: 1px;
             box-shadow: 0 0 15px var(--accent-glow);
         }
-        /* SIDEBAR DENGAN FILTER BLUR 0.1px */
         .sidebar {
             position: absolute;
             right: 0; top: 0; width: 380px; height: 100%;
             background: var(--ui-bg);
-            
             display: flex; flex-direction: column;
             border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10;
             box-shadow: -10px 0 30px rgba(0,0,0,0.3);
@@ -62,14 +58,10 @@
             pointer-events: auto;
             touch-action: pan-y;
         }
-        .sidebar-sticky-top {
-            flex-shrink: 0;
-            background: transparent;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-        }
         .header {
             padding: 25px 20px;
             text-align: center;
+            flex-shrink: 0;
         }
         .polri-logo {
             width: 160px;
@@ -84,10 +76,32 @@
         }
         .header .target-tag { color: var(--primary-red); font-weight: 800; font-size: 24px;
             text-shadow: 0 0 10px var(--accent-glow); }
+        
+        /* SEARCH BOX CONTAINER */
+        .search-box {
+            padding: 0 15px 15px 15px;
+            flex-shrink: 0;
+        }
+        .search-box input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 12px;
+            border-radius: 4px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus {
+            border-color: var(--primary-red);
+        }
+
         .scroll-container {
             flex: 1;
             overflow-y: auto;
-            padding: 20px 15px;
+            padding: 0 15px 20px 15px;
             -webkit-overflow-scrolling: touch;
             touch-action: pan-y;
         }
@@ -95,340 +109,83 @@
         }
         .scroll-container::-webkit-scrollbar-thumb { background: var(--primary-red);
         }
-        .investigasi-module {
-            background: transparent;
-            padding: 5px 0px 25px 0px;
-            flex-shrink: 0;
-        }
-        .inv-title {
-            font-size: 11px;
-            font-weight: 800; color: var(--primary-red);
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;
-            display: flex; align-items: center; gap: 6px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
-        .inv-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;
-        }
-        .btn-inv {
-            background: rgba(0, 0, 0, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            padding: 15px 10px; font-size: 10px; font-weight: 700; border-radius: 4px;
-            color: #fff; cursor: pointer;
-            transition: 0.2s; text-transform: uppercase;
-            text-align: center; line-height: 1.3;
-            backdrop-filter: blur(0.1px);
-            -webkit-backdrop-filter: blur(0.1px);
-        }
-        .btn-inv:hover { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.3);
-        }
-        .btn-inv.active { background: var(--primary-red); border-color: var(--primary-red);
-            box-shadow: 0 0 8px rgba(255, 59, 59, 0.6); }
-        /* DOWNBAR COMPONENT DENGAN FILTER BLUR 0.1px */
-        .downbar-container {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: calc(100% - 380px);
-            height: 320px;
-            background: var(--ui-bg);
-            border-top: 2px solid var(--primary-red);
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.3);
-            z-index: 15;
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-            padding: 15px 20px;
-            overflow: hidden;
-            backdrop-filter: blur(0.1px);
-            -webkit-backdrop-filter: blur(0.1px);
-            pointer-events: auto;
-        }
-        .downbar-header-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            color: var(--primary-red);
-            letter-spacing: 2px;
-            font-weight: 800;
-            margin-bottom: 15px;
-            flex-shrink: 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
-        .downbar-content-area {
-            flex: 1;
-            overflow-y: auto;
-            color: #ffffff;
-            -webkit-overflow-scrolling: touch;
-            touch-action: pan-y;
-        }
-        .downbar-content-area::-webkit-scrollbar { width: 4px;
-        }
-        .downbar-content-area::-webkit-scrollbar-thumb { background: var(--primary-red);
-        }
-        .downbar-grid-view {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding-bottom: 10px;
-        }
-        .downbar-card-item {
+
+        /* CARD COMPONENT STYLES */
+        .property-card {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 6px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-        .downbar-card-item:hover {
-            background: rgba(0, 0, 0, 0.6);
-            border-color: rgba(255, 59, 59, 0.6);
-        }
-        .downbar-photo-thumb {
-            width: 65px;
-            height: 65px; object-fit: cover;
-            border-radius: 4px; border: 1px solid var(--primary-red);
-            flex-shrink: 0;
-            transition: transform 0.2s;
-        }
-        .downbar-photo-thumb:hover {
-            transform: scale(1.05);
-        }
-        .downbar-photo-large {
-            width: 140px;
-            height: 85px; object-fit: cover;
-            border-radius: 4px; border: 1px solid rgba(255,255,255,0.25);
-            flex-shrink: 0;
-            transition: transform 0.2s;
-        }
-        .downbar-photo-large:hover {
-            transform: scale(1.03);
-        }
-        .downbar-info-text {
-            font-size: 11px;
-            line-height: 1.5; color: var(--text-sub);
-            flex: 1;
-            text-shadow: 0 1px 4px rgba(0,0,0,1), 0 1px 8px rgba(0,0,0,1);
-            /* Mempertebal bayangan teks agar tetap terbaca jelas */
-        }
-        .downbar-info-text strong { color: #fff;
-            font-size: 14px; display: block; margin-bottom: 3px; text-shadow: 0 2px 4px #000;
-        }
-        .btn-gmaps {
-            background: var(--gmaps-green);
-            color: #fff;
-            border: none;
-            padding: 8px 14px;
-            font-size: 10px;
-            font-weight: 800;
-            border-radius: 4px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: 0.2s;
-            align-self: center;
-        }
-        .btn-gmaps:hover {
-            background: #2b8c44;
-            box-shadow: 0 0 10px rgba(52, 168, 83, 0.4);
-        }
-        .downbar-search-wrapper {
+            padding: 12px;
             margin-bottom: 15px;
-            display: flex; gap: 8px; max-width: 820px; flex-wrap: wrap;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
         }
-        .downbar-search-wrapper input {
-            flex: 1;
-            min-width: 260px;
-            background: rgba(0, 0, 0, 0.7); border: 1px solid var(--primary-red);
-            padding: 8px 12px; color: #fff; font-size: 12px; border-radius: 4px;
-            outline: none;
+        .property-card:hover {
+            border-color: rgba(255, 59, 59, 0.4);
+            background: rgba(0, 0, 0, 0.5);
         }
-        .downbar-search-wrapper button {
-            background: var(--gmaps-blue);
-            border: none; color: white; padding: 0 15px; min-height: 33px;
-            border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; text-transform: uppercase;
+        .property-card.active {
+            border-color: var(--primary-red);
+            box-shadow: inset 0 0 10px rgba(255, 59, 59, 0.2), 0 0 15px rgba(255, 59, 59, 0.1);
+            background: rgba(15, 5, 5, 0.6);
         }
-        .downbar-flex-layout {
-            display: flex;
-            gap: 25px; align-items: flex-start;
-        }
-        .video-box-gdrive {
-            width: 340px;
-            flex-shrink: 0;
-        }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000;
-            width: 100%; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15);
+        .video-wrapper { 
+            position: relative; padding-bottom: 56.25%; height: 0; background: #000;
+            width: 100%; border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 10px;
         }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%;
             height: 100%; border: none; }
-        @media (max-width: 768px) {
-            .downbar-search-wrapper { max-width: 100%;
-            }
-        }
-        @keyframes pulse-glow {
-            0% { opacity: 0.6;
-                transform: translateX(0); }
-            50% { opacity: 1; transform: translateX(5px);
-            }
-            100% { opacity: 0.6; transform: translateX(0);
-            }
-        }
         
-        /* CSS KEPENTINGAN TEKS BERKEDIP MERAH */
-        .blink-red-text {
-            color: #ff3b3b !important;
-            animation: blink-animation 5.0s steps(5, start) infinite;
-            text-shadow: 0 0 8px rgba(255, 59, 59, 0.5);
-        }
-        
-        /* BARU: CSS UNTUK BERKEDIP TANPA MERUBAH WARNA ASLI TEKS HILANG/BANTUAN */
-        .blink-text {
-            animation: blink-animation 5.0s steps(5, start) infinite;
-        }
-
-        @keyframes blink-animation {
-            to { visibility: hidden;
-            }
-        }
-
-        .cesium-viewer-bottom { display: none !important;
-        }
-        .cesium-viewer-toolbar { right: 390px !important;
-        }
-        
-        /* CSS KOMKOMPONEN MODAL POPUP MEDIA/IMAGE */
-        .custom-modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .custom-modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-        .custom-modal-wrapper {
-            position: relative;
-            max-width: 90%;
-            max-height: 85%;
-            background: rgba(10, 10, 10, 0.9);
-            border: 2px solid var(--primary-red);
-            box-shadow: 0 0 30px var(--accent-glow);
-            border-radius: 8px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transform: scale(0.7);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .custom-modal-overlay.active .custom-modal-wrapper {
-            transform: scale(1);
-        }
-        .custom-modal-close {
-            position: absolute;
-            top: -15px; right: -15px;
-            width: 32px; height: 32px;
-            background: var(--primary-red);
-            border: 2px solid #fff;
-            border-radius: 50%;
-            color: #fff; font-size: 16px;
-            font-weight: bold;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            z-index: 10001;
-        }
-        .custom-modal-media-content {
-            max-width: 100%;
-            max-height: 70vh;
-            object-fit: contain;
-            border-radius: 4px;
-        }
-        .custom-modal-iframe-content {
-            width: 80vw;
-            height: 45vw;
-            max-width: 1000px;
-            max-height: 562px;
-            border: none;
-            border-radius: 4px;
-        }
-        .custom-modal-caption {
-            color: #fff;
-            font-size: 13px;
-            font-weight: 600;
-            margin-top: 12px;
-            text-align: center;
-            letter-spacing: 1px;
+        /* MENILAI INTEGRITAS TEKS UTAMA PADA CARD (TIDAK BOLD) */
+        .card-content h3 {
+            font-size: 12px;
+            font-weight: 400; /* Mengubah tulisan h3 menjadi tidak tebal/normal */
+            line-height: 1.6;
+            margin: 0 0 8px 0;
+            color: var(--text-sub);
             text-transform: uppercase;
-            text-shadow: 0 2px 4px #000;
+            letter-spacing: 0.5px;
         }
-
-        @media (max-width: 768px) {
-            body, html { overflow: auto !important;
-            }
-            #cesiumContainer { height: 50%; width: 100%; position: relative;
-            }
-            .downbar-container { width: 100%; position: relative; height: auto;
-                min-height: 250px; border-left: none; }
-            .sidebar {
-                position: relative;
-                width: 100%; height: auto; border-left: none;
-                border-top: 2px solid var(--primary-red); background: rgba(5,5,5,0.9);
-            }
-            .downbar-flex-layout { flex-direction: column; gap: 15px;
-            }
-            .video-box-gdrive { width: 100%;
-            }
-            .cesium-viewer-toolbar { right: 10px !important; top: 10px !important;
-            }
-            .map-instruction { right: 10px; top: 50px;
-            }
-            .polri-logo { width: 120px;
-            }
-            .header .unit-name { font-size: 6px;
-            }
-            .header .polda-name { font-size: 18px;
-            }
-            .header .target-tag { font-size: 22px;
-            }
-            .custom-modal-iframe-content {
-                width: 90vw;
-                height: 50.62vw;
-            }
+        .coords-label {
+            display: block;
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            font-family: monospace;
+            margin-bottom: 10px;
         }
-      
-        /* Buttons */
-        .btn { 
-            flex: 1; border: none; border-radius: 4px; cursor: pointer; 
-            font-weight: 700; padding: 12px; font-size: 10px; 
-            transition: 0.3s; text-decoration: none; text-align: center;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            text-transform: uppercase; color: white;
-        }
-        
-        .btn-track { background: var(--primary-red); }
-        .btn-track:hover { background: #ff0000; box-shadow: 0 0 15px var(--accent-glow); }
-        .btn-maps { background: var(--gmaps-blue); }
 
         @keyframes pulse-glow {
             0% { opacity: 0.6; transform: translateX(0); }
             50% { opacity: 1; transform: translateX(5px); }
             100% { opacity: 0.6; transform: translateX(0); }
         }
-      
-      
+        
+        /* Buttons */
+        .btn { 
+            flex: 1; border: none; border-radius: 4px; cursor: pointer; 
+            font-weight: 700; padding: 10px; font-size: 10px; 
+            transition: 0.3s; text-decoration: none; text-align: center;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            text-transform: uppercase; color: white;
+        }
+        .btn-track { background: var(--primary-red); }
+        .btn-track:hover { background: #ff0000; box-shadow: 0 0 15px var(--accent-glow); }
+        .btn-maps { background: var(--gmaps-blue); }
+        .btn-maps:hover { background: #357ae8; }
+
+        @media (max-width: 768px) {
+            body, html { overflow: auto !important; }
+            #cesiumContainer { height: 50%; width: 100%; position: relative; }
+            .sidebar {
+                position: relative; width: 100%; height: auto; border-left: none;
+                border-top: 2px solid var(--primary-red); background: rgba(5,5,5,0.9);
+            }
+            .cesium-viewer-toolbar { right: 10px !important; top: 10px !important; }
+            .map-instruction { right: 40px; top: 13px; }
+        }
+        .cesium-viewer-bottom { display: none !important; }
+        .cesium-viewer-toolbar { right: 390px !important; }
     </style>
 </head>
 <body>
@@ -441,13 +198,12 @@
 
     <div class="sidebar">
         <div class="header">
-         <img src="https://lh3.googleusercontent.com/d/1XD22zPAn-bMITxCG-SV6n5Y_jNslXatR" alt="Lambang POLRI" class="polri-logo">
+            <img src="https://lh3.googleusercontent.com/d/1XD22zPAn-bMITxCG-SV6n5Y_jNslXatR" alt="Lambang POLRI" class="polri-logo">
             <span class="unit-name">KEPOLISIAN NEGARA REPUBLIK INDONESIA</span>
             <span class="polda-name">POLDA METRO JAYA</span>
             <span class="target-tag">TARGET OPERASI</span>
         </div>
 
-        <!-- FITUR CARI NOMOR PELAPOR -->
         <div class="search-box">
             <input type="text" id="pelaporSearch" placeholder="Cari Nomor Pelapor (Contoh: 0857...)" onkeyup="filterPelapor()">
         </div>
@@ -473,7 +229,7 @@
     // 2. Database Target (Manual)
     const manualProperties = [
         { 
-            name: "WAKTU : 10052026 - 10.30 <br> T.O :  YUSUF <br> KUHP : 368 <br> PELAPOR : 085782375574  ", 
+            name: "WAKTU : 10052026 - 10.30 <br> T.O : YUSUF <br> KUHP : 368 <br> PELAPOR : 085782375574 ", 
             coords: [-6.116531515275683, 106.8934121286276], 
             ytId: "BkcucgopvGk",
             pelapor: "085782375574"
@@ -496,14 +252,14 @@
             const card = document.createElement('div');
             card.className = 'property-card';
             card.id = `card-${index}`;
-            card.setAttribute('data-pelapor', prop.pelapor); // Data attribute untuk filter
+            card.setAttribute('data-pelapor', prop.pelapor); 
             card.innerHTML = `
                 <div class="video-wrapper">
                     <iframe src="https://www.youtube.com/embed/${prop.ytId}?autoplay=1&mute=1&loop=1&playlist=${prop.ytId}" allowfullscreen></iframe>
                 </div>
                 <div class="card-content">
                     <h3>${prop.name}</h3>
-                    <span class="coords-label"> ${prop.coords[0].toFixed(6)}, ${prop.coords[1].toFixed(6)}</span>
+                    <span class="coords-label">${prop.coords[0].toFixed(6)}, ${prop.coords[1].toFixed(6)}</span>
                     <div style="display:flex; gap:8px;">
                         <button class="btn btn-track" onclick="focusTarget(${prop.coords[0]}, ${prop.coords[1]}, ${index})">POSISI</button>
                         <a href="https://www.google.com/maps?q=${prop.coords[0]},${prop.coords[1]}" target="_blank" class="btn btn-maps">LOKASI</a>
@@ -535,8 +291,10 @@
         
         document.querySelectorAll('.property-card').forEach(c => c.classList.remove('active'));
         const activeCard = document.getElementById(`card-${index}`);
-        activeCard.classList.add('active');
-        activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if(activeCard) {
+            activeCard.classList.add('active');
+            activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
 
         const destination = Cesium.Cartesian3.fromDegrees(lng, lat);
 
@@ -596,3 +354,4 @@
     });
 </script>
 </body>
+</html>

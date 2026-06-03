@@ -3,121 +3,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TARGET OPERASI POLRI</title>
+    <title>JARINGAN LAPORAN 0.0</title>
     
-    <!-- CesiumJS Resources -->
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
     
     <style>
         :root {
             --primary-red: #ff3b3b;
-            --ui-bg: rgba(0, 0, 0, 0.3); 
-            --card-bg: rgba(255, 255, 255, 0.05); 
+            /* MENGUBAH BACKGROUND MENJADI SANGAT TRANSPARAN */
+            --ui-bg: rgba(5, 5, 5, 0.4);
+            --card-bg: rgba(0, 0, 0, 0.3);
             --accent-glow: #ff0000;
             --text-main: #ffffff;
-            --text-sub: rgba(255, 255, 255, 0.6);
+            --text-sub: rgba(255, 255, 255, 0.9);
+            /* Dinaikkan kontrasnya karena bg semakin transparan */
             --gmaps-blue: #4285F4;
+            --gmaps-green: #34A853;
         }
-
-        body, html { 
-            margin: 0; padding: 0; height: 100%; overflow: hidden; 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background: #000; color: white; 
+        body, html {
+            margin: 0;
+            padding: 0; height: 100%; overflow: hidden;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: #000; color: white;
+            touch-action: none;
         }
         
-        #cesiumContainer { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; 
+        #cesiumContainer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
+            transition: 0.3s;
+            pointer-events: auto;
         }
-
-        /* Instruksi Ganti Basemap */
         .map-instruction {
-            position: absolute; top: 15px; right: 440px; z-index: 20;
+            position: absolute;
+            top: 15px; right: 430px; z-index: 20;
             display: flex; align-items: center; pointer-events: none;
             animation: pulse-glow 2s infinite;
         }
-
         .instruction-text {
-            background: var(--primary-red); color: white; padding: 8px 15px;
+            background: var(--primary-red);
+            color: white; padding: 8px 15px;
             border-radius: 4px; font-size: 11px; font-weight: 800;
             text-transform: uppercase; letter-spacing: 1px;
             box-shadow: 0 0 15px var(--accent-glow);
         }
-
-        /* Sidebar UI */
-        .sidebar { 
-            position: absolute; right: 0; top: 0; width: 380px; height: 100%;
-            background: var(--ui-bg); display: flex; flex-direction: column;
-            border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+        /* SIDEBAR DENGAN FILTER BLUR 0.1px */
+        .sidebar {
+            position: absolute;
+            right: 0; top: 0; width: 380px; height: 100%;
+            background: var(--ui-bg);
+            
+            display: flex; flex-direction: column;
+            border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 10;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(0.1px);
+            -webkit-backdrop-filter: blur(0.1px);
+            pointer-events: auto;
+            touch-action: pan-y;
         }
-
-        .header { 
-            padding: 25px 20px; 
-            border-bottom: 1px solid rgba(255,255,255,0.1); 
-            text-align: center; 
+        .sidebar-sticky-top {
+            flex-shrink: 0;
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .header {
+            padding: 25px 20px;
+            text-align: center;
+        }
+        .polri-logo {
+            width: 160px;
+            height: auto;
+            margin-bottom: 8px;
+            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.7));
+        }
+        .header .unit-name { font-size: 9px;
+            opacity: 0.9; display: block; letter-spacing: 3px; margin-bottom: 4px; text-transform: uppercase;
+            font-weight: 600;}
+        .header .polda-name { font-size: 24px; font-weight: 900; display: block; color: var(--text-main);
+        }
+        .header .target-tag { color: var(--primary-red); font-weight: 800; font-size: 24px;
+            text-shadow: 0 0 10px var(--accent-glow); }
+        .scroll-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 15px;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
+        }
+        .scroll-container::-webkit-scrollbar { width: 4px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb { background: var(--primary-red);
+        }
+        .investigasi-module {
+            background: transparent;
+            padding: 5px 0px 25px 0px;
             flex-shrink: 0;
         }
-
-        /* Styling Pencarian */
-        .search-box {
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .inv-title {
+            font-size: 11px;
+            font-weight: 800; color: var(--primary-red);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+        .inv-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;
+        }
+        .btn-inv {
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 15px 10px; font-size: 10px; font-weight: 700; border-radius: 4px;
+            color: #fff; cursor: pointer;
+            transition: 0.2s; text-transform: uppercase;
+            text-align: center; line-height: 1.3;
+            backdrop-filter: blur(0.1px);
+            -webkit-backdrop-filter: blur(0.1px);
+        }
+        .btn-inv:hover { border-color: var(--primary-red); background: rgba(255, 59, 59, 0.3);
+        }
+        .btn-inv.active { background: var(--primary-red); border-color: var(--primary-red);
+            box-shadow: 0 0 8px rgba(255, 59, 59, 0.6); }
+        /* DOWNBAR COMPONENT DENGAN FILTER BLUR 0.1px */
+        .downbar-container {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: calc(100% - 380px);
+            height: 320px;
+            background: var(--ui-bg);
+            border-top: 2px solid var(--primary-red);
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.3);
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            padding: 15px 20px;
+            overflow: hidden;
+            backdrop-filter: blur(0.1px);
+            -webkit-backdrop-filter: blur(0.1px);
+            pointer-events: auto;
+        }
+        .downbar-header-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--primary-red);
+            letter-spacing: 2px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+        .downbar-content-area {
+            flex: 1;
+            overflow-y: auto;
+            color: #ffffff;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
+        }
+        .downbar-content-area::-webkit-scrollbar { width: 4px;
+        }
+        .downbar-content-area::-webkit-scrollbar-thumb { background: var(--primary-red);
+        }
+        .downbar-grid-view {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 10px;
+        }
+        .downbar-card-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 6px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .downbar-card-item:hover {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 59, 59, 0.6);
+        }
+        .downbar-photo-thumb {
+            width: 65px;
+            height: 65px; object-fit: cover;
+            border-radius: 4px; border: 1px solid var(--primary-red);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .downbar-photo-thumb:hover {
+            transform: scale(1.05);
+        }
+        .downbar-photo-large {
+            width: 140px;
+            height: 85px; object-fit: cover;
+            border-radius: 4px; border: 1px solid rgba(255,255,255,0.25);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .downbar-photo-large:hover {
+            transform: scale(1.03);
+        }
+        .downbar-info-text {
+            font-size: 11px;
+            line-height: 1.5; color: var(--text-sub);
+            flex: 1;
+            text-shadow: 0 1px 4px rgba(0,0,0,1), 0 1px 8px rgba(0,0,0,1);
+            /* Mempertebal bayangan teks agar tetap terbaca jelas */
+        }
+        .downbar-info-text strong { color: #fff;
+            font-size: 14px; display: block; margin-bottom: 3px; text-shadow: 0 2px 4px #000;
+        }
+        .btn-gmaps {
+            background: var(--gmaps-green);
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            font-size: 10px;
+            font-weight: 800;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.2s;
+            align-self: center;
+        }
+        .btn-gmaps:hover {
+            background: #2b8c44;
+            box-shadow: 0 0 10px rgba(52, 168, 83, 0.4);
+        }
+        .downbar-search-wrapper {
+            margin-bottom: 15px;
+            display: flex; gap: 8px; max-width: 820px; flex-wrap: wrap;
+        }
+        .downbar-search-wrapper input {
+            flex: 1;
+            min-width: 260px;
+            background: rgba(0, 0, 0, 0.7); border: 1px solid var(--primary-red);
+            padding: 8px 12px; color: #fff; font-size: 12px; border-radius: 4px;
+            outline: none;
+        }
+        .downbar-search-wrapper button {
+            background: var(--gmaps-blue);
+            border: none; color: white; padding: 0 15px; min-height: 33px;
+            border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; text-transform: uppercase;
+        }
+        .downbar-flex-layout {
+            display: flex;
+            gap: 25px; align-items: flex-start;
+        }
+        .video-box-gdrive {
+            width: 340px;
+            flex-shrink: 0;
+        }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000;
+            width: 100%; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15);
+        }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%;
+            height: 100%; border: none; }
+        @media (max-width: 768px) {
+            .downbar-search-wrapper { max-width: 100%;
+            }
+        }
+        @keyframes pulse-glow {
+            0% { opacity: 0.6;
+                transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(5px);
+            }
+            100% { opacity: 0.6; transform: translateX(0);
+            }
         }
         
-        .search-box input {
-            width: 100%;
+        /* CSS KEPENTINGAN TEKS BERKEDIP MERAH */
+        .blink-red-text {
+            color: #ff3b3b !important;
+            animation: blink-animation 5.0s steps(5, start) infinite;
+            text-shadow: 0 0 8px rgba(255, 59, 59, 0.5);
+        }
+        
+        /* BARU: CSS UNTUK BERKEDIP TANPA MERUBAH WARNA ASLI TEKS HILANG/BANTUAN */
+        .blink-text {
+            animation: blink-animation 5.0s steps(5, start) infinite;
+        }
+
+        @keyframes blink-animation {
+            to { visibility: hidden;
+            }
+        }
+
+        .cesium-viewer-bottom { display: none !important;
+        }
+        .cesium-viewer-toolbar { right: 390px !important;
+        }
+        
+        /* CSS KOMKOMPONEN MODAL POPUP MEDIA/IMAGE */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .custom-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .custom-modal-wrapper {
+            position: relative;
+            max-width: 90%;
+            max-height: 85%;
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid var(--primary-red);
+            box-shadow: 0 0 30px var(--accent-glow);
+            border-radius: 8px;
             padding: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--primary-red);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: scale(0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .custom-modal-overlay.active .custom-modal-wrapper {
+            transform: scale(1);
+        }
+        .custom-modal-close {
+            position: absolute;
+            top: -15px; right: -15px;
+            width: 32px; height: 32px;
+            background: var(--primary-red);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            color: #fff; font-size: 16px;
+            font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            z-index: 10001;
+        }
+        .custom-modal-media-content {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
             border-radius: 4px;
-            color: white;
-            font-size: 12px;
-            box-sizing: border-box;
-            outline: none;
-            box-shadow: 0 0 5px rgba(255, 59, 59, 0.2);
+        }
+        .custom-modal-iframe-content {
+            width: 80vw;
+            height: 45vw;
+            max-width: 1000px;
+            max-height: 562px;
+            border: none;
+            border-radius: 4px;
+        }
+        .custom-modal-caption {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px #000;
         }
 
-        /* Styling Logo Polri */
-        .polri-logo {
-            width: 200px;
-            height: auto;
-            margin-bottom: 15px;
+        @media (max-width: 768px) {
+            body, html { overflow: auto !important;
+            }
+            #cesiumContainer { height: 50%; width: 100%; position: relative;
+            }
+            .downbar-container { width: 100%; position: relative; height: auto;
+                min-height: 250px; border-left: none; }
+            .sidebar {
+                position: relative;
+                width: 100%; height: auto; border-left: none;
+                border-top: 2px solid var(--primary-red); background: rgba(5,5,5,0.9);
+            }
+            .downbar-flex-layout { flex-direction: column; gap: 15px;
+            }
+            .video-box-gdrive { width: 100%;
+            }
+            .cesium-viewer-toolbar { right: 10px !important; top: 10px !important;
+            }
+            .map-instruction { right: 10px; top: 50px;
+            }
+            .polri-logo { width: 120px;
+            }
+            .header .unit-name { font-size: 6px;
+            }
+            .header .polda-name { font-size: 18px;
+            }
+            .header .target-tag { font-size: 22px;
+            }
+            .custom-modal-iframe-content {
+                width: 90vw;
+                height: 50.62vw;
+            }
         }
-
-        .header .unit-name { font-size: 9px; opacity: 0.7; display: block; letter-spacing: 2px; margin-bottom: 4px; }
-        .header .polda-name { font-size: 24px; font-weight: 900; display: block; color: var(--text-main); }
-        .header .target-tag { color: var(--primary-red); font-weight: 800; font-size: 28px; text-shadow: 0 0 10px var(--accent-glow); }
-
-        .scroll-container { 
-            flex: 1; 
-            overflow-y: auto; 
-            padding: 15px;
-            -webkit-overflow-scrolling: touch;
-        }
-        .scroll-container::-webkit-scrollbar { width: 4px; }
-        .scroll-container::-webkit-scrollbar-thumb { background: var(--primary-red); }
-
-        /* Card Style */
-        .property-card {
-            background: var(--card-bg); border-radius: 8px; margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.1); overflow: hidden; transition: 0.4s;
-        }
-
-        .property-card.active { 
-            border-color: var(--primary-red); 
-            background: rgba(255, 59, 59, 0.15);
-            transform: scale(1.02);
-        }
-
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-
-        .card-content { padding: 15px; }
-        .card-content h3 { margin: 0 0 10px 0; font-size: 12px; line-height: 1.4; color: var(--text-main); font-weight: 500; }
-        .coords-label { color: var(--text-sub); font-size: 10px; font-family: monospace; display: block; margin-bottom: 15px; }
-
+      
         /* Buttons */
         .btn { 
             flex: 1; border: none; border-radius: 4px; cursor: pointer; 
@@ -136,27 +427,8 @@
             50% { opacity: 1; transform: translateX(5px); }
             100% { opacity: 0.6; transform: translateX(0); }
         }
-
-        .cesium-viewer-bottom { display: none !important; }
-        .cesium-viewer-toolbar { right: 390px !important; }
-
-        @media (max-width: 768px) {
-            #cesiumContainer { height: 40%; position: relative; }
-            .sidebar { 
-                position: relative; 
-                width: 100%; 
-                height: 60%; 
-                border-left: none; 
-                border-top: 2px solid var(--primary-red); 
-                background: rgba(0,0,0,0.8);
-            }
-            .cesium-viewer-toolbar { right: 10px !important; }
-            .map-instruction { right: 10px; top: 50px; }
-            .polri-logo { width: 120px; }
-            .header .unit-name  { font-size: 6px; }
-            .header .polda-name { font-size: 18px; }
-            .header .target-tag { font-size: 22px; }
-        }
+      
+      
     </style>
 </head>
 <body>
@@ -324,4 +596,3 @@
     });
 </script>
 </body>
-</html>

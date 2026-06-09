@@ -159,17 +159,14 @@
 
     let currentActiveProject = null;
 
-    // Alur diubah menjadi pemantauan tenor angsuran bulanan
+    // Alur disesuaikan: Menghapus Review Q1, Bulan 7, dan menggeser Mid Term ke Bulan 6
     const stepsTemplate = [
-        { id: "1", badge: "Bulan 01", title: "Angsuran Bulan ke-1", desc: "Pembayaran cicilan pertama setelah masa tenggang atau pencairan." },
-        { id: "2", badge: "Bulan 02", title: "Angsuran Bulan ke-2", desc: "Monitoring konsistensi pembayaran siklus kedua." },
-        { id: "3", badge: "Bulan 03", title: "Angsuran Bulan ke-3", desc: "Siklus akhir kuartal pertama. Evaluasi kedisiplinan keuangan finansial." },
-        { id: "V1", badge: "Review Q1", title: "Audit & Verifikasi Lapangan I", desc: "Validasi silang fisik/lokasi jika ada penurunan grafik performa di triwulan pertama." },
-        { id: "4", badge: "Bulan 04", title: "Angsuran Bulan ke-4", desc: "Penerimaan dan pencatatan cicilan kuartal kedua." },
-        { id: "5", badge: "Bulan 05", title: "Angsuran Bulan ke-5", desc: "Pengecekan stabilitas pelunasan sebelum memasuki paruh waktu tenor." },
-        { id: "V2", badge: "Mid Term", title: "Verifikasi Komitmen Paruh Waktu", desc: "Pemeriksaan total saldo pokok, sisa bunga, re-sign komitmen jika diperlukan." },
-        { id: "6", badge: "Bulan 06", title: "Angsuran Bulan ke-6", desc: "Pembayaran tengah periode. Batas kritis penentuan risiko kredit macet." },
-        { id: "7", badge: "Bulan 07", title: "Angsuran Bulan ke-7", desc: "Siklus pemulihan sisa pokok hutang menuju tahap penyelesaian akhir." }
+        { id: "1", badge: "Bulan 01", title: "Angsuran Bulan ke-1", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" },
+        { id: "2", badge: "Bulan 02", title: "Angsuran Bulan ke-2", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" },
+        { id: "3", badge: "Bulan 03", title: "Angsuran Bulan ke-3", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" },
+        { id: "4", badge: "Bulan 04", title: "Angsuran Bulan ke-4", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" },
+        { id: "5", badge: "Bulan 05", title: "Angsuran Bulan ke-5", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" },
+        { id: "6", badge: "Bulan 06", title: "Angsuran Bulan ke-6 ", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" }
     ];
 
     function getGPS() {
@@ -198,6 +195,7 @@
         return new Date().toLocaleString('id-ID', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }).replace(/\./g, ':');
     }
 
+    // Fungsi normalisasi Thumbnail URL Drive
     function formatImgUrl(url) {
         if (!url) return "";
         if (url.includes("drive.google.com")) {
@@ -211,7 +209,7 @@
         document.getElementById('workflow').innerHTML = stepsTemplate.map(step => `
             <div class="step-card" id="card-${step.id}" onclick="handleInteraction('${step.id}')">
                 <div class="status-badge">${step.badge}</div>
-                <div class="step-number">${step.id}</div>
+                <div class="step-number">${step.id === '6' ? 'M6' : step.id}</div>
                 <div class="step-content">
                     <h3>${step.title}</h3>
                     <p>${step.desc}</p>
@@ -297,7 +295,7 @@
                 });
             } else {
                 card.classList.remove('interacted');
-                if (step.id === "V1" || step.id === "V2") {
+                if (step.id === "6") { // Id 6 bertindak sebagai kartu evaluasi kritis / berdenyut merah jika aktif
                     card.classList.add('verification-active');
                 } else {
                     card.classList.remove('verification-active');

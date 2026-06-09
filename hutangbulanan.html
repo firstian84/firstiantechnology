@@ -50,7 +50,7 @@
         .progress-bar { height: 100%; width: 0%; background: linear-gradient(to right, var(--accent-red-main), var(--accent-blue-main)); transition: width 0.5s ease-in-out; }
         .percentage-text { font-size: 0.8rem; font-weight: bold; color: var(--accent-green); margin-top: 5px; font-family: monospace; }
 
-        .admin-controls { margin-bottom: 20px; display: flex; gap: 10px; }
+        .admin-controls { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         .btn-action { background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; text-transform: uppercase; }
         .btn-confirm { border-color: var(--accent-blue-main); color: var(--accent-blue-main); }
         .btn-delete:hover { border-color: var(--accent-red-main); color: var(--accent-red-main); }
@@ -86,7 +86,7 @@
         .btn-save-link { background: var(--accent-blue-main); border: none; color: black; font-weight: bold; font-size: 0.65rem; padding: 0 12px; border-radius: 4px; cursor: pointer; }
 
         .image-preview-container { display: flex; gap: 12px; width: 100%; overflow-x: auto; padding: 5px 0; min-height: 50px; }
-        .preview-img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid var(--accent-blue-main); flex-shrink: 0; }
+        .preview-img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid var(--accent-blue-main); flex-shrink: 0; cursor: pointer; }
 
         .status-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 4px; border: 1px solid #30363d; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
         .timestamp-active { font-size: 0.7rem; color: var(--accent-blue-main); margin-top: 8px; font-family: monospace; font-weight: bold; display: none; }
@@ -103,7 +103,29 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
         .modal-box { background: var(--card-bg); border: 1px solid var(--accent-blue-main); padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; }
-        .modal-box input { width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-blue); color: white; border-radius: 6px; margin-bottom: 20px; }
+        .modal-box h2 { font-size: 1.2rem; margin-bottom: 15px; letter-spacing: 1px; color: white; }
+        .modal-box input { width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-blue); color: white; border-radius: 6px; margin-bottom: 20px; outline: none; }
+
+        /* ==================== RESPONSIVE LAYOUT (ANDROID/MOBILE OPTIMIZATION) ==================== */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            h1 { font-size: 1.2rem; margin-bottom: 15px; }
+            
+            .workflow-wrapper::before { left: 20px; }
+            
+            .step-card { padding: 15px 12px 15px 50px; border-radius: 10px; }
+            .step-number { left: 8px; top: 14px; width: 28px; height: 28px; font-size: 9px; }
+            .step-content h3 { font-size: 0.95rem; }
+            .step-content p { font-size: 0.75rem; }
+            
+            .link-input-group { flex-direction: column; gap: 8px; width: 100%; }
+            .link-input-small { width: 100%; height: 35px; font-size: 0.8rem; padding: 6px 10px; }
+            .btn-save-link { width: 100%; height: 35px; font-size: 0.8rem; padding: 8px 0; margin-top: 2px; }
+            
+            .preview-img { width: 90px; height: 90px; }
+            .issue-card { padding: 15px; }
+            .admin-controls .btn-action { padding: 8px 12px; font-size: 0.65rem; }
+        }
     </style>
 </head>
 <body>
@@ -159,14 +181,13 @@
 
     let currentActiveProject = null;
 
-    // Alur disesuaikan: Menghapus Review Q1, Bulan 7, dan menggeser Mid Term ke Bulan 6
     const stepsTemplate = [
         { id: "1", badge: "Bulan 01", title: "Angsuran Bulan ke-1", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" },
         { id: "2", badge: "Bulan 02", title: "Angsuran Bulan ke-2", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" },
         { id: "3", badge: "Bulan 03", title: "Angsuran Bulan ke-3", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" },
         { id: "4", badge: "Bulan 04", title: "Angsuran Bulan ke-4", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" },
         { id: "5", badge: "Bulan 05", title: "Angsuran Bulan ke-5", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" },
-        { id: "6", badge: "Bulan 06", title: "Angsuran Bulan ke-6 ", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" }
+        { id: "6", badge: "Bulan 06", title: "Angsuran Bulan ke-6", desc: "upload bukti pembayaran pada GDrive, bagikan public dan tempelkan, simpan alamatnya pada input konten" }
     ];
 
     function getGPS() {
@@ -195,7 +216,6 @@
         return new Date().toLocaleString('id-ID', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }).replace(/\./g, ':');
     }
 
-    // Fungsi normalisasi Thumbnail URL Drive
     function formatImgUrl(url) {
         if (!url) return "";
         if (url.includes("drive.google.com")) {
@@ -216,8 +236,7 @@
                     <div class="gps-display" id="gps-val-${step.id}">📍 Menunggu penandaan lokasi setoran...</div>
                     <div class="action-row" onclick="event.stopPropagation()">
                         <div class="link-input-group">
-                            <input type="text" class="link-input-small" id="l1-${step.id}" placeholder="Link Foto Resi / Slip Bank">
-                            <input type="text" class="link-input-small" id="l2-${step.id}" placeholder="Link Kuitansi / Berita Acara">
+                            <input type="text" class="link-input-small" id="l1-${step.id}" placeholder="Link Bukti Utama">
                             <button class="btn-save-link" id="btn-save-${step.id}" onclick="saveLinks('${step.id}')">INPUT</button>
                         </div>
                         <div class="image-preview-container" id="preview-${step.id}"></div>
@@ -239,6 +258,7 @@
             if (!keys || keys.length === 0) {
                 document.getElementById('project-name-display').innerText = "BELUM ADA DATA ANGSURAN AKTIF";
                 updateProgressBar(0);
+                renderWorkflow();
                 return;
             }
 
@@ -274,6 +294,7 @@
         stepsTemplate.forEach(step => {
             const card = document.getElementById(`card-${step.id}`);
             const data = steps[step.id];
+            if (!card) return;
             
             if (data?.status === 1) {
                 completedSteps++;
@@ -282,20 +303,21 @@
                 document.getElementById(`gps-val-${step.id}`).innerText = `📍 LOC PYMT: ${data.gps || 'Unknown'}`;
                 document.getElementById(`ts-act-${step.id}`).innerText = `PAID AT: ${data.time}`;
                 
+                if(data.link1) document.getElementById(`l1-${step.id}`).value = data.link1;
+
                 const previewBox = document.getElementById(`preview-${step.id}`);
                 previewBox.innerHTML = "";
-                [data.link1, data.link2].forEach(link => {
-                    if (link) {
-                        const img = document.createElement('img');
-                        img.src = formatImgUrl(link);
-                        img.className = "preview-img";
-                        img.onclick = () => window.open(link, '_blank');
-                        previewBox.appendChild(img);
-                    }
-                });
+                if (data.link1 && data.link1.trim() !== "") {
+                    const img = document.createElement('img');
+                    img.src = formatImgUrl(data.link1.trim());
+                    img.className = "preview-img";
+                    img.onclick = () => window.open(data.link1, '_blank');
+                    previewBox.appendChild(img);
+                }
             } else {
                 card.classList.remove('interacted');
-                if (step.id === "6") { // Id 6 bertindak sebagai kartu evaluasi kritis / berdenyut merah jika aktif
+                // SINKRONISASI AKTIF: Mengunci efek pulse berkedip merah HANYA untuk Bulan ke-6 (M6)
+                if (step.id === "6") { 
                     card.classList.add('verification-active');
                 } else {
                     card.classList.remove('verification-active');
@@ -318,25 +340,45 @@
     }
 
     async function handleInteraction(id) {
-        if (!currentActiveProject || currentActiveProject.steps[id].status === 1) return;
+        if (!currentActiveProject || (currentActiveProject.steps[id] && currentActiveProject.steps[id].status === 1)) return;
         try {
             const loc = await getGPS();
-            currentActiveProject.steps[id] = { status: 1, time: getFormattedDate(), gps: loc };
+            currentActiveProject.steps[id] = { 
+                status: 1, 
+                time: getFormattedDate(), 
+                gps: loc,
+                link1: document.getElementById(`l1-${id}`).value,
+                link2: ""
+            };
             await pushToDB();
             updateProjectUI();
-        } catch (e) {}
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     async function saveLinks(id) {
         if (!currentActiveProject) return;
         try {
-            const loc = await getGPS();
+            let loc = (currentActiveProject.steps[id] && currentActiveProject.steps[id].gps) ? currentActiveProject.steps[id].gps : "";
+            if (!loc) {
+                loc = await getGPS();
+            }
             const l1 = document.getElementById(`l1-${id}`).value;
-            const l2 = document.getElementById(`l2-${id}`).value;
-            currentActiveProject.steps[id] = { status: 1, time: getFormattedDate(), gps: loc, link1: l1, link2: l2 };
+            
+            currentActiveProject.steps[id] = { 
+                status: 1, 
+                time: currentActiveProject.steps[id]?.time || getFormattedDate(), 
+                gps: loc, 
+                link1: l1, 
+                link2: "" 
+            };
             await pushToDB();
             updateProjectUI();
-        } catch (e) {}
+            alert(`Data angsuran Bulan ${id} berhasil diperbarui.`);
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     async function saveIssue() {
@@ -383,12 +425,13 @@
             method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
             body: JSON.stringify({ client: name, steps: steps, progress: 0 })
         });
+        document.getElementById('clientInput').value = "";
         closeModal(); 
         updateProjectUI();
     }
 
     async function deleteLatestProject() {
-        if (currentActiveProject && confirm("Hapus riwayat angsuran debitur ini?")) {
+        if (currentActiveProject && confirm(`Hapus riwayat angsuran debitur "${currentActiveProject.client}" ini?`)) {
             await fetch(`${CONFIG.URL}/del/${currentActiveProject.key}`, { 
                 method: 'POST', 
                 headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } 
@@ -405,7 +448,7 @@
 
     setInterval(() => {
         updateProjectUI();
-    }, 5000);
+    }, 7000);
 </script>
 </body>
 </html>

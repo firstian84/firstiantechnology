@@ -274,7 +274,7 @@
             const data = JSON.parse(rawData);
             currentActiveProject = { key: keys[0], ...data };
             
-            document.getElementById('project-name-display').innerText = `DEBITUR AKTIF: ${data.client}`;
+            document.getElementById('project-name-display').innerText = ` ${data.client}`;
             syncUI(data.steps);
         } catch (e) { 
             console.error("Sync Error:", e); 

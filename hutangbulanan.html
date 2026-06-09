@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HUTANG BULANAN</title>
+    <title>1030003720022 mandiri</title>
     
     <style>
         :root {
@@ -158,7 +158,7 @@
 </div>
 
 <div class="container">
-    <h1>HUTANG BULANAN</h1>
+    <h1>1030003720022 MUHAMMAD RIZKY HERSY</h1>
     <div class="workflow-wrapper" id="workflow"></div>
 
     <div class="issue-monitor-section">
@@ -274,7 +274,7 @@
             const data = JSON.parse(rawData);
             currentActiveProject = { key: keys[0], ...data };
             
-            document.getElementById('project-name-display').innerText = `1030003720022 ${data.client}`;
+            document.getElementById('project-name-display').innerText = ` ${data.client}`;
             syncUI(data.steps);
         } catch (e) { 
             console.error("Sync Error:", e); 

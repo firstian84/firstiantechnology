@@ -132,7 +132,7 @@
 
 <div class="modal-overlay" id="projectModal">
     <div class="modal-box">
-        <h2>DEBITUR BARU</h2>
+        <h2>BARU</h2>
         <input type="text" id="clientInput" placeholder="NAMA DEBITUR / TARGET ANGSURAN...">
         <div style="display: flex; gap: 10px; justify-content: center;">
             <button class="btn-action" onclick="closeModal()">Batal</button>
@@ -153,8 +153,8 @@
 </div>
 
 <div class="admin-controls">
-    <button class="btn-action" onclick="openModal()">Registrasi Debitur</button>
-    <button class="btn-action btn-delete" onclick="deleteLatestProject()">Hapus Rekor</button>
+    <button class="btn-action" onclick="openModal()">Registrasi</button>
+    <button class="btn-action btn-delete" onclick="deleteLatestProject()">Hapus</button>
 </div>
 
 <div class="container">
@@ -300,7 +300,7 @@
                 completedSteps++;
                 card.classList.add('interacted');
                 card.classList.remove('verification-active');
-                document.getElementById(`gps-val-${step.id}`).innerText = `📍 LOC PYMT: ${data.gps || 'Unknown'}`;
+                document.getElementById(`gps-val-${step.id}`).innerText = ` ${data.gps || 'Unknown'}`;
                 document.getElementById(`ts-act-${step.id}`).innerText = `PAID AT: ${data.time}`;
                 
                 if(data.link1) document.getElementById(`l1-${step.id}`).value = data.link1;

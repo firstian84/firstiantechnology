@@ -133,7 +133,7 @@
 <div class="modal-overlay" id="projectModal">
     <div class="modal-box">
         <h2>BARU</h2>
-        <input type="text" id="clientInput" placeholder="NAMA DEBITUR / TARGET ANGSURAN...">
+        <input type="text" id="clientInput" placeholder="NAMA / TARGET ANGSURAN...">
         <div style="display: flex; gap: 10px; justify-content: center;">
             <button class="btn-action" onclick="closeModal()">Batal</button>
             <button class="btn-action btn-confirm" onclick="confirmProject()">Simpan</button>
@@ -142,11 +142,11 @@
 </div>
 
 <div class="project-header">
-    <div id="project-name-display">SYNCING REPAYMENT LOGS...</div>
+    <div id="project-name-display">SYNCING LOGS...</div>
 </div>
 
 <div class="container" style="text-align: center; margin-bottom: 10px;">
-    <div class="percentage-text" id="percent-label">REPAYMENT PROGRESS: 0%</div>
+    <div class="percentage-text" id="percent-label"REPAYMENT PROGRESS: 0%</div>
     <div class="progress-container">
         <div class="progress-bar" id="completion-bar"></div>
     </div>
@@ -274,7 +274,7 @@
             const data = JSON.parse(rawData);
             currentActiveProject = { key: keys[0], ...data };
             
-            document.getElementById('project-name-display').innerText = ` ${data.client}`;
+            document.getElementById('project-name-display').innerText = `1030003720022 ${data.client}`;
             syncUI(data.steps);
         } catch (e) { 
             console.error("Sync Error:", e); 
@@ -283,7 +283,7 @@
 
     function updateProgressBar(percent) {
         document.getElementById('completion-bar').style.width = percent + "%";
-        document.getElementById('percent-label').innerText = `REPAYMENT PROGRESS: ${percent}%`;
+        document.getElementById('percent-label').innerText = `PROGRESS: ${percent}%`;
     }
 
     function syncUI(steps) {
@@ -316,7 +316,7 @@
                 }
             } else {
                 card.classList.remove('interacted');
-                // SINKRONISASI AKTIF: Mengunci efek pulse berkedip merah HANYA untuk Bulan ke-6 (M6)
+                // SINKRONISASI AKTIF: Mengunci efek pulse berkedip merah HANYA untuk Bulan ke-6 
                 if (step.id === "6") { 
                     card.classList.add('verification-active');
                 } else {
@@ -431,7 +431,7 @@
     }
 
     async function deleteLatestProject() {
-        if (currentActiveProject && confirm(`Hapus riwayat angsuran debitur "${currentActiveProject.client}" ini?`)) {
+        if (currentActiveProject && confirm(`Hapus riwayat "${currentActiveProject.client}" ini?`)) {
             await fetch(`${CONFIG.URL}/del/${currentActiveProject.key}`, { 
                 method: 'POST', 
                 headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } 

@@ -97,7 +97,6 @@
             align-items: center;
             padding: 0 5%;
             position: relative;
-            /* Ditambahkan overlay gelap agar teks putih kontras dan terbaca */
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
         }
 
@@ -111,11 +110,11 @@
             line-height: 1.2;
             margin-bottom: 20px;
             font-weight: 700;
-            color: #ffffff; /* PERBAIKAN: Mengunci warna teks judul menjadi putih */
+            color: #ffffff;
         }
 
         .hero-content2 p {
-            color: #ffffff; /* PERBAIKAN: Mengunci warna teks deskripsi menjadi putih */
+            color: #ffffff;
             margin-bottom: 30px;
             font-size: 1.1rem;
             opacity: 0.9;
@@ -123,8 +122,8 @@
 
         /* --- PRODUCT CUSTOMIZER SECTION --- */
         .customizer-section {
-            padding: 100px 5%;
-            background: #ffffff; /* Mengubah background area customizer menjadi putih */
+            padding: 100px 5% 20px 5%; /* PERBAIKAN: Mengurangi padding bawah dari 100px menjadi 20px */
+            background: #ffffff;
         }
 
         .section-title {
@@ -135,7 +134,7 @@
         .section-title h2 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            color: #111827; /* Menjadi hitam/gelap agar terlihat di background putih */
+            color: #111827;
         }
 
         .section-title p {
@@ -161,7 +160,7 @@
         .product-image {
             width: 100%;
             max-width: 400px;
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1)); /* Shadow diperhalus untuk latar putih */
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
@@ -183,8 +182,8 @@
         .furniture-list li {
             font-size: 1.1rem;
             margin-bottom: 12px;
-            color: #111827; /* Mengganti var(--text-main) menjadi hitam tegas agar terbaca */
-            white-space: pre-line; /* Menambahkan ini agar fungsi breakline (\n) pada JS berjalan rapi */
+            color: #111827;
+            white-space: pre-line;
         }
 
         .price {
@@ -195,7 +194,7 @@
         }
 
         .option-group {
-            margin-bottom: 30px;
+            margin-bottom: 0px; /* PERBAIKAN: Mengeliminasi margin bawah agar rapat dengan tombol di bawahnya */
         }
 
         .option-title {
@@ -222,7 +221,7 @@
         }
 
         .color-dot.active {
-            border-color: #111827; /* Mengubah indikator aktif menjadi gelap menyesuaikan tema putih */
+            border-color: #111827;
             transform: scale(1.1);
         }
 
@@ -235,8 +234,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 60px 0; 
-            background-color: #ffffff; /* Mengubah wrapper tombol menjadi putih */
+            padding: 20px 0 60px 0; /* PERBAIKAN: Mengurangi padding atas dari 60px menjadi 20px */
+            background-color: #ffffff;
         }
 
         .btn-web-animated {
@@ -278,44 +277,51 @@
             }
         }
 
-       /* --- RESPONSIVE LAYOUT UNTUK MOBILE ANDROID --- */
-@media (max-width: 768px) {
-    nav { 
-        padding: 10px 4%; 
-        /* Efek Glassmorphism */
-        background-color: rgba(255, 255, 255, 0.1); /* Warna putih transparan */
-        backdrop-filter: blur(2px); /* Efek blur pada background di bawah nav */
-        -webkit-backdrop-filter: blur(1px); /* Dukungan untuk browser Safari/iOS */
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Garis pembatas tipis transparan */
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Bayangan lembut agar nav lebih menonjol */
-        
-        /* Opsional: Pastikan nav tetap berada di paling atas saat di-scroll */
-        position: fixed; 
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1000;
-    }
-    
-    .nav-links { display: none; } 
-    .customizer-container { grid-template-columns: 1fr; gap: 20px;  }
-    .hero-content2 h1 { font-size: 2rem; color: #ffffff; } /* Diperbaiki dari #00000 menjadi #000000 */
-    .hero-content2 p { font-size: 0.95rem; color: #ffffff; }
-    .product-image { max-height: 350px; } 
-    
-    .hero { 
-        top: 50px;
-        height: 50vh;  
-        width: 100vw; 
-        margin: 0 auto; 
-        display: flex;
-        flex-direction: column;
-        justify-content: center; 
-        align-items: center;    
-        text-align: center;
-        background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
-    }
-}
+        /* --- RESPONSIVE LAYOUT UNTUK MOBILE ANDROID --- */
+        @media (max-width: 768px) {
+            nav { 
+                padding: 0;
+                background-color: rgba(255, 255, 255, 0.1); 
+                backdrop-filter: blur(2px); 
+                -webkit-backdrop-filter: blur(1px); 
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
+                position: fixed; 
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+            }
+            
+            .nav-links { display: none; } 
+            
+            .customizer-container { 
+                grid-template-columns: 1fr; 
+                gap: 0;
+            }
+            
+            .hero-content2 h1 { font-size: 2rem; color: #ffffff; } 
+            .hero-content2 p { font-size: 0.95rem; color: #ffffff; }
+            .product-image { max-height: 350px; } 
+            
+            .hero { 
+                top: 50px;
+                height: 50vh;  
+                width: 100vw; 
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center; 
+                align-items: center;    
+                text-align: center;
+                background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
+            }
+
+            .button-wrapper {
+                padding: 10px 0 40px 0; /* Mengoptimalkan jarak pada tampilan mobile */
+            }
+        }
     </style>
 </head>
 <body>
@@ -402,7 +408,6 @@
             heroBg.style.opacity = "0.8";
             
             setTimeout(() => {
-                /* PERBAIKAN: Mengunci gradasi gelap (rgba(0,0,0,0.5)) di JavaScript saat transisi hero agar teks putih tetap kontras */
                 heroBg.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('${heroData[index].bg}')`;
                 heroTitle.innerText = heroData[index].title;
                 heroDesc.innerText = heroData[index].desc;

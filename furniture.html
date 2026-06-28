@@ -278,28 +278,44 @@
             }
         }
 
-        /* --- RESPONSIVE LAYOUT UNTUK MOBILE ANDROID --- */
-        @media (max-width: 768px) {
-            nav { padding: 10px 4%; background-color: #ffffff; }
-            .nav-links { display: none; } 
-            .customizer-container { grid-template-columns: 1fr; gap: 20px;  }
-            .hero-content2 h1 { font-size: 2rem; color: #ffffff; }
-            .hero-content2 p { font-size: 0.95rem; color: #ffffff; }
-            .product-image { max-height: 280px; } 
-            
-            .hero { 
-                top: 50px;
-                height: 50vh;  
-                width: 100vw; 
-                margin: 0 auto; 
-                display: flex;
-                flex-direction: column;
-                justify-content: center; 
-                align-items: center;    
-                text-align: center;
-                background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
-            }
-        }      
+       /* --- RESPONSIVE LAYOUT UNTUK MOBILE ANDROID --- */
+@media (max-width: 768px) {
+    nav { 
+        padding: 10px 4%; 
+        /* Efek Glassmorphism */
+        background-color: rgba(255, 255, 255, 0.1); /* Warna putih transparan */
+        backdrop-filter: blur(2px); /* Efek blur pada background di bawah nav */
+        -webkit-backdrop-filter: blur(1px); /* Dukungan untuk browser Safari/iOS */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Garis pembatas tipis transparan */
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Bayangan lembut agar nav lebih menonjol */
+        
+        /* Opsional: Pastikan nav tetap berada di paling atas saat di-scroll */
+        position: fixed; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+    
+    .nav-links { display: none; } 
+    .customizer-container { grid-template-columns: 1fr; gap: 20px;  }
+    .hero-content2 h1 { font-size: 2rem; color: #ffffff; } /* Diperbaiki dari #00000 menjadi #000000 */
+    .hero-content2 p { font-size: 0.95rem; color: #ffffff; }
+    .product-image { max-height: 350px; } 
+    
+    .hero { 
+        top: 50px;
+        height: 50vh;  
+        width: 100vw; 
+        margin: 0 auto; 
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        align-items: center;    
+        text-align: center;
+        background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
+    }
+}
     </style>
 </head>
 <body>

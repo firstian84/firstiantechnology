@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RuangNyata</title>
+    <title>furniture</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -18,13 +18,13 @@
         }
 
         :root {
-            --bg-primary: #ffffff; /* Mengubah background utama menjadi putih */
-            --bg-card: rgba(0, 0, 0, 0.03); /* Mengubah tint kartu agar kontras di latar putih */
+            --bg-primary: #121614;
+            --bg-card: rgba(255, 255, 255, 0.03);
             --accent-wood: #b58252;
             --accent-fabric: #4a6b5d;
-            --text-main: #1f2937; /* Mengubah teks utama menjadi abu-abu gelap/hitam */
-            --text-muted: #4b5563; /* Mengubah teks sekunder menjadi sedikit lebih gelap */
-            --glass-border: rgba(0, 0, 0, 0.08); /* Mengubah border agar terlihat di latar putih */
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --glass-border: rgba(255, 255, 255, 0.08);
             
             /* Variabel Warna Utama Kode Kedua (Nuansa Biru) */
             --blue-light: #2575fc; 
@@ -48,7 +48,6 @@
             align-items: center;
             z-index: 100;
             backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.8); /* Memberi sedikit warna putih transparan pada nav blur */
             border-bottom: 1px solid var(--glass-border);
         }
 
@@ -71,7 +70,7 @@
 
         .logo span { 
             color: var(--accent-wood); 
-            text-stroke: 1px rgba(0,0,0,0.2);
+            text-stroke: 2px black;
         }
 
         .nav-links {
@@ -88,7 +87,7 @@
         
         .nav-links a:hover, .nav-links a.active {
             color: var(--text-main);
-            text-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
         }
 
         /* --- HERO SECTION --- */
@@ -98,36 +97,36 @@
             align-items: center;
             padding: 0 5%;
             position: relative;
-            /* Menggunakan gradasi putih transparan agar gambar background tetap serasi dengan tema putih */
-            background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
+            /* Ditambahkan overlay gelap agar teks putih kontras dan terbaca */
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
         }
 
-        .hero-content {
+        .hero-content2 {
             max-width: 600px;
             z-index: 2;
         }
 
-        .hero-content h1 {
+        .hero-content2 h1 {
             font-size: 3.5rem;
             line-height: 1.2;
             margin-bottom: 20px;
             font-weight: 700;
-            color: #111827; /* Teks judul dibuat sangat tegas di latar putih */
+            color: #ffffff; /* PERBAIKAN: Mengunci warna teks judul menjadi putih */
         }
 
-        .hero-content p {
-            color: #374151; /* Teks paragraf hero disesuaikan menjadi gelap */
+        .hero-content2 p {
+            color: #ffffff; /* PERBAIKAN: Mengunci warna teks deskripsi menjadi putih */
             margin-bottom: 30px;
             font-size: 1.1rem;
+            opacity: 0.9;
         }
 
         /* --- PRODUCT CUSTOMIZER SECTION --- */
         .customizer-section {
-            padding: 60px 5% 20px 5%;
+            padding: 100px 5%;
             background: #ffffff; /* Mengubah background area customizer menjadi putih */
         }
 
-     
         .section-title {
             text-align: center;
             margin-bottom: 60px;
@@ -136,6 +135,7 @@
         .section-title h2 {
             font-size: 2.5rem;
             margin-bottom: 10px;
+            color: #111827; /* Menjadi hitam/gelap agar terlihat di background putih */
         }
 
         .section-title p {
@@ -172,6 +172,7 @@
         .customizer-controls h3 {
             font-size: 1.8rem;
             margin-bottom: 15px;
+            color: #111827;
         }
 
         .furniture-list {
@@ -181,8 +182,9 @@
 
         .furniture-list li {
             font-size: 1.1rem;
-            margin-bottom: 8px;
-            color: var(--text-main);
+            margin-bottom: 12px;
+            color: #111827; /* Mengganti var(--text-main) menjadi hitam tegas agar terbaca */
+            white-space: pre-line; /* Menambahkan ini agar fungsi breakline (\n) pada JS berjalan rapi */
         }
 
         .price {
@@ -220,7 +222,7 @@
         }
 
         .color-dot.active {
-            border-color: var(--text-main);
+            border-color: #111827; /* Mengubah indikator aktif menjadi gelap menyesuaikan tema putih */
             transform: scale(1.1);
         }
 
@@ -277,56 +279,25 @@
         }
 
         /* --- RESPONSIVE LAYOUT UNTUK MOBILE ANDROID --- */
-       /* --- RESPONSIVE LAYOUT UNTUK MOBILE ANDROID --- */
-@media (max-width: 768px) {
-    nav { 
-        padding: 10px 4%; 
-        background-color: #ffffff; 
-    }
-    .nav-links { 
-        display: none; 
-    } 
-    
-    /* Mengatur grid agar elemen kontrol & gambar tidak terlalu renggang */
-    .customizer-container { 
-        grid-template-columns: 1fr; 
-        gap: 15px;  
-    }
-    
-    .customizer-section {
-        padding: 40px 5% 10px 5%; /* Memangkas padding atas & bawah di mobile */
-    }
-
-    .customizer-controls {
-        padding: 10px 0; /* Mengurangi padding internal box kontrol */
-    }
-
-    .option-group {
-        margin-bottom: 15px; /* Memperkecil jarak bawah pilihan warna */
-    }
-
-    /* Merapatkan wrapper tombol langsung di bawah pilihan warna */
-    .button-wrapper {
-        padding: 10px 0 30px 0; 
-    }
-
-    .hero-content h1 { font-size: 2rem; }
-    .hero-content p { font-size: 0.95rem; }
-    .product-image { max-height: 250px; } 
-    
-    .hero { 
-        top: 50px;
-        height: 40vh;  /* Menurunkan tinggi hero di mobile agar tidak memakan space */
-        width: 100vw; 
-        margin: 0 auto; 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;    
-        align-items: center;    
-        text-align: center;
-        background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
-    }
-}
+        @media (max-width: 768px) {
+            nav { padding: 10px 4%; background-color: #ffffff; }
+            .nav-links { display: none; } 
+            .customizer-container { grid-template-columns: 1fr; gap: 20px;  }
+            .hero-content2 h1 { font-size: 2rem; color: #ffffff; }
+            .hero-content2 p { font-size: 0.95rem; color: #ffffff; }
+            .product-image { max-height: 280px; } 
+            
+            .hero { 
+                top: 50px;
+                height: 50vh;  
+                width: 100vw; 
+                margin: 0 auto; 
+                display: flex;
+                flex-direction: column;
+                justify-content: center; 
+                align-items: center;    
+                text-align: center;
+                background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
             }
         }      
     </style>
@@ -346,7 +317,7 @@
     </nav>
 
     <section class="hero" id="heroBg">
-        <div class="hero-content">
+        <div class="hero-content2">
             <h1 id="heroTitle">Pengalaman Berkesan <br>di Ruang Anda</h1>
             <p id="heroDesc">Kami merancang bangun furniture bukan sekadar fungsi, melainkan sebuah karya seni interaktif yang mengisi jiwa rumah Anda.</p>
         </div>
@@ -415,8 +386,8 @@
             heroBg.style.opacity = "0.8";
             
             setTimeout(() => {
-                // Menjaga agar gradasi putih transparan tetap ada saat berganti background hero
-                heroBg.style.backgroundImage = `linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0)), url('${heroData[index].bg}')`;
+                /* PERBAIKAN: Mengunci gradasi gelap (rgba(0,0,0,0.5)) di JavaScript saat transisi hero agar teks putih tetap kontras */
+                heroBg.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('${heroData[index].bg}')`;
                 heroTitle.innerText = heroData[index].title;
                 heroDesc.innerText = heroData[index].desc;
                 heroBg.style.opacity = "1";
@@ -438,9 +409,9 @@
             },
             c2: { 
                 img: "https://lh3.googleusercontent.com/d/1TGLBKZOuWchqRpXlELkHIQi1p0Ai176K",
-                name: "",
+                name: "Paket Keluarga Klasik",
                 items: [
-                  "• Ottoman: 50x50x45 \n (Rp1.500.000)",
+                    "• Ottoman: 50x50x45 \n (Rp1.500.000)",
                     "• Ottoman: 195x50x42 \n (Rp6.500.000)",
                     "• Dipan: 180x200x30 \n (Rp8.000.000)",
                     "• Kepala Dipan: 180x100x10 \n (Rp5.000.000)"
@@ -449,9 +420,9 @@
             },
             c3: {
                 img: "https://lh3.googleusercontent.com/d/1Mv2l-dS1kgU2skxQPZYyoblTwqda5jKc",
-                name: "",
+                name: "Paket Minimalis Modern",
                 items: [
-                  "• Ottoman: 50x50x45 \n (Rp1.500.000)",
+                    "• Ottoman: 50x50x45 \n (Rp1.500.000)",
                     "• Ottoman: 195x50x42 \n (Rp6.500.000)",
                     "• Dipan: 180x200x30 \n (Rp8.000.000)",
                     "• Kepala Dipan: 180x100x10 \n (Rp5.000.000)"

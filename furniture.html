@@ -123,10 +123,11 @@
 
         /* --- PRODUCT CUSTOMIZER SECTION --- */
         .customizer-section {
-            padding: 100px 5%;
+            padding: 60px 5% 20px 5%;
             background: #ffffff; /* Mengubah background area customizer menjadi putih */
         }
 
+     
         .section-title {
             text-align: center;
             margin-bottom: 60px;
@@ -276,25 +277,56 @@
         }
 
         /* --- RESPONSIVE LAYOUT UNTUK MOBILE ANDROID --- */
-        @media (max-width: 768px) {
-            nav { padding: 10px 4%; background-color: #ffffff; }
-            .nav-links { display: none; } 
-            .customizer-container { grid-template-columns: 1fr; gap: 20px;  }
-            .hero-content h1 { font-size: 2rem; }
-            .hero-content p { font-size: 0.95rem; }
-            .product-image { max-height: 280px; } 
-            
-            .hero { 
-                top: 50px;
-                height: 50vh;  
-                width: 100vw; 
-                margin: 0 auto; 
-                display: flex;
-                flex-direction: column;
-                justify-content: center; 
-                align-items: center;    
-                text-align: center;
-                background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
+       /* --- RESPONSIVE LAYOUT UNTUK MOBILE ANDROID --- */
+@media (max-width: 768px) {
+    nav { 
+        padding: 10px 4%; 
+        background-color: #ffffff; 
+    }
+    .nav-links { 
+        display: none; 
+    } 
+    
+    /* Mengatur grid agar elemen kontrol & gambar tidak terlalu renggang */
+    .customizer-container { 
+        grid-template-columns: 1fr; 
+        gap: 15px;  
+    }
+    
+    .customizer-section {
+        padding: 40px 5% 10px 5%; /* Memangkas padding atas & bawah di mobile */
+    }
+
+    .customizer-controls {
+        padding: 10px 0; /* Mengurangi padding internal box kontrol */
+    }
+
+    .option-group {
+        margin-bottom: 15px; /* Memperkecil jarak bawah pilihan warna */
+    }
+
+    /* Merapatkan wrapper tombol langsung di bawah pilihan warna */
+    .button-wrapper {
+        padding: 10px 0 30px 0; 
+    }
+
+    .hero-content h1 { font-size: 2rem; }
+    .hero-content p { font-size: 0.95rem; }
+    .product-image { max-height: 250px; } 
+    
+    .hero { 
+        top: 50px;
+        height: 40vh;  /* Menurunkan tinggi hero di mobile agar tidak memakan space */
+        width: 100vw; 
+        margin: 0 auto; 
+        display: flex;
+        flex-direction: column;
+        justify-content: center;    
+        align-items: center;    
+        text-align: center;
+        background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
+    }
+}
             }
         }      
     </style>

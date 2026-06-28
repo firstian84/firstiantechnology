@@ -35,7 +35,7 @@
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 15px 5%; /* Sedikit dikurangi agar navbar tidak terlalu tebal karena ada logo */
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -44,11 +44,10 @@
             border-bottom: 1px solid var(--glass-border);
         }
 
-        /* Perbaikan flexbox pada logo agar gambar & text sejajar horizontal */
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px; /* Jarak antara gambar logo dan teks */
+            gap: 12px;
             font-size: 1.5rem;
             font-weight: 800;
             letter-spacing: 2px;
@@ -57,14 +56,14 @@
         }
 
         .logo img {
-            height: 100px; /* Ukuran tinggi logo yang ideal untuk navbar */
+            height: 100px; /* Disesuaikan agar proposional dengan navbar */
             width: auto;
             object-fit: contain;
         }
 
         .logo span { 
             color: var(--accent-wood); 
-                 }
+        }
 
         .nav-links {
             display: flex;
@@ -85,12 +84,12 @@
 
         /* --- HERO SECTION --- */
         .hero {
-            height: 150vh;
+            height: 100vh; /* Diubah ke 100vh agar pas satu layar standard */
             display: flex;
             align-items: center;
             padding: 0 5%;
             position: relative;
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
         }
 
         .hero-content {
@@ -109,43 +108,6 @@
             color: var(--text-muted);
             margin-bottom: 30px;
             font-size: 1.1rem;
-        }
-
-        /* BUTTON GLOWING */
-        .btn-interactive {
-            display: inline-block;
-            padding: 15px 35px;
-            background: transparent;
-            color: var(--text-main);
-            border: 2px solid var(--accent-wood);
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn-interactive::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--accent-wood);
-            transition: all 0.4s ease;
-            z-index: -1;
-        }
-
-        .btn-interactive:hover::before {
-            left: 0;
-        }
-
-        .btn-interactive:hover {
-            box-shadow: 0 0 25px rgba(181, 130, 82, 0.6);
-            transform: translateY(-3px);
         }
 
         /* --- PRODUCT CUSTOMIZER SECTION --- */
@@ -177,7 +139,6 @@
             margin: 0 auto;
         }
 
-        /* STATIC DISPLAY (Tilt effect removed) */
         .product-display {
             display: flex;
             justify-content: center;
@@ -188,7 +149,7 @@
         .product-image {
             width: 100%;
             max-width: 400px;
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.7));
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2));
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
@@ -197,8 +158,20 @@
         }
 
         .customizer-controls h3 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin-bottom: 15px;
+        }
+
+        /* Styling List Furnitur */
+        .furniture-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .furniture-list li {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
         }
 
         .price {
@@ -244,42 +217,14 @@
         .dot-c2 { background-color: #704085; }
         .dot-c3 { background-color: #e77543; }
 
-        /* HERO BG CHANGER INTERACTIVE BUTTONS */
-        .bg-switchers {
-            position: absolute;
-            right: 5%;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 10;
-        }
-
-        .bg-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            border: 2px solid var(--glass-border);
-            cursor: pointer;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .bg-btn.active {
-            border-color: var(--accent-wood);
-            transform: scale(1.1);
-        }
-
-       /* RESPONSIVE LAYOUT UNTUK MOBILE ANDROID */
+        /* RESPONSIVE LAYOUT UNTUK MOBILE ANDROID */
         @media (max-width: 768px) {
             nav { padding: 10px 4%; }
-            .nav-links { display: none; } /* Menyembunyikan link navbar atas di mobile */
+            .nav-links { display: none; } 
             .customizer-container { grid-template-columns: 1fr; gap: 20px; }
             .hero-content h1 { font-size: 2rem; }
             .hero-content p { font-size: 0.95rem; }
-            .bg-switchers { bottom: 20px; top: auto; right: 5%; flex-direction: row; transform: none; }
-            .product-image { max-height: 280px; } /* Memastikan gambar muat penuh di satu layar HP */
+            .product-image { max-height: 280px; } 
         }
     </style>
 </head>
@@ -306,8 +251,8 @@
 
     <section class="customizer-section" id="customizer">
         <div class="section-title">
-            <h2>Interaktif</h2>
-            <p></p>
+            <h2>Interaktif Pilihan</h2>
+         
         </div>
 
         <div class="customizer-container">
@@ -315,8 +260,12 @@
                 <img src="https://lh3.googleusercontent.com/d/1SacgdbZug4ZkB6IwZSV3lL8lGdmxvNq4" class="product-image" id="productImg">
             </div>
             <div class="customizer-controls">
-                <h3 id="productName">Kursi OTTOMAN 50x50x45</h3>
-                <div class="price" id="productPrice">Rp 1.500.000</div>
+                <h3 id="productName">Paket Kamar Utama</h3>
+                
+                <ul class="furniture-list" id="furnitureList">
+                    </ul>
+
+                <div class="price" id="productPrice"></div>
                 <p style="color: var(--text-muted); margin-bottom: 25px;"></p>
                 
                 <div class="option-group">
@@ -332,19 +281,22 @@
     </section>
 
     <script>
-        // --- 1. DATA KONTEN HERO ---
+        // --- 1. DATA KONTEN HERO (Dilengkapi data title dan desc agar tidak undefined) ---
         const heroData = [   
             {
                 bg: "https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c",
-
+                title: "Pengalaman Berkesan di Ruang Anda",
+                desc: "Kami merancang bangun furniture bukan sekadar fungsi, melainkan sebuah karya seni interaktif yang mengisi jiwa rumah Anda."
             },
             {
                 bg: "https://lh3.googleusercontent.com/u/0/d/17rDviRouf0Rh93x23dSe4A2JMhAZ-ubj",
-             
+                title: "Kenyamanan Ruang Keluarga Klasik",
+                desc: "Hadirkan kehangatan mendalam di ruang santai Anda dengan sentuhan material premium pilihan."
             },
             {
                 bg: "https://lh3.googleusercontent.com/u/0/d/1Ow_n6k8QhYDMwmZYv4Q04obUeOgnekj1",
-              
+                title: "Sentuhan Estetika Modern Minimalis",
+                desc: "Desain yang presisi, ringkas, dan mengutamakan efisiensi ruang tanpa mengorbankan keindahan visual."
             }
         ];
 
@@ -361,30 +313,42 @@
                 heroDesc.innerText = heroData[index].desc;
                 heroBg.style.opacity = "1";
             }, 200);
-
-            const btns = document.querySelectorAll('.bg-btn');
-            btns.forEach(btn => btn.classList.remove('active'));
-            if(btns[index]) {
-                btns[index].classList.add('active');
-            }
         }
 
-        // --- 2. FITUR CUSTOMIZER FURNITURE ---
+        // --- 2. FITUR CUSTOMIZER FURNITURE (Dilengkapi properti price dan struktur array list item) ---
         const variants = {
             c1: {
                 img: "https://lh3.googleusercontent.com/d/1SacgdbZug4ZkB6IwZSV3lL8lGdmxvNq4", 
-                name: "Kursi OTTOMAN 50x50x45",
-                price: "Rp 1.500.000"
+                 name: "",
+                items: [
+                    "• Ottoman: 50x50x45 (Rp1.500.000)",
+                    "• Ottoman: 195x50x42 (Rp6.500.000)",
+                    "• Dipan: 180x200x30 (Rp8.000.000)",
+                    "• Kepala Dipan: 180x100x10 (Rp5.000.000)"
+                ],
+                price: "Total Paket: Rp21.000.000"
             },
             c2: { 
                 img: "https://lh3.googleusercontent.com/d/1TGLBKZOuWchqRpXlELkHIQi1p0Ai176K",
-                name: "Kursi OTTOMAN 50x50x45",
-                price: "Rp 1.500.000"
+                name: "",
+                 items: [
+                    "• Ottoman: 50x50x45 (Rp1.500.000)",
+                    "• Ottoman: 195x50x42 (Rp6.500.000)",
+                    "• Dipan: 180x200x30 (Rp8.000.000)",
+                    "• Kepala Dipan: 180x100x10 (Rp5.000.000)"
+                ],
+                price: "Total Paket: Rp21.000.000"
             },
             c3: {
                 img: "https://lh3.googleusercontent.com/d/1Mv2l-dS1kgU2skxQPZYyoblTwqda5jKc",
-                name: "Kursi OTTOMAN 50x50x45",
-                price: "Rp 1.500.000"
+                name: "",
+               items: [
+                    "• Ottoman: 50x50x45 (Rp1.500.000)",
+                    "• Ottoman: 195x50x42 (Rp6.500.000)",
+                    "• Dipan: 180x200x30 (Rp8.000.000)",
+                    "• Kepala Dipan: 180x100x10 (Rp5.000.000)"
+                ],
+                price: "Total Paket: Rp21.000.000"
             }
         };
 
@@ -392,6 +356,7 @@
             const imgEl = document.getElementById('productImg');
             const nameEl = document.getElementById('productName');
             const priceEl = document.getElementById('productPrice');
+            const listEl = document.getElementById('furnitureList');
 
             imgEl.style.transform = 'scale(0.95)';
             imgEl.style.opacity = '0';
@@ -402,8 +367,17 @@
                 imgEl.style.height = "400px";
                 imgEl.style.objectFit = "cover";
                 
+                // Mengubah Text Judul Varian & Harga
                 nameEl.innerText = variants[key].name;
                 priceEl.innerText = variants[key].price;
+                
+                // Mengosongkan list lama dan membuat list item baru secara terstruktur
+                listEl.innerHTML = "";
+                variants[key].items.forEach(itemText => {
+                    const li = document.createElement('li');
+                    li.innerText = itemText;
+                    listEl.appendChild(li);
+                });
                 
                 imgEl.style.transform = 'scale(1)';
                 imgEl.style.opacity = '1';
@@ -412,6 +386,7 @@
             document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
             element.classList.add('active');
 
+            // Integrasi perubahan background hero saat dot warna diklik
             if (key === 'c1') {
                 changeHero(0);
             } else if (key === 'c2') {
@@ -422,9 +397,9 @@
         }
 
         // --- 3. NAVIGATION UTILITY ---
-        function scrollToCustomizer() {
-            document.getElementById('customizer').scrollIntoView({ behavior: 'smooth' });
-        }
+        window.onload = function() {
+            changeVariant('c1', document.querySelector('.dot-c1'));
+        };
     </script>
 </body>
 </html>

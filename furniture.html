@@ -219,14 +219,25 @@
 
         /* RESPONSIVE LAYOUT UNTUK MOBILE ANDROID */
         @media (max-width: 768px) {
-            nav { padding: 10px 4%; }
-            .nav-links { display: none; } 
-            .customizer-container { grid-template-columns: 1fr; gap: 20px; }
-            .hero-content h1 { font-size: 2rem; }
-            .hero-content  { font-size: 0.95rem; }
-            .product-image { max-height: 280px; } 
-          .hero { height: 60vh;  width: 30vh;   display: flex;  align-items: center; justify-content: center;   }
-              
+    nav { padding: 10px 4%; }
+    .nav-links { display: none; } 
+    .customizer-container { grid-template-columns: 1fr; gap: 20px; }
+    .hero-content h1 { font-size: 2rem; }
+    .hero-content { font-size: 0.95rem; }
+    .product-image { max-height: 280px; } 
+    
+    /* Perbaikan untuk kelas .hero */
+    .hero { 
+        height: 60vh;  
+        width: 30vh; /* Catatan: Biasanya untuk lebar HP lebih aman menggunakan % atau vw, misal: width: 80vw; */
+        margin: 0 auto; /* Membuat kotak hero berada di tengah secara horizontal */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Membuat konten di dalamnya tengah secara vertikal */
+        align-items: center;    /* Membuat konten di dalamnya tengah secara horizontal */
+        text-align: center;
+    }
+}      
     </style>
 </head>
 <body>

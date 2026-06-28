@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RuangNyata</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         /* --- RESET & VARIABLES --- */
         * {
@@ -15,13 +18,17 @@
         }
 
         :root {
-            --bg-primary: #121614;
-            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-primary: #ffffff; /* Mengubah background utama menjadi putih */
+            --bg-card: rgba(0, 0, 0, 0.03); /* Mengubah tint kartu agar kontras di latar putih */
             --accent-wood: #b58252;
             --accent-fabric: #4a6b5d;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #1f2937; /* Mengubah teks utama menjadi abu-abu gelap/hitam */
+            --text-muted: #4b5563; /* Mengubah teks sekunder menjadi sedikit lebih gelap */
+            --glass-border: rgba(0, 0, 0, 0.08); /* Mengubah border agar terlihat di latar putih */
+            
+            /* Variabel Warna Utama Kode Kedua (Nuansa Biru) */
+            --blue-light: #2575fc; 
+            --blue-dark: #6a11cb;  
         }
 
         body {
@@ -41,6 +48,7 @@
             align-items: center;
             z-index: 100;
             backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.8); /* Memberi sedikit warna putih transparan pada nav blur */
             border-bottom: 1px solid var(--glass-border);
         }
 
@@ -56,14 +64,14 @@
         }
 
         .logo img {
-            height: 100px; /* Disesuaikan agar proposional dengan navbar */
+            height: 100px; 
             width: auto;
             object-fit: contain;
         }
 
         .logo span { 
             color: var(--accent-wood); 
-            text-stroke: 2px black;
+            text-stroke: 1px rgba(0,0,0,0.2);
         }
 
         .nav-links {
@@ -80,17 +88,18 @@
         
         .nav-links a:hover, .nav-links a.active {
             color: var(--text-main);
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            text-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         /* --- HERO SECTION --- */
         .hero {
-            height: 150vh; /* Diubah ke 100vh agar pas satu layar standard */
+            height: 150vh; 
             display: flex;
             align-items: center;
             padding: 0 5%;
             position: relative;
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
+            /* Menggunakan gradasi putih transparan agar gambar background tetap serasi dengan tema putih */
+            background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
         }
 
         .hero-content {
@@ -103,10 +112,11 @@
             line-height: 1.2;
             margin-bottom: 20px;
             font-weight: 700;
+            color: #111827; /* Teks judul dibuat sangat tegas di latar putih */
         }
 
-        .hero-content  {
-            color: #ffffff;
+        .hero-content p {
+            color: #374151; /* Teks paragraf hero disesuaikan menjadi gelap */
             margin-bottom: 30px;
             font-size: 1.1rem;
         }
@@ -114,7 +124,7 @@
         /* --- PRODUCT CUSTOMIZER SECTION --- */
         .customizer-section {
             padding: 100px 5%;
-            background: #181d1b;
+            background: #ffffff; /* Mengubah background area customizer menjadi putih */
         }
 
         .section-title {
@@ -150,7 +160,7 @@
         .product-image {
             width: 100%;
             max-width: 400px;
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1)); /* Shadow diperhalus untuk latar putih */
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
@@ -163,7 +173,6 @@
             margin-bottom: 15px;
         }
 
-        /* Styling List Furnitur */
         .furniture-list {
             list-style: none;
             margin-bottom: 20px;
@@ -206,7 +215,7 @@
             border-radius: 50%;
             cursor: pointer;
             border: 3px solid transparent;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         .color-dot.active {
@@ -214,33 +223,80 @@
             transform: scale(1.1);
         }
 
-        .dot-c1 { background-color: #dcdddb; }
+        .dot-c1 { background-color: #dcdddb; border: 1px solid #ccc; }
         .dot-c2 { background-color: #704085; }
         .dot-c3 { background-color: #e77543; }
 
-        /* RESPONSIVE LAYOUT UNTUK MOBILE ANDROID */
+        /* --- STYLE UNTUK TOMBOL BARU DI PALING BAWAH --- */
+        .button-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 0; 
+            background-color: #ffffff; /* Mengubah wrapper tombol menjadi putih */
+        }
+
+        .btn-web-animated {
+            background: linear-gradient(45deg, var(--blue-light), var(--blue-dark));
+            box-shadow: 0 0 15px rgba(37, 117, 252, 0.3);
+            animation: pulse-web-main 2s infinite;
+            transition: transform 0.3s ease;
+            width: 250px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .btn-web-animated:hover {
+            transform: scale(1.05);
+        }
+
+        /* ANIMASI PULSA TOMBOL */
+        @keyframes pulse-web-main {
+            0% { 
+                transform: scale(1); 
+                box-shadow: 0 0 0 0 rgba(37, 117, 252, 0.5); 
+            }
+            70% { 
+                transform: scale(1.05); 
+                box-shadow: 0 0 0 10px rgba(37, 117, 252, 0); 
+            }
+            100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 0 0 rgba(37, 117, 252, 0); 
+            }
+        }
+
+        /* --- RESPONSIVE LAYOUT UNTUK MOBILE ANDROID --- */
         @media (max-width: 768px) {
-    nav { padding: 10px 4%; }
-    .nav-links { display: none; } 
-    .customizer-container { grid-template-columns: 1fr; gap: 20px;  }
-    .hero-content h1 { font-size: 2rem; }
-    .hero-content { font-size: 0.95rem; }
-    .product-image { max-height: 280px; } 
-    
-    /* Perbaikan untuk kelas .hero */
-    .hero { 
-        top: 50px;
-  
-        height: 50vh;  
-        width: 100vw; /* Catatan: Biasanya untuk lebar HP lebih aman menggunakan % atau vw, misal: width: 80vw; */
-         margin: 0 auto; /* Membuat kotak hero berada di tengah secara horizontal */
-        display: flex;
-        flex-direction: column;
-        justify-content: center; /* Membuat konten di dalamnya tengah secara vertikal */
-        align-items: center;    /* Membuat konten di dalamnya tengah secara horizontal */
-        text-align: center;
-    }
-}      
+            nav { padding: 10px 4%; background-color: #ffffff; }
+            .nav-links { display: none; } 
+            .customizer-container { grid-template-columns: 1fr; gap: 20px;  }
+            .hero-content h1 { font-size: 2rem; }
+            .hero-content p { font-size: 0.95rem; }
+            .product-image { max-height: 280px; } 
+            
+            .hero { 
+                top: 50px;
+                height: 50vh;  
+                width: 100vw; 
+                margin: 0 auto; 
+                display: flex;
+                flex-direction: column;
+                justify-content: center; 
+                align-items: center;    
+                text-align: center;
+                background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
+            }
+        }      
     </style>
 </head>
 <body>
@@ -267,7 +323,6 @@
     <section class="customizer-section" id="customizer">
         <div class="section-title">
             <h2>Interaktif Pilihan</h2>
-         
         </div>
 
         <div class="customizer-container">
@@ -277,8 +332,7 @@
             <div class="customizer-controls">
                 <h3 id="productName">Paket Kamar Utama</h3>
                 
-                <ul class="furniture-list" id="furnitureList">
-                    </ul>
+                <ul class="furniture-list" id="furnitureList"></ul>
 
                 <div class="price" id="productPrice"></div>
                 <p style="color: var(--text-muted); margin-bottom: 25px;"></p>
@@ -295,8 +349,14 @@
         </div>
     </section>
 
+    <div class="button-wrapper">
+        <button onclick="openLink()" class="btn-web-animated" title="Mulai Diskusi RND PO">
+            DISKUSI RnD P.O
+        </button>
+    </div>
+
     <script>
-        // --- 1. DATA KONTEN HERO (Dilengkapi data title dan desc agar tidak undefined) ---
+        // --- 1. DATA KONTEN HERO ---
         const heroData = [   
             {
                 bg: "https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c",
@@ -323,18 +383,19 @@
             heroBg.style.opacity = "0.8";
             
             setTimeout(() => {
-                heroBg.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('${heroData[index].bg}')`;
+                // Menjaga agar gradasi putih transparan tetap ada saat berganti background hero
+                heroBg.style.backgroundImage = `linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0)), url('${heroData[index].bg}')`;
                 heroTitle.innerText = heroData[index].title;
                 heroDesc.innerText = heroData[index].desc;
                 heroBg.style.opacity = "1";
             }, 200);
         }
 
-        // --- 2. FITUR CUSTOMIZER FURNITURE (Dilengkapi properti price dan struktur array list item) ---
+        // --- 2. FITUR CUSTOMIZER FURNITURE ---
         const variants = {
             c1: {
                 img: "https://lh3.googleusercontent.com/d/1SacgdbZug4ZkB6IwZSV3lL8lGdmxvNq4", 
-                 name: "",
+                name: "",
                 items: [
                     "• Ottoman: 50x50x45 (Rp1.500.000)",
                     "• Ottoman: 195x50x42 (Rp6.500.000)",
@@ -346,7 +407,7 @@
             c2: { 
                 img: "https://lh3.googleusercontent.com/d/1TGLBKZOuWchqRpXlELkHIQi1p0Ai176K",
                 name: "",
-                 items: [
+                items: [
                     "• Ottoman: 50x50x45 (Rp1.500.000)",
                     "• Ottoman: 195x50x42 (Rp6.500.000)",
                     "• Dipan: 180x200x30 (Rp8.000.000)",
@@ -357,7 +418,7 @@
             c3: {
                 img: "https://lh3.googleusercontent.com/d/1Mv2l-dS1kgU2skxQPZYyoblTwqda5jKc",
                 name: "",
-               items: [
+                items: [
                     "• Ottoman: 50x50x45 (Rp1.500.000)",
                     "• Ottoman: 195x50x42 (Rp6.500.000)",
                     "• Dipan: 180x200x30 (Rp8.000.000)",
@@ -382,11 +443,9 @@
                 imgEl.style.height = "400px";
                 imgEl.style.objectFit = "cover";
                 
-                // Mengubah Text Judul Varian & Harga
                 nameEl.innerText = variants[key].name;
                 priceEl.innerText = variants[key].price;
                 
-                // Mengosongkan list lama dan membuat list item baru secara terstruktur
                 listEl.innerHTML = "";
                 variants[key].items.forEach(itemText => {
                     const li = document.createElement('li');
@@ -401,7 +460,6 @@
             document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
             element.classList.add('active');
 
-            // Integrasi perubahan background hero saat dot warna diklik
             if (key === 'c1') {
                 changeHero(0);
             } else if (key === 'c2') {
@@ -411,7 +469,12 @@
             }
         }
 
-        // --- 3. NAVIGATION UTILITY ---
+        // --- 3. LOGIKA INTERAKSI TOMBOL ---
+        function openLink() { 
+            window.open("https://firstian84.github.io/firstiantechnology/tech.html", "_blank"); 
+        }
+
+        // --- 4. NAVIGATION UTILITY ---
         window.onload = function() {
             changeVariant('c1', document.querySelector('.dot-c1'));
         };

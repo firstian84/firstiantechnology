@@ -97,6 +97,7 @@
             align-items: center;
             padding: 0 5%;
             position: relative;
+            /* Memberikan overlay gelap tipis di atas gambar agar teks putih bawaan HTML Anda tetap terbaca */
             background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
         }
 
@@ -123,7 +124,7 @@
         /* --- BUTTON HORIZONTAL ROW SECTION --- */
         .button-grid-section {
             padding: 40px 0px 0px 0px;
-            background-color: #ffffff; 
+            background-color: #ffffff; /* Mengubah background section galeri menjadi putih */
             overflow: hidden;
         }
 
@@ -163,7 +164,6 @@
             padding: 0 10px;
         }
 
-        /* Dimensi Default (Desktop/Large Screen) */
         .image-button-custom {
             flex: 0 0 280px; 
             height: 200px;
@@ -175,7 +175,7 @@
             background-repeat: no-repeat;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); /* Mengurangi kepekatan shadow agar clean */
         }
 
         .image-button-custom::after {
@@ -199,9 +199,9 @@
             transform: scale(0.98);
         }
 
-        #btn1 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1vCfbGQDMCYf7-ZHwiXpJocvLrj0RdcfC'); }
+        #btn6 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1vCfbGQDMCYf7-ZHwiXpJocvLrj0RdcfC'); }
         #btn2 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1Mz9DOi5p26YfOnGOUCodITwOlb6qvfJO'); }
-        #btn3 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1nsyFw4kqSnte-8pCBLWRX8YOuH5LUtl7'); }
+        #btn7 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1nsyFw4kqSnte-8pCBLWRX8YOuH5LUtl7'); }
         #btn4 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1pGH1tLNbRNezO8f9Y73O0FJreCKIxkz6'); }
         #btn5 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1kOzkN4OhZY2COrQuF6UM-TIU9dylmING'); }
 
@@ -212,7 +212,7 @@
             z-index: 2000;             
             left: 0; top: 0;
             width: 100%; height: 100%;
-            background-color: rgba(255, 255, 255, 0.95); 
+            background-color: rgba(255, 255, 255, 0.95); /* Mengubah backdrop modal menjadi putih transparan */
             backdrop-filter: blur(5px);
             justify-content: center;   
             align-items: center;  
@@ -222,8 +222,8 @@
             max-width: 85%;
             max-height: 80vh;
             border-radius: 12px;
-            border: 1px solid rgba(0,0,0,0.1); 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
+            border: 1px solid rgba(0,0,0,0.1); /* Border modal disesuaikan */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1); /* Shadow modal dibuat lebih smooth */
             animation: zoomIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
             object-fit: contain;
         }
@@ -232,7 +232,7 @@
             position: absolute;
             top: 25px;
             right: 40px;
-            color: #111827; 
+            color: #111827; /* Tombol close diubah menjadi gelap */
             font-size: 45px;
             font-weight: 300;
             cursor: pointer;
@@ -251,7 +251,7 @@
         /* --- PRODUCT CUSTOMIZER SECTION --- */
         .customizer-section {
             padding: 80px 5% 40px 5%; 
-            background: #ffffff; 
+            background: #ffffff; /* Tetap putih bersih */
         }
 
         .section-title {
@@ -358,7 +358,7 @@
             justify-content: center;
             align-items: center;
             padding: 30px 0 60px 0; 
-            background-color: #ffffff; 
+            background-color: #ffffff; /* Tetap putih bersih */
         }
 
         .btn-web-animated {
@@ -393,30 +393,31 @@
         #interaction-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.02); 
+            background: rgba(0,0,0,0.02); /* Dikurangi opacity-nya agar transparan bersih */
             z-index: 9999;
             cursor: pointer;
         }
 
-        /* --- RESPONSIVE LAYOUT & ANDROID SPECIAL DIMENSION --- */
+        /* --- RESPONSIVE LAYOUT --- */
         @media (max-width: 768px) {
             nav { 
-                padding: 10px 20px;
-                background-color: rgba(255, 255, 255, 0.9); 
+                 position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
             }
             
             .nav-links { display: none; } 
             
-            /* Kustomisasi Khusus Android/Mobile sesuai permintaan: Dimensi 20x30 */
             .image-button-custom {
-                flex: 0 0 1px !important;  
-                width: 2px !important;
-                height: 1px !important;
-                border-radius: 1px; /* Disesuaikan agar rasio sudut proporsional */
-            }
-            
-            .gallery-grid {
-                gap: 8px; /* Memperpendek jarak antar tombol kecil agar rapi */
+                flex: 0 0 220px; 
+                height: 160px;
             }
             
             .customizer-container { 
@@ -465,9 +466,9 @@
         
         <div class="gallery-scroll-container" id="scrollContainer">
             <div class="gallery-grid">
-                <button class="image-button-custom" id="btn1" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d//1vCfbGQDMCYf7-ZHwiXpJocvLrj0RdcfC')"></button>
+                <button class="image-button-custom" id="btn6" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d//1vCfbGQDMCYf7-ZHwiXpJocvLrj0RdcfC')"></button>
                 <button class="image-button-custom" id="btn2" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d/1Mz9DOi5p26YfOnGOUCodITwOlb6qvfJO')"></button>
-                <button class="image-button-custom" id="btn3" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d//1nsyFw4kqSnte-8pCBLWRX8YOuH5LUtl7')"></button>
+                <button class="image-button-custom" id="btn7" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d//1nsyFw4kqSnte-8pCBLWRX8YOuH5LUtl7')"></button>
                 <button class="image-button-custom" id="btn4" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d/1pGH1tLNbRNezO8f9Y73O0FJreCKIxkz6')"></button>
                 <button class="image-button-custom" id="btn5" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d/1kOzkN4OhZY2COrQuF6UM-TIU9dylmING')"></button>
             </div>

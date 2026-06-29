@@ -400,30 +400,58 @@
         }
 
         /* --- RESPONSIVE LAYOUT --- */
+              /* --- RESPONSIVE LAYOUT & ULTRA SMALL BUTTONS FOR ANDROID --- */
         @media (max-width: 768px) {
             nav { 
-                 position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            backdrop-filter: blur(5px);
-            border-bottom: 1px solid var(--glass-border);
+                position: fixed;
+                top: 0;
+                width: 100%;
+                padding: 10px 5%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 100;
+                backdrop-filter: blur(5px);
+                border-bottom: 1px solid var(--glass-border);
             }
             
             .nav-links { display: none; } 
             
+            .button-grid-section {
+                padding: 10px 0px;
+                background-color: #ffffff;
+            }
+
+            /* 1. Mengaktifkan Scroll Geser Jari (Touch) pada Android */
+            .gallery-scroll-container {
+                display: block;
+                width: 100%;
+                overflow-x: auto; /* Membuka jalur scroll horizontal */
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch; /* Membuat scroll terasa sangat ringan/native di Android */
+            }
+            
+            /* 2. Memastikan Barisan Tombol Tetap Sejajar Horizontal */
+            .gallery-grid {
+                display: flex;
+                flex-wrap: nowrap; /* Mencegah tombol turun ke bawah */
+                gap: 8px;
+                padding: 0 15px; /* Memberi ruang di awal dan akhir geseran */
+                width: max-content; /* Memaksa lebar kontainer mengikuti total lebar tombol */
+            }
+
+            /* 3. Ukuran Tombol Mikro */
             .image-button-custom {
-                flex: 0 0 220px; 
-                height: 160px;
+                flex: 0 0 60px;  /* Lebar super kecil */
+                height: 45px;    /* Tinggi super kecil */
+                border-radius: 6px;
+                box-shadow: none;
+                display: inline-block;
             }
             
             .customizer-container { 
                 grid-template-columns: 1fr; 
-                gap: 30px;
+                gap: 20px;
             }
             
             .hero-content2 h1 { font-size: 2.2rem; } 

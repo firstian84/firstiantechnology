@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- RESET & VARIABLES --- */
+      /* --- RESET & VARIABLES --- */
         * {
             margin: 0;
             padding: 0;
@@ -92,12 +92,13 @@
 
         /* --- HERO SECTION --- */
         .hero {
-            height: 150vh; 
+            height: 70vh; 
             display: flex;
             align-items: center;
             padding: 0 5%;
             position: relative;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
+            /* Memberikan overlay gelap tipis di atas gambar agar teks putih bawaan HTML Anda tetap terbaca */
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
         }
 
         .hero-content2 {
@@ -120,10 +121,137 @@
             opacity: 0.9;
         }
 
+        /* --- BUTTON HORIZONTAL ROW SECTION --- */
+        .button-grid-section {
+            padding: 40px 0px 0px 0px;
+            background-color: #ffffff; /* Mengubah background section galeri menjadi putih */
+            overflow: hidden;
+        }
+
+        .grid-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .grid-title h2 {
+            font-size: 2rem;
+            color: var(--text-main);
+            letter-spacing: 1px;
+        }
+
+        .gallery-scroll-container {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            cursor: grab;
+            scrollbar-width: none;
+            -ms-overflow-style: none;  
+        }
+        
+        .gallery-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .gallery-scroll-container:active {
+            cursor: grabbing;
+        }
+
+        .gallery-grid {
+            display: flex;
+            gap: 20px;
+            max-width: fit-content;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+
+        .image-button-custom {
+            flex: 0 0 280px; 
+            height: 200px;
+            border: 2px solid var(--glass-border);
+            border-radius: 12px;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); /* Mengurangi kepekatan shadow agar clean */
+        }
+
+        .image-button-custom::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .image-button-custom:hover::after {
+            background: rgba(0, 0, 0, 0);
+        }
+
+        .image-button-custom:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--accent-wood);
+        }
+
+        .image-button-custom:active {
+            transform: scale(0.98);
+        }
+
+        #btn1 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1vCfbGQDMCYf7-ZHwiXpJocvLrj0RdcfC'); }
+        #btn2 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1Mz9DOi5p26YfOnGOUCodITwOlb6qvfJO'); }
+        #btn3 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1nsyFw4kqSnte-8pCBLWRX8YOuH5LUtl7'); }
+        #btn4 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1pGH1tLNbRNezO8f9Y73O0FJreCKIxkz6'); }
+        #btn5 { background-image: url('https://lh3.googleusercontent.com/u/0/d/1kOzkN4OhZY2COrQuF6UM-TIU9dylmING'); }
+
+        /* --- MODAL SYSTEM --- */
+        .modal-custom {
+            display: none;             
+            position: fixed;           
+            z-index: 2000;             
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.95); /* Mengubah backdrop modal menjadi putih transparan */
+            backdrop-filter: blur(5px);
+            justify-content: center;   
+            align-items: center;  
+        }
+
+        .modal-content-custom {
+            max-width: 85%;
+            max-height: 80vh;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.1); /* Border modal disesuaikan */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1); /* Shadow modal dibuat lebih smooth */
+            animation: zoomIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            object-fit: contain;
+        }
+
+        .close-btn-custom {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            color: #111827; /* Tombol close diubah menjadi gelap */
+            font-size: 45px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn-custom:hover {
+            color: var(--accent-wood);
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
         /* --- PRODUCT CUSTOMIZER SECTION --- */
         .customizer-section {
-            padding: 100px 5% 20px 5%; /* PERBAIKAN: Mengurangi padding bawah dari 100px menjadi 20px */
-            background: #ffffff;
+            padding: 80px 5% 40px 5%; 
+            background: #ffffff; /* Tetap putih bersih */
         }
 
         .section-title {
@@ -135,10 +263,6 @@
             font-size: 2.5rem;
             margin-bottom: 10px;
             color: #111827;
-        }
-
-        .section-title p {
-            color: var(--text-muted);
         }
 
         .customizer-container {
@@ -160,7 +284,7 @@
         .product-image {
             width: 100%;
             max-width: 400px;
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.08));
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
@@ -194,7 +318,7 @@
         }
 
         .option-group {
-            margin-bottom: 0px; /* PERBAIKAN: Mengeliminasi margin bawah agar rapat dengan tombol di bawahnya */
+            margin-bottom: 0px; 
         }
 
         .option-title {
@@ -205,7 +329,6 @@
             color: var(--text-muted);
         }
 
-        /* COLOR & MATERIAL BUTTONS */
         .color-pickers {
             display: flex;
             gap: 15px;
@@ -229,20 +352,19 @@
         .dot-c2 { background-color: #704085; }
         .dot-c3 { background-color: #e77543; }
 
-        /* --- STYLE UNTUK TOMBOL BARU DI PALING BAWAH --- */
+        /* --- FOOTER BUTTON --- */
         .button-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px 0 60px 0; /* PERBAIKAN: Mengurangi padding atas dari 60px menjadi 20px */
-            background-color: #ffffff;
+            padding: 30px 0 60px 0; 
+            background-color: #ffffff; /* Tetap putih bersih */
         }
 
         .btn-web-animated {
             background: linear-gradient(45deg, var(--blue-light), var(--blue-dark));
             box-shadow: 0 0 15px rgba(37, 117, 252, 0.3);
             animation: pulse-web-main 2s infinite;
-            transition: transform 0.3s ease;
             width: 250px;
             height: 60px;
             display: flex;
@@ -261,80 +383,46 @@
             transform: scale(1.05);
         }
 
-        /* ANIMASI PULSA TOMBOL */
         @keyframes pulse-web-main {
-            0% { 
-                transform: scale(1); 
-                box-shadow: 0 0 0 0 rgba(37, 117, 252, 0.5); 
-            }
-            70% { 
-                transform: scale(1.05); 
-                box-shadow: 0 0 0 10px rgba(37, 117, 252, 0); 
-            }
-            100% { 
-                transform: scale(1); 
-                box-shadow: 0 0 0 0 rgba(37, 117, 252, 0); 
-            }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 117, 252, 0.5); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 117, 252, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 117, 252, 0); }
         }
 
-        /* --- RESPONSIVE LAYOUT UNTUK MOBILE ANDROID --- */
+        /* --- AUDIO INTERACTION OVERLAY --- */
+        #interaction-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.02); /* Dikurangi opacity-nya agar transparan bersih */
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        /* --- RESPONSIVE LAYOUT --- */
         @media (max-width: 768px) {
             nav { 
-                padding: 0;
-                background-color: rgba(255, 255, 255, 0.1); 
-                backdrop-filter: blur(2px); 
-                -webkit-backdrop-filter: blur(1px); 
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
-                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
-                position: fixed; 
-                top: 0;
-                left: 0;
-                width: 100%;
-                z-index: 1000;
+                padding: 10px 20px;
+                background-color: rgba(255, 255, 255, 0.9); /* Transparansi mobile disesuaikan ke putih */
             }
             
             .nav-links { display: none; } 
             
+            .image-button-custom {
+                flex: 0 0 220px; 
+                height: 160px;
+            }
+            
             .customizer-container { 
                 grid-template-columns: 1fr; 
-                gap: 0;
+                gap: 30px;
             }
             
-            .hero-content2 h1 { font-size: 2rem; color: #ffffff; } 
-            .hero-content2 p { font-size: 0.95rem; color: #ffffff; }
-            .product-image { max-height: 350px; } 
+            .hero-content2 h1 { font-size: 2.2rem; } 
+            .product-image { max-height: 320px; } 
             
             .hero { 
-                top: 50px;
                 height: 50vh;  
-                width: 100vw; 
-                margin: 0;
-                padding: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: center; 
-                align-items: center;    
-                text-align: center;
-                background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
             }
-
-            .button-wrapper {
-                padding: 10px 0 40px 0; /* Mengoptimalkan jarak pada tampilan mobile */
-            }
-        }
-
-        /* --- STYLE DARI KODE KEDUA (AUDIO INTERACTION) --- */
-        #interaction-overlay {
-            position: fixed;
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 9999;
         }
     </style>
 </head>
@@ -344,7 +432,6 @@
 
     <audio id="myAudio">
         <source src="https://firstian84.github.io/firstiantechnology/middle.m4a" type="audio/mpeg">
-       
     </audio>
 
     <nav>
@@ -366,6 +453,25 @@
         </div>
     </section>
 
+    <section class="button-grid-section">
+        <div class="grid-title"></div>
+        
+        <div class="gallery-scroll-container" id="scrollContainer">
+            <div class="gallery-grid">
+                <button class="image-button-custom" id="btn1" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d//1vCfbGQDMCYf7-ZHwiXpJocvLrj0RdcfC')"></button>
+                <button class="image-button-custom" id="btn2" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d/1Mz9DOi5p26YfOnGOUCodITwOlb6qvfJO')"></button>
+                <button class="image-button-custom" id="btn3" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d//1nsyFw4kqSnte-8pCBLWRX8YOuH5LUtl7')"></button>
+                <button class="image-button-custom" id="btn4" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d/1pGH1tLNbRNezO8f9Y73O0FJreCKIxkz6')"></button>
+                <button class="image-button-custom" id="btn5" onclick="openVisualModal('https://lh3.googleusercontent.com/u/0/d/1kOzkN4OhZY2COrQuF6UM-TIU9dylmING')"></button>
+            </div>
+        </div>
+    </section>
+
+    <div id="unifiedModal" class="modal-custom" onclick="closeVisualModal(event)">
+        <span class="close-btn-custom" onclick="forceCloseModal()">×</span>
+        <img class="modal-content-custom" id="modalTargetImg" src="" alt="Preview Visual">
+    </div>
+
     <section class="customizer-section" id="customizer">
         <div class="section-title">
             <h2>Interaktif Pilihan</h2>
@@ -373,15 +479,14 @@
 
         <div class="customizer-container">
             <div class="product-display" id="tiltCard">
-                <img src="https://lh3.googleusercontent.com/d/1SacgdbZug4ZkB6IwZSV3lL8lGdmxvNq4" class="product-image" id="productImg">
+                <img src="https://lh3.googleusercontent.com/d/1SacgdbZug4ZkB6IwZSV3lL8lGdmxvNq4" class="product-image" id="productImg" alt="Product Layout">
             </div>
             <div class="customizer-controls">
-                <h3 id="productName"></h3>
+                <h3 id="productName">Koleksi Eksklusif</h3>
                 
                 <ul class="furniture-list" id="furnitureList"></ul>
 
-                <div class="price" id="productPrice"></div>
-                <p style="color: var(--text-muted); margin-bottom: 25px;"></p>
+                <div class="price" id="productPrice">Total Paket: Rp21.000.000</div>
                 
                 <div class="option-group">
                     <div class="option-title">Pilih Varian</div>
@@ -402,7 +507,7 @@
     </div>
 
     <script>
-        // --- 1. DATA KONTEN HERO ---
+        // --- 1. HERO SLIDESHOW MATRIX DATA ---
         const heroData = [   
             {
                 bg: "https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c",
@@ -436,7 +541,7 @@
             }, 200);
         }
 
-        // --- 2. FITUR CUSTOMIZER FURNITURE ---
+        // --- 2. CONFIG VARIANT INTERACTION ---
         const variants = {
             c1: {
                 img: "https://lh3.googleusercontent.com/d/1SacgdbZug4ZkB6IwZSV3lL8lGdmxvNq4", 
@@ -505,53 +610,88 @@
             document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
             element.classList.add('active');
 
-            if (key === 'c1') {
-                changeHero(0);
-            } else if (key === 'c2') {
-                changeHero(1);
-            } else if (key === 'c3') {
-                changeHero(2);
+            if (key === 'c1') changeHero(0);
+            else if (key === 'c2') changeHero(1);
+            else if (key === 'c3') changeHero(2);
+        }
+
+        // --- 3. UNIFIED MODAL CORE CONTROLLER ---
+        const uModal = document.getElementById('unifiedModal');
+        const modalTargetImg = document.getElementById('modalTargetImg');
+
+        function openVisualModal(imgUrl) {
+            modalTargetImg.src = imgUrl;
+            uModal.style.display = 'flex';
+        }
+
+        function closeVisualModal(event) {
+            if (event.target === uModal) {
+                uModal.style.display = 'none';
             }
         }
 
-        // --- 3. LOGIKA INTERAKSI TOMBOL ---
+        function forceCloseModal() {
+            uModal.style.display = 'none';
+        }
+
+        // --- 4. REDIRECTION ACTION ---
         function openLink() { 
             window.open("https://firstian84.github.io/firstiantechnology/tech.html", "_blank"); 
         }
 
-        // --- 4. LOGIKA AUDIO DELAYED LOOP (DARI KODE KEDUA) ---
+        // --- 5. AUDIO SCHEDULER ENGINE ---
         const audio = document.getElementById('myAudio');
         const overlay = document.getElementById('interaction-overlay');
-        const delayBetweenLoops = 10000; // Jeda 10 detik sebelum putaran berikutnya
+        const delayBetweenLoops = 10000; 
 
         function setupDelayedLoop() {
             audio.addEventListener('ended', function() {
-                console.log("Lagu selesai diputar. Menunggu 10 detik...");
-                
+                console.log("Audio putaran selesai. Istirahat 10 detik...");
                 setTimeout(function() {
                     audio.currentTime = 0; 
-                    console.log("Memutar ulang lagu (Putaran berikutnya)...");
                     audio.play().catch(err => console.log("Gagal memutar ulang:", err));
                 }, delayBetweenLoops);
             });
         }
 
-        // --- 5. COMBINED WINDOW ONLOAD ---
+        // --- 6. DRAG-TO-SCROLL MOUSE INTERACTION FOR HORIZONTAL LAYOUT ---
+        const slider = document.getElementById('scrollContainer');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            slider.classList.add('active');
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+        slider.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 1.5; 
+            slider.scrollLeft = scrollLeft - walk;
+        });
+
+        // --- 7. WINDOW BOOTSTRAP INITIALIZER ---
         window.onload = function() {
-            // Inisialisasi Varian Furniture Pertama
             changeVariant('c1', document.querySelector('.dot-c1'));
 
-            // Inisialisasi Event Listener Audio Overlay
             overlay.addEventListener('click', function() {
-                overlay.style.display = 'none'; // Sembunyikan overlay setelah interaksi pertama pengguna
+                overlay.style.display = 'none'; 
                 setupDelayedLoop();
-
-                console.log("Memicu putaran pertama (Langsung tanpa delay)...");
+                
                 audio.play()
-                    .then(() => console.log("Lagu berhasil berbunyi!"))
+                    .then(() => console.log("Audio Stream Aktif."))
                     .catch(err => {
-                        console.error("Gagal memutar audio awal:", err);
-                        alert("Gagal memutar audio. Pastikan URL audio dapat diakses secara publik.");
+                        console.error("Gagal melakukan inisiasi audio:", err);
                     });
             });
         };

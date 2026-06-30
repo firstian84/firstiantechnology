@@ -56,25 +56,6 @@
             flex-direction: column;
         }
 
-        @media (max-width: 500px) {
-            .control-panel {
-                width: calc(100% - 40px);
-                left: 20px;
-                top: 20px;
-            }
-        }
-
-        h2 {
-            color: var(--cyber-neon);
-            margin-top: 0;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
-            font-size: 22px;
-            text-align: center;
-        }
-
         .btn-group {
             display: flex;
             gap: 12px;
@@ -130,6 +111,17 @@
             opacity: 0.5;
         }
 
+        h2 {
+            color: var(--cyber-neon);
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+            font-size: 22px;
+            text-align: center;
+        }
+
         .data-item-wrapper {
             display: flex;
             align-items: stretch;
@@ -139,7 +131,6 @@
             box-sizing: border-box;
         }
 
-        /* Mewarisi style property-card dari rancangan navigasi baru */
         .data-item-btn {
             background-color: rgba(17, 17, 17, 0.8);
             color: #39ff14;
@@ -163,7 +154,6 @@
             box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
         }
 
-        /* Style aktif untuk mensinkronisasi state pencarian taktis */
         .data-item-btn.active {
             background-color: #39ff14 !important;
             color: #000000 !important;
@@ -228,7 +218,7 @@
             text-align: left;
         }
 
-        /* Instruksi Ganti Basemap Mengambang di Kanan Atas Globe */
+        /* Instruksi Ganti Basemap Mengambang */
         .map-instruction {
             position: absolute;
             top: 20px; 
@@ -274,6 +264,44 @@
         }
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 255, 204, 0.8);
+        }
+      
+        /* TARGET OPTIMASI MEDIA QUERY ANDROID */
+        @media (max-width: 768px) {
+            body, html { 
+                overflow: auto !important; 
+            }
+            #cesiumContainer { 
+                height: 50vh; 
+                width: 100%; 
+                position: relative; 
+            }
+            .control-panel {
+                position: relative;
+                width: 100%; 
+                height: auto; 
+                top: 0;
+                left: 0;
+                border-left: none;
+                border-radius: 0px;
+                border-top: 2px solid var(--primary-red); 
+                background: rgba(5,5,5,0.95);
+                max-height: none;
+                box-shadow: none;
+                padding: 15px;
+                box-sizing: border-box;
+            }
+            #dataContainer {
+                max-height: 250px;
+            }
+            .cesium-viewer-toolbar { 
+                right: 10px !important; 
+                top: 10px !important; 
+            }
+            .map-instruction { 
+                right: 10px; 
+                top: 50px; 
+            }
         }
     </style>
 </head>
@@ -337,7 +365,6 @@
             sceneModePicker: true
         });
         
-        // Atur posisi awal kamera fokus ke Jakarta
         viewer.camera.setView({ 
             destination: Cesium.Cartesian3.fromDegrees(106.82, -6.17, 30000) 
         });
@@ -419,7 +446,6 @@
                 logMessage(`Sukses memuat semua value.`);
                 previewLabel.style.display = 'block';
                 
-                // Render list komponen data
                 Object.keys(allDataObjects).forEach((key, index) => {
                     const valueData = allDataObjects[key];
                     
@@ -428,13 +454,11 @@
 
                     const button = document.createElement('button');
                     button.className = 'data-item-btn';
-                    // Id disamakan agar method card.scrollIntoView & classList.add('active') bekerja sempurna
                     button.id = `card-${index}`;
                     
                     let previewText = typeof valueData === 'object' ? JSON.stringify(valueData) : valueData;
                     button.innerHTML = `<strong>${key}</strong><br><span style="font-size:11px; color:#a8b2d1;">${previewText}</span>`;
                     
-                    // Integrasi: Parsing kordinat adaptif dari DB sebelum memanggil focusTarget
                     button.onclick = function() {
                         const coords = extractLatLng(valueData);
                         if(coords) {
@@ -494,7 +518,6 @@
         }
     }
 
-    // Helper untuk mengekstrak Latitude & Longitude secara adaptif dari database string/object
     function extractLatLng(data) {
         let lat = null;
         let lng = null;
@@ -528,7 +551,6 @@
         return null;
     }
 
-    // 4. Fungsi Navigasi Kamera & Marker 3D (Terintegrasi Penuh)
     function focusTarget(lat, lng, index) {
         viewer.entities.removeAll(); 
         activeIndex = index;
@@ -542,7 +564,6 @@
 
         const destination = Cesium.Cartesian3.fromDegrees(lng, lat);
 
-        // Menambahkan polyline pelacak taktis dari layar UI kartu menuju koordinat target bumi
         viewer.entities.add({
             polyline: {
                 positions: new Cesium.CallbackProperty(() => {
@@ -560,7 +581,6 @@
             }
         });
 
-        // Struktur grafis SVG Crosshair taktis merah cerah
         const targetSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
             <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="#ff3b3b" stroke-width="6"/>
             <path d="M 70 10 L 90 10 L 90 30" fill="none" stroke="#ff3b3b" stroke-width="6"/>
@@ -570,7 +590,6 @@
             <circle cx="50" cy="50" r="5" fill="#ff3b3b" />
         </svg>`;
 
-        // Render Marker Billboard 3D dengan animasi pulse ukuran konstan
         viewer.entities.add({
             position: destination,
             billboard: {
@@ -586,7 +605,6 @@
 
         logMessage(`Menghubungkan sistem... Merender titik koordinat pada globe.`);
         
-        // Terbangkan kamera menuju koordinat target dengan pitch sudut pandang miring taktis (-30 derajat)
         viewer.camera.flyTo({
             destination: Cesium.Cartesian3.fromDegrees(lng, lat, 2500),
             orientation: { 

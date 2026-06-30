@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>candiru5_ctrl_cesium</title>
+    
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-red: #ff3b3b;
+            --accent-glow: #ff0000;
+            --cyber-neon: #00ffcc;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000000;
+            color: var(--cyber-neon);
+        }
+
+        /* Cesium sebagai Background Penuh */
+        #cesiumContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        /* Overlay Panel Kontrol (Tactical Glassmorphism) */
+        .control-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 420px;
+            max-height: calc(100vh - 40px);
+            z-index: 10;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--cyber-neon);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.15);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            color: #000000;
+            border: 1px solid transparent;
+            padding: 12px 20px;
+            font-size: 13px;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex: 1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-view {
+            background-color: var(--cyber-neon);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
+        .btn-view:hover:not(:disabled) {
+            background-color: #000000;
+            color: var(--cyber-neon);
+            border-color: var(--cyber-neon);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.6);
+        }
+
+        .btn-delete {
+            background-color: #ff0055;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+        }
+
+        .btn-delete:hover:not(:disabled) {
+            background-color: #000000;
+            color: #ff0055;
+            border-color: #ff0055;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.6);
+        }
+
+        .btn:disabled {
+            background-color: #1a1a1a !important;
+            color: #444444 !important;
+            border-color: #444444 !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        h2 {
+            color: var(--cyber-neon);
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+            font-size: 22px;
+            text-align: center;
+        }
+
+        .data-item-wrapper {
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+            margin-bottom: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .data-item-btn {
+            background-color: rgba(17, 17, 17, 0.8);
+            color: #39ff14;
+            border: 1px solid rgba(57, 255, 20, 0.4);
+            text-align: left;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            transition: all 0.2s ease;
+            flex: 1;
+            white-space: pre-wrap;
+            word-break: break-all;
+            overflow-wrap: break-word;
+            overflow: hidden;
+        }
+
+        .data-item-btn:hover {
+            background-color: rgba(57, 255, 20, 0.15);
+            border-color: #39ff14;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+        }
+
+        .data-item-btn.active {
+            background-color: #39ff14 !important;
+            color: #000000 !important;
+            border-color: #39ff14 !important;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
+        }
+        
+        .data-item-btn.active span {
+            color: #111111 !important;
+        }
+
+        .btn-delete-single {
+            background-color: rgba(34, 34, 34, 0.8);
+            color: #ff0055;
+            border: 1px solid rgba(255, 0, 85, 0.4);
+            border-radius: 6px;
+            padding: 0 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete-single:hover {
+            background-color: #ff0055;
+            color: #fff;
+            border-color: #ff0055;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+        }
+
+        .label-box {
+            text-align: left;
+            font-weight: bold;
+            font-size: 11px;
+            color: #8892b0;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #status {
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-align: left;
+            margin-bottom: 15px;
+            display: none;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(0, 255, 204, 0.4);
+            color: #a8b2d1;
+            white-space: pre-line;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        #dataContainer {
+            max-height: 320px;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        /* Instruksi Ganti Basemap Mengambang */
+        .map-instruction {
+            position: absolute;
+            top: 20px; 
+            right: 40px; 
+            z-index: 10;
+            display: flex; 
+            align-items: center; 
+            pointer-events: none;
+            animation: pulse-glow 2s infinite;
+        }
+        
+        .instruction-text {
+            background: var(--primary-red);
+            color: white; 
+            padding: 8px 15px;
+            border-radius: 4px; 
+            font-size: 11px; 
+            font-weight: 800;
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        @keyframes pulse-glow {
+            0% { opacity: 0.7; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(-5px); }
+            100% { opacity: 0.7; transform: translateX(0); }
+        }
+        
+        .cesium-viewer-bottom { display: none !important; }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 204, 0.4);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 204, 0.8);
+        }
+      
+        /* TARGET OPTIMASI MEDIA QUERY ANDROID */
+        @media (max-width: 768px) {
+            body, html { 
+                overflow: auto !important; 
+            }
+            #cesiumContainer { 
+                height: 50vh; 
+                width: 100%; 
+                position: relative; 
+            }
+            .control-panel {
+                position: relative;
+                width: 100%; 
+                height: auto; 
+                top: 0;
+                left: 0;
+                border-left: none;
+                border-radius: 0px;
+                border-top: 2px solid var(--primary-red); 
+                background: rgba(5,5,5,0.95);
+                max-height: none;
+                box-shadow: none;
+                padding: 15px;
+                box-sizing: border-box;
+            }
+            #dataContainer {
+                max-height: 250px;
+            }
+            .cesium-viewer-toolbar { 
+                right: 10px !important; 
+                top: 10px !important; 
+            }
+            .map-instruction { 
+                right: 10px; 
+                top: 50px; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="cesiumContainer"></div>
+
+<div class="map-instruction">
+    <div class="instruction-text">GANTI BASEMAP > OTHER > ARCGIS WORLD IMAGERY</div>
+</div>
+
+<div class="control-panel">
+    <h2>Candiru-5</h2>
+    
+    <div class="btn-group">
+        <button id="viewBtn" class="btn btn-view" onclick="fetchAndShowValues()">Refresh</button>
+        <button id="deleteBtn" class="btn btn-delete" onclick="startDeletion()">Hapus Semua</button>
+    </div>
+    
+    <div class="label-box" id="statusLabel" style="display:none;">Logs:</div>
+    <div id="status"></div>
+
+    <div class="label-box" id="previewLabel" style="display:none;">Pilih Data Target:</div>
+    <div id="dataContainer"></div>
+</div>
+
+<script>
+    const CONFIG = {
+        URL: "https://enabled-crayfish-71186.upstash.io",
+        TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
+        PREFIX: "candiru_5"
+    };
+
+    const statusDiv = document.getElementById('status');
+    const dataContainer = document.getElementById('dataContainer');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const viewBtn = document.getElementById('viewBtn');
+    
+    const statusLabel = document.getElementById('statusLabel');
+    const previewLabel = document.getElementById('previewLabel');
+
+    let viewer;
+    let activeIndex = null;
+
+    window.onload = function() {
+        initCesium();
+        fetchAndShowValues();
+    };
+
+    function initCesium() {
+        viewer = new Cesium.Viewer('cesiumContainer', {
+            terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+            animation: false,
+            timeline: false,
+            infoBox: false,
+            selectionIndicator: false,
+            navigationHelpButton: false,
+            baseLayerPicker: true, 
+            geocoder: true,
+            homeButton: true,
+            sceneModePicker: true
+        });
+        
+        viewer.camera.setView({ 
+            destination: Cesium.Cartesian3.fromDegrees(106.82, -6.17, 30000) 
+        });
+    }
+
+    function logMessage(msg) {
+        statusLabel.style.display = 'block';
+        statusDiv.style.display = 'block';
+        statusDiv.innerText += msg + "\n";
+        statusDiv.scrollTop = statusDiv.scrollHeight;
+    }
+
+    function setActionLoading(isLoading, text = "Memproses...") {
+        deleteBtn.disabled = isLoading;
+        viewBtn.disabled = isLoading;
+        if(isLoading) {
+            deleteBtn.innerText = text;
+        } else {
+            deleteBtn.innerText = "Hapus Semua";
+            viewBtn.innerText = "Refresh";
+        }
+    }
+
+    async function upstashFetch(command) {
+        const response = await fetch(`${CONFIG.URL}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${CONFIG.TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(command)
+        });
+        return response.json();
+    }
+
+    async function fetchAndShowValues() {
+        setActionLoading(true, "Membaca...");
+        statusDiv.innerText = "";
+        dataContainer.innerHTML = "";
+        previewLabel.style.display = 'none';
+        
+        viewer.entities.removeAll();
+        activeIndex = null;
+
+        let cursor = "0";
+        let allDataObjects = {};
+        logMessage("Memulai pemindaian key dengan prefiks '" + CONFIG.PREFIX + "'...");
+
+        try {
+            do {
+                const res = await upstashFetch(["SCAN", cursor, "MATCH", `${CONFIG.PREFIX}*`, "COUNT", "100"]);
+                if (res.error) throw new Error(res.error);
+
+                cursor = res.result[0];
+                const keys = res.result[1];
+
+                if (keys && keys.length > 0) {
+                    logMessage(`Menemukan ${keys.length} key, mengambil nilainya...`);
+                    
+                    const valuesRes = await upstashFetch(["MGET", ...keys]);
+                    if (valuesRes.error) throw new Error(valuesRes.error);
+
+                    keys.forEach((key, index) => {
+                        let rawValue = valuesRes.result[index];
+                        try {
+                            allDataObjects[key] = JSON.parse(rawValue);
+                        } catch(e) {
+                            allDataObjects[key] = rawValue;
+                        }
+                    });
+                }
+            } while (cursor !== "0");
+
+            const totalKeys = Object.keys(allDataObjects).length;
+            if (totalKeys === 0) {
+                logMessage("Tidak ada data yang ditemukan dengan prefiks tersebut.");
+                dataContainer.innerHTML = "<div style='color: #ff0055; text-align:center; padding:10px;'>Database Kosong</div>";
+            } else {
+                logMessage(`Sukses memuat semua value.`);
+                previewLabel.style.display = 'block';
+                
+                Object.keys(allDataObjects).forEach((key, index) => {
+                    const valueData = allDataObjects[key];
+                    
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'data-item-wrapper';
+
+                    const button = document.createElement('button');
+                    button.className = 'data-item-btn';
+                    button.id = `card-${index}`;
+                    
+                    let previewText = typeof valueData === 'object' ? JSON.stringify(valueData) : valueData;
+                    button.innerHTML = `<strong>${key}</strong><br><span style="font-size:11px; color:#a8b2d1;">${previewText}</span>`;
+                    
+                    button.onclick = function() {
+                        const coords = extractLatLng(valueData);
+                        if(coords) {
+                            focusTarget(coords.lat, coords.lng, index);
+                        } else {
+                            logMessage(`[ERROR] Gagal membaca koordinat dari key: ${key}`);
+                            alert(`Gagal mendeteksi data posisi geografis.\nData Mentah: ${previewText}`);
+                        }
+                    };
+                    
+                    const deleteSingleBtn = document.createElement('button');
+                    deleteSingleBtn.className = 'btn-delete-single';
+                    deleteSingleBtn.innerHTML = '🗑️';
+                    deleteSingleBtn.title = `Hapus data ${key}`;
+                    
+                    deleteSingleBtn.onclick = async function(e) {
+                        e.stopPropagation();
+                        
+                        if (confirm(`Apakah Anda yakin ingin menghapus key ini?\n[ ${key} ]`)) {
+                            deleteSingleBtn.disabled = true;
+                            deleteSingleBtn.innerText = "⏳";
+                            try {
+                                logMessage(`Menghapus single key: ${key}...`);
+                                const delRes = await upstashFetch(["DEL", key]);
+                                if (delRes.error) throw new Error(delRes.error);
+                                
+                                logMessage(`Key '${key}' sukses dihapus.`);
+                                wrapper.remove();
+                                
+                                if (activeIndex === index) {
+                                    viewer.entities.removeAll();
+                                    activeIndex = null;
+                                }
+                                
+                                if(dataContainer.children.length === 0) {
+                                    previewLabel.style.display = 'none';
+                                    dataContainer.innerHTML = "<div style='color: #ff0055; text-align:center; padding:10px;'>Database Kosong</div>";
+                                }
+                            } catch (err) {
+                                logMessage(`Gagal menghapus key: ${err.message}`);
+                                deleteSingleBtn.disabled = false;
+                                deleteSingleBtn.innerHTML = '🗑️';
+                            }
+                        }
+                    };
+
+                    wrapper.appendChild(button);
+                    wrapper.appendChild(deleteSingleBtn);
+                    dataContainer.appendChild(wrapper);
+                });
+            }
+
+        } catch (error) {
+            logMessage(`Gagal melihat data: ${error.message}`);
+        } finally {
+            setActionLoading(false);
+        }
+    }
+
+    function extractLatLng(data) {
+        let lat = null;
+        let lng = null;
+        let targetString = "";
+
+        if (typeof data === 'object' && data !== null) {
+            if (data.koordinat) {
+                targetString = String(data.koordinat);
+            } else if (data.coordinate) {
+                targetString = String(data.coordinate);
+            } else {
+                lat = data.lat ?? data.latitude ?? data.location?.lat ?? data.coords?.latitude;
+                lng = data.lon ?? data.lng ?? data.longitude ?? data.location?.lon ?? data.coords?.longitude;
+            }
+        } else if (data) {
+            targetString = String(data);
+        }
+
+        if (targetString && (lat === null || lng === null)) {
+            const regex = /(-?\d+\.\d+)\s*[\s,]\s*(-?\d+\.\d+)/;
+            const match = targetString.match(regex);
+            if (match) {
+                lat = match[1];
+                lng = match[2];
+            }
+        }
+
+        if (lat !== null && lng !== null && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng))) {
+            return { lat: parseFloat(lat), lng: parseFloat(lng) };
+        }
+        return null;
+    }
+
+    function focusTarget(lat, lng, index) {
+        viewer.entities.removeAll(); 
+        activeIndex = index;
+        
+        document.querySelectorAll('.data-item-btn').forEach(c => c.classList.remove('active'));
+        const activeCard = document.getElementById(`card-${index}`);
+        if(activeCard) {
+            activeCard.classList.add('active');
+            activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        const destination = Cesium.Cartesian3.fromDegrees(lng, lat);
+
+        viewer.entities.add({
+            polyline: {
+                positions: new Cesium.CallbackProperty(() => {
+                    const cardElem = document.getElementById(`card-${activeIndex}`);
+                    if(!cardElem) return [destination, destination];
+                    const rect = cardElem.getBoundingClientRect();
+                    const screenPos = new Cesium.Cartesian2(rect.left, rect.top + (rect.height / 2));
+                    const ray = viewer.camera.getPickRay(screenPos);
+                    const startPos = viewer.scene.globe.pick(ray, viewer.scene) || viewer.camera.position;
+                    return [startPos, destination];
+                }, false),
+                width: 2,
+                material: Cesium.Color.RED.withAlpha(0.5),
+                arcType: Cesium.ArcType.GEODESIC
+            }
+        });
+
+        const targetSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+            <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+            <path d="M 70 10 L 90 10 L 90 30" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+            <path d="M 90 70 L 90 90 L 70 90" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+            <path d="M 30 90 L 10 90 L 10 70" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+            <circle cx="50" cy="50" r="12" fill="none" stroke="#ff3b3b" stroke-width="3" />
+            <circle cx="50" cy="50" r="5" fill="#ff3b3b" />
+        </svg>`;
+
+        viewer.entities.add({
+            position: destination,
+            billboard: {
+                image: 'data:image/svg+xml;base64,' + btoa(targetSvg),
+                scale: new Cesium.CallbackProperty((time) => {
+                    const sec = Cesium.JulianDate.secondsDifference(time, Cesium.JulianDate.now());
+                    return 0.8 + Math.abs(Math.sin(sec * 4)) * 0.4; 
+                }, false),
+                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+            }
+        });
+
+        logMessage(`Menghubungkan sistem... Merender titik koordinat pada globe.`);
+        
+        viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 2500),
+            orientation: { 
+                pitch: Cesium.Math.toRadians(-30.0), 
+                heading: 0.0 
+            },
+            duration: 2.5
+        });
+
+        logMessage(`[SUKSES] Target Terkunci pada Posisi: ${lat}, ${lng}`);
+    }
+
+    async function startDeletion() {
+        if (!confirm("Apakah Anda yakin ingin menghapus SELURUH data dengan prefiks ini?")) return;
+        
+        setActionLoading(true, "Menghapus...");
+        statusDiv.innerText = "";
+        dataContainer.innerHTML = "";
+        previewLabel.style.display = 'none';
+        
+        viewer.entities.removeAll();
+        activeIndex = null;
+        
+        let cursor = "0";
+        let totalDeleted = 0;
+
+        logMessage("Memulai pembersihan database...");
+
+        try {
+            do {
+                const res = await upstashFetch(["SCAN", cursor, "MATCH", `${CONFIG.PREFIX}*`, "COUNT", "100"]);
+                if (res.error) throw new Error(res.error);
+
+                cursor = res.result[0];
+                const keys = res.result[1];
+
+                if (keys && keys.length > 0) {
+                    logMessage(`Menghapus ${keys.length} key...`);
+                    const delRes = await upstashFetch(["DEL", ...keys]);
+                    if (!delRes.error) {
+                        totalDeleted += delRes.result;
+                    }
+                }
+            } while (cursor !== "0");
+
+            logMessage(`Selesai! Total ${totalDeleted} data berhasil dihapus.`);
+
+        } catch (error) {
+            logMessage(`Terjadi kesalahan: ${error.message}`);
+        } finally {
+            setActionLoading(false);
+        }
+    }
+</script>
+
+</body>
+</html>

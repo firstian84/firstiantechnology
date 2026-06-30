@@ -3,78 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>candiru1_ctrl</title>
+    <title>candiru1_ctrl_cesium</title>
+    
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #000000; /* Hitam Pekat */
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            color: #00ffcc;
-            min-height: 100vh;
-        }
-        
-        /* Layout Grid Utama: Kiri Kontrol & Data, Kanan Peta */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-            align-items: start;
+        :root {
+            --primary-red: #ff3b3b;
+            --accent-glow: #ff0000;
+            --cyber-neon: #00ffcc;
         }
 
-        @media (max-width: 900px) {
-            .main-layout {
-                grid-template-columns: 1fr;
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000000;
+            color: var(--cyber-neon);
+        }
+
+        /* Cesium sebagai Background Penuh */
+        #cesiumContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        /* Overlay Panel Kontrol (Tactical Glassmorphism) */
+        .control-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 420px;
+            max-height: calc(100vh - 40px);
+            z-index: 10;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--cyber-neon);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.15);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (max-width: 500px) {
+            .control-panel {
+                width: calc(100% - 40px);
+                left: 20px;
+                top: 20px;
             }
         }
 
-        .container {
-            background-color: #000000;
-            border: 1px solid #00ffcc;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        /* Panel Sebelah Kanan untuk Peta */
-        .map-container {
-            background-color: #000000;
-            border: 1px solid #00ffcc;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
-            box-sizing: border-box;
-            position: sticky;
-            top: 20px;
-            text-align: center;
-        }
-
         h2 {
-            color: #00ffcc;
+            color: var(--cyber-neon);
             margin-top: 0;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 3px;
             text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
-            font-size: 24px;
+            font-size: 22px;
+            text-align: center;
         }
 
         .btn-group {
             display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .btn {
             color: #000000;
             border: 1px solid transparent;
-            padding: 14px 24px;
-            font-size: 14px;
+            padding: 12px 20px;
+            font-size: 13px;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             border-radius: 4px;
@@ -86,14 +97,14 @@
         }
 
         .btn-view {
-            background-color: #00ffcc;
+            background-color: var(--cyber-neon);
             box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
         }
 
         .btn-view:hover:not(:disabled) {
             background-color: #000000;
-            color: #00ffcc;
-            border-color: #00ffcc;
+            color: var(--cyber-neon);
+            border-color: var(--cyber-neon);
             box-shadow: 0 0 15px rgba(0, 255, 204, 0.6);
         }
 
@@ -119,7 +130,6 @@
             opacity: 0.5;
         }
 
-        /* Container Pembungkus Tombol Data & Tombol Hapus Tunggal */
         .data-item-wrapper {
             display: flex;
             align-items: stretch;
@@ -129,9 +139,9 @@
             box-sizing: border-box;
         }
 
-        /* Desain Tombol Data List */
+        /* Mewarisi style property-card dari rancangan navigasi baru */
         .data-item-btn {
-            background-color: #111;
+            background-color: rgba(17, 17, 17, 0.8);
             color: #39ff14;
             border: 1px solid rgba(57, 255, 20, 0.4);
             text-align: left;
@@ -140,33 +150,34 @@
             cursor: pointer;
             font-family: 'Courier New', Courier, monospace;
             transition: all 0.2s ease;
-            flex: 1; /* Mengisi ruang sisa */
-            
-            /* Perbaikan agar teks membungkus penuh dan tidak keluar jalur */
+            flex: 1;
             white-space: pre-wrap;
             word-break: break-all;
             overflow-wrap: break-word;
+            overflow: hidden;
         }
 
         .data-item-btn:hover {
-            background-color: rgba(57, 255, 20, 0.1);
+            background-color: rgba(57, 255, 20, 0.15);
             border-color: #39ff14;
             box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
         }
 
+        /* Style aktif untuk mensinkronisasi state pencarian taktis */
         .data-item-btn.active {
-            background-color: #39ff14;
-            color: #000;
+            background-color: #39ff14 !important;
+            color: #000000 !important;
+            border-color: #39ff14 !important;
             font-weight: bold;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
         }
         
         .data-item-btn.active span {
-            color: #222 !important; /* Supaya sub-teks tetap terbaca saat tombol aktif */
+            color: #111111 !important;
         }
 
-        /* Tombol Ikon Hapus Spesifik Data */
         .btn-delete-single {
-            background-color: #222;
+            background-color: rgba(34, 34, 34, 0.8);
             color: #ff0055;
             border: 1px solid rgba(255, 0, 85, 0.4);
             border-radius: 6px;
@@ -189,7 +200,7 @@
         .label-box {
             text-align: left;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             color: #8892b0;
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -197,56 +208,65 @@
         }
 
         #status {
-            padding: 15px;
+            padding: 12px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             text-align: left;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: none;
-            font-family: 'Courier New', Courier, monospace;
-            box-sizing: border-box;
-            background: #000000;
+            background: rgba(0, 0, 0, 0.85);
             border: 1px solid rgba(0, 255, 204, 0.4);
             color: #a8b2d1;
             white-space: pre-line;
-            max-height: 120px;
+            max-height: 100px;
             overflow-y: auto;
         }
 
         #dataContainer {
-            max-height: 450px;
+            max-height: 320px;
             overflow-y: auto;
             text-align: left;
-            margin-bottom: 20px;
         }
 
-        /* Bingkai Peta / Iframe */
-        .map-wrapper {
-            width: 100%;
-            height: 450px;
-            border: 1px dashed #00ffcc;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #050505;
-            color: #8892b0;
-            overflow: hidden;
+        /* Instruksi Ganti Basemap Mengambang di Kanan Atas Globe */
+        .map-instruction {
+            position: absolute;
+            top: 20px; 
+            right: 40px; 
+            z-index: 10;
+            display: flex; 
+            align-items: center; 
+            pointer-events: none;
+            animation: pulse-glow 2s infinite;
+        }
+        
+        .instruction-text {
+            background: var(--primary-red);
+            color: white; 
+            padding: 8px 15px;
+            border-radius: 4px; 
+            font-size: 11px; 
+            font-weight: 800;
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        @keyframes pulse-glow {
+            0% { opacity: 0.7; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(-5px); }
+            100% { opacity: 0.7; transform: translateX(0); }
         }
+        
+        .cesium-viewer-bottom { display: none !important; }
 
-        /* Scrollbar Sci-Fi */
+        /* Scrollbar Styling */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
-            background: #000000;
+            background: rgba(0, 0, 0, 0.5);
         }
         ::-webkit-scrollbar-thumb {
             background: rgba(0, 255, 204, 0.4);
@@ -254,36 +274,30 @@
         }
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 255, 204, 0.8);
-            border-radius: 3px;
         }
     </style>
 </head>
 <body>
 
-<div class="main-layout">
+<div id="cesiumContainer"></div>
+
+<div class="map-instruction">
+    <div class="instruction-text">GANTI BASEMAP > OTHER > ARCGIS WORLD IMAGERY</div>
+</div>
+
+<div class="control-panel">
+    <h2>Candiru-1</h2>
     
-    <div class="container">
-        <h2>Candiru-1</h2>
-        
-        <div class="btn-group">
-            <button id="viewBtn" class="btn btn-view" onclick="fetchAndShowValues()">Refresh</button>
-            <button id="deleteBtn" class="btn btn-delete" onclick="startDeletion()">Hapus Semua</button>
-        </div>
-        
-        <div class="label-box" id="statusLabel" style="display:none;">Logs:</div>
-        <div id="status"></div>
-
-        <div class="label-box" id="previewLabel" style="display:none;">Pilih Data Target:</div>
-        <div id="dataContainer"></div>
+    <div class="btn-group">
+        <button id="viewBtn" class="btn btn-view" onclick="fetchAndShowValues()">Refresh</button>
+        <button id="deleteBtn" class="btn btn-delete" onclick="startDeletion()">Hapus Semua</button>
     </div>
+    
+    <div class="label-box" id="statusLabel" style="display:none;">Logs:</div>
+    <div id="status"></div>
 
-    <div class="map-container">
-        <div class="label-box">Navigasi Visual</div>
-        <div class="map-wrapper" id="mapWrapper">
-            Pilih atau sentuh salah satu tombol data di sebelah kiri untuk memuat peta lokasi.
-        </div>
-    </div>
-
+    <div class="label-box" id="previewLabel" style="display:none;">Pilih Data Target:</div>
+    <div id="dataContainer"></div>
 </div>
 
 <script>
@@ -297,14 +311,37 @@
     const dataContainer = document.getElementById('dataContainer');
     const deleteBtn = document.getElementById('deleteBtn');
     const viewBtn = document.getElementById('viewBtn');
-    const mapWrapper = document.getElementById('mapWrapper');
     
     const statusLabel = document.getElementById('statusLabel');
     const previewLabel = document.getElementById('previewLabel');
 
+    let viewer;
+    let activeIndex = null;
+
     window.onload = function() {
+        initCesium();
         fetchAndShowValues();
     };
+
+    function initCesium() {
+        viewer = new Cesium.Viewer('cesiumContainer', {
+            terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+            animation: false,
+            timeline: false,
+            infoBox: false,
+            selectionIndicator: false,
+            navigationHelpButton: false,
+            baseLayerPicker: true, 
+            geocoder: true,
+            homeButton: true,
+            sceneModePicker: true
+        });
+        
+        // Atur posisi awal kamera fokus ke Jakarta
+        viewer.camera.setView({ 
+            destination: Cesium.Cartesian3.fromDegrees(106.82, -6.17, 30000) 
+        });
+    }
 
     function logMessage(msg) {
         statusLabel.style.display = 'block';
@@ -341,7 +378,9 @@
         statusDiv.innerText = "";
         dataContainer.innerHTML = "";
         previewLabel.style.display = 'none';
-        mapWrapper.innerHTML = "Pilih atau sentuh salah satu tombol data di sebelah kiri untuk memuat peta lokasi.";
+        
+        viewer.entities.removeAll();
+        activeIndex = null;
 
         let cursor = "0";
         let allDataObjects = {};
@@ -375,12 +414,13 @@
             const totalKeys = Object.keys(allDataObjects).length;
             if (totalKeys === 0) {
                 logMessage("Tidak ada data yang ditemukan dengan prefiks tersebut.");
-                dataContainer.innerHTML = "<div style='color: #ff0055;'>Database Kosong</div>";
+                dataContainer.innerHTML = "<div style='color: #ff0055; text-align:center; padding:10px;'>Database Kosong</div>";
             } else {
                 logMessage(`Sukses memuat semua value.`);
                 previewLabel.style.display = 'block';
                 
-                Object.keys(allDataObjects).forEach((key) => {
+                // Render list komponen data
+                Object.keys(allDataObjects).forEach((key, index) => {
                     const valueData = allDataObjects[key];
                     
                     const wrapper = document.createElement('div');
@@ -388,16 +428,21 @@
 
                     const button = document.createElement('button');
                     button.className = 'data-item-btn';
+                    // Id disamakan agar method card.scrollIntoView & classList.add('active') bekerja sempurna
+                    button.id = `card-${index}`;
                     
-                    // PERBAIKAN UTAMA: Menghapus logika substring agar teks JSON/koordinat tampil UTUH tanpa terpotong
                     let previewText = typeof valueData === 'object' ? JSON.stringify(valueData) : valueData;
-                    
                     button.innerHTML = `<strong>${key}</strong><br><span style="font-size:11px; color:#a8b2d1;">${previewText}</span>`;
                     
+                    // Integrasi: Parsing kordinat adaptif dari DB sebelum memanggil focusTarget
                     button.onclick = function() {
-                        document.querySelectorAll('.data-item-btn').forEach(b => b.classList.remove('active'));
-                        button.classList.add('active');
-                        renderMapFromData(valueData);
+                        const coords = extractLatLng(valueData);
+                        if(coords) {
+                            focusTarget(coords.lat, coords.lng, index);
+                        } else {
+                            logMessage(`[ERROR] Gagal membaca koordinat dari key: ${key}`);
+                            alert(`Gagal mendeteksi data posisi geografis.\nData Mentah: ${previewText}`);
+                        }
                     };
                     
                     const deleteSingleBtn = document.createElement('button');
@@ -419,9 +464,14 @@
                                 logMessage(`Key '${key}' sukses dihapus.`);
                                 wrapper.remove();
                                 
+                                if (activeIndex === index) {
+                                    viewer.entities.removeAll();
+                                    activeIndex = null;
+                                }
+                                
                                 if(dataContainer.children.length === 0) {
                                     previewLabel.style.display = 'none';
-                                    dataContainer.innerHTML = "<div style='color: #ff0055;'>Database Kosong</div>";
+                                    dataContainer.innerHTML = "<div style='color: #ff0055; text-align:center; padding:10px;'>Database Kosong</div>";
                                 }
                             } catch (err) {
                                 logMessage(`Gagal menghapus key: ${err.message}`);
@@ -444,49 +494,109 @@
         }
     }
 
-    function renderMapFromData(data) {
+    // Helper untuk mengekstrak Latitude & Longitude secara adaptif dari database string/object
+    function extractLatLng(data) {
         let lat = null;
-        let lon = null;
+        let lng = null;
         let targetString = "";
 
         if (typeof data === 'object' && data !== null) {
             if (data.koordinat) {
-                targetString = data.koordinat;
+                targetString = String(data.koordinat);
+            } else if (data.coordinate) {
+                targetString = String(data.coordinate);
             } else {
-                lat = data.lat || data.latitude || data.location?.lat || data.coords?.latitude;
-                lon = data.lon || data.lng || data.longitude || data.location?.lon || data.coords?.longitude;
+                lat = data.lat ?? data.latitude ?? data.location?.lat ?? data.coords?.latitude;
+                lng = data.lon ?? data.lng ?? data.longitude ?? data.location?.lon ?? data.coords?.longitude;
             }
-        } else if (typeof data === 'string') {
-            targetString = data;
+        } else if (data) {
+            targetString = String(data);
         }
 
-        if (targetString) {
-            const regex = /(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/;
+        if (targetString && (lat === null || lng === null)) {
+            const regex = /(-?\d+\.\d+)\s*[\s,]\s*(-?\d+\.\d+)/;
             const match = targetString.match(regex);
             if (match) {
                 lat = match[1];
-                lon = match[2];
+                lng = match[2];
             }
         }
 
-        if (lat && lon) {
-            mapWrapper.innerHTML = `
-                <iframe 
-                    src="https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed" 
-                    allowfullscreen="" 
-                    loading="lazy"
-                    style="width: 100%; height: 100%; border: none;">
-                </iframe>`;
-            logMessage(`Peta berhasil dimuat untuk posisi: ${lat}, ${lon}`);
-        } else {
-            mapWrapper.innerHTML = `
-                <div style="padding: 20px; text-align: left; font-size:12px; color: #39ff14; width:100%; box-sizing:border-box;">
-                    <span style="color:#ff0055; font-weight:bold;">[DATA TIDAK BERISI KOORDINAT]</span><br><br>
-                    <strong>Isi Data Mentah:</strong><br>
-                    <pre style="white-space: pre-wrap; word-break: break-all; color:#39ff14;">${JSON.stringify(data, null, 2)}</pre>
-                </div>`;
-            logMessage(`Gagal mendeteksi koordinat geografis dari data.`);
+        if (lat !== null && lng !== null && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng))) {
+            return { lat: parseFloat(lat), lng: parseFloat(lng) };
         }
+        return null;
+    }
+
+    // 4. Fungsi Navigasi Kamera & Marker 3D (Terintegrasi Penuh)
+    function focusTarget(lat, lng, index) {
+        viewer.entities.removeAll(); 
+        activeIndex = index;
+        
+        document.querySelectorAll('.data-item-btn').forEach(c => c.classList.remove('active'));
+        const activeCard = document.getElementById(`card-${index}`);
+        if(activeCard) {
+            activeCard.classList.add('active');
+            activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        const destination = Cesium.Cartesian3.fromDegrees(lng, lat);
+
+        // Menambahkan polyline pelacak taktis dari layar UI kartu menuju koordinat target bumi
+        viewer.entities.add({
+            polyline: {
+                positions: new Cesium.CallbackProperty(() => {
+                    const cardElem = document.getElementById(`card-${activeIndex}`);
+                    if(!cardElem) return [destination, destination];
+                    const rect = cardElem.getBoundingClientRect();
+                    const screenPos = new Cesium.Cartesian2(rect.left, rect.top + (rect.height / 2));
+                    const ray = viewer.camera.getPickRay(screenPos);
+                    const startPos = viewer.scene.globe.pick(ray, viewer.scene) || viewer.camera.position;
+                    return [startPos, destination];
+                }, false),
+                width: 2,
+                material: Cesium.Color.RED.withAlpha(0.5),
+                arcType: Cesium.ArcType.GEODESIC
+            }
+        });
+
+        // Struktur grafis SVG Crosshair taktis merah cerah
+        const targetSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+            <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+            <path d="M 70 10 L 90 10 L 90 30" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+            <path d="M 90 70 L 90 90 L 70 90" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+            <path d="M 30 90 L 10 90 L 10 70" fill="none" stroke="#ff3b3b" stroke-width="6"/>
+            <circle cx="50" cy="50" r="12" fill="none" stroke="#ff3b3b" stroke-width="3" />
+            <circle cx="50" cy="50" r="5" fill="#ff3b3b" />
+        </svg>`;
+
+        // Render Marker Billboard 3D dengan animasi pulse ukuran konstan
+        viewer.entities.add({
+            position: destination,
+            billboard: {
+                image: 'data:image/svg+xml;base64,' + btoa(targetSvg),
+                scale: new Cesium.CallbackProperty((time) => {
+                    const sec = Cesium.JulianDate.secondsDifference(time, Cesium.JulianDate.now());
+                    return 0.8 + Math.abs(Math.sin(sec * 4)) * 0.4; 
+                }, false),
+                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+            }
+        });
+
+        logMessage(`Menghubungkan sistem... Merender titik koordinat pada globe.`);
+        
+        // Terbangkan kamera menuju koordinat target dengan pitch sudut pandang miring taktis (-30 derajat)
+        viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(lng, lat, 2500),
+            orientation: { 
+                pitch: Cesium.Math.toRadians(-30.0), 
+                heading: 0.0 
+            },
+            duration: 2.5
+        });
+
+        logMessage(`[SUKSES] Target Terkunci pada Posisi: ${lat}, ${lng}`);
     }
 
     async function startDeletion() {
@@ -496,7 +606,9 @@
         statusDiv.innerText = "";
         dataContainer.innerHTML = "";
         previewLabel.style.display = 'none';
-        mapWrapper.innerHTML = "Pilih atau sentuh salah satu tombol data di sebelah kiri untuk memuat peta lokasi.";
+        
+        viewer.entities.removeAll();
+        activeIndex = null;
         
         let cursor = "0";
         let totalDeleted = 0;

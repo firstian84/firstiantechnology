@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>candiru1_ctrl</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000000; /* Hitam Pekat */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #00ffcc;
+            min-height: 100vh;
+        }
+        
+        /* Layout Grid Utama: Kiri Kontrol & Data, Kanan Peta */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .container {
+            background-color: #000000;
+            border: 1px solid #00ffcc;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Panel Sebelah Kanan untuk Peta */
+        .map-container {
+            background-color: #000000;
+            border: 1px solid #00ffcc;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
+            box-sizing: border-box;
+            position: sticky;
+            top: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #00ffcc;
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+            font-size: 24px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            color: #000000;
+            border: 1px solid transparent;
+            padding: 14px 24px;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex: 1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-view {
+            background-color: #00ffcc;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
+        .btn-view:hover:not(:disabled) {
+            background-color: #000000;
+            color: #00ffcc;
+            border-color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.6);
+        }
+
+        .btn-delete {
+            background-color: #ff0055;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+        }
+
+        .btn-delete:hover:not(:disabled) {
+            background-color: #000000;
+            color: #ff0055;
+            border-color: #ff0055;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.6);
+        }
+
+        .btn:disabled {
+            background-color: #1a1a1a !important;
+            color: #444444 !important;
+            border-color: #444444 !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* Container Pembungkus Tombol Data & Tombol Hapus Tunggal */
+        .data-item-wrapper {
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* Desain Tombol Data List */
+        .data-item-btn {
+            background-color: #111;
+            color: #39ff14;
+            border: 1px solid rgba(57, 255, 20, 0.4);
+            text-align: left;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            transition: all 0.2s ease;
+            flex: 1; /* Mengisi ruang sisa */
+        }
+
+        .data-item-btn:hover {
+            background-color: rgba(57, 255, 20, 0.1);
+            border-color: #39ff14;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+        }
+
+        .data-item-btn.active {
+            background-color: #39ff14;
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* Tombol Ikon Hapus Spesifik Data */
+        .btn-delete-single {
+            background-color: #222;
+            color: #ff0055;
+            border: 1px solid rgba(255, 0, 85, 0.4);
+            border-radius: 6px;
+            padding: 0 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete-single:hover {
+            background-color: #ff0055;
+            color: #fff;
+            border-color: #ff0055;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+        }
+
+        .label-box {
+            text-align: left;
+            font-weight: bold;
+            font-size: 12px;
+            color: #8892b0;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #status {
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: left;
+            margin-bottom: 20px;
+            display: none;
+            font-family: 'Courier New', Courier, monospace;
+            box-sizing: border-box;
+            background: #000000;
+            border: 1px solid rgba(0, 255, 204, 0.4);
+            color: #a8b2d1;
+            white-space: pre-line;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        #dataContainer {
+            max-height: 450px;
+            overflow-y: auto;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        /* Bingkai Peta / Iframe */
+        .map-wrapper {
+            width: 100%;
+            height: 450px;
+            border: 1px dashed #00ffcc;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #050505;
+            color: #8892b0;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Scrollbar Sci-Fi */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 204, 0.4);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 204, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-layout">
+    
+    <div class="container">
+        <h2>Candiru-1</h2>
+        
+        <div class="btn-group">
+            <button id="viewBtn" class="btn btn-view" onclick="fetchAndShowValues()">Refresh</button>
+            <button id="deleteBtn" class="btn btn-delete" onclick="startDeletion()">Hapus Semua</button>
+        </div>
+        
+        <div class="label-box" id="statusLabel" style="display:none;">Logs:</div>
+        <div id="status"></div>
+
+        <div class="label-box" id="previewLabel" style="display:none;">Pilih Data Target:</div>
+        <div id="dataContainer"></div>
+    </div>
+
+    <div class="map-container">
+        <div class="label-box">Navigasi Visual</div>
+        <div class="map-wrapper" id="mapWrapper">
+            Pilih atau sentuh salah satu tombol data di sebelah kiri untuk memuat peta lokasi.
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const CONFIG = {
+        URL: "https://enabled-crayfish-71186.upstash.io",
+        TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
+        PREFIX: "candiru_1"
+    };
+
+    const statusDiv = document.getElementById('status');
+    const dataContainer = document.getElementById('dataContainer');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const viewBtn = document.getElementById('viewBtn');
+    const mapWrapper = document.getElementById('mapWrapper');
+    
+    const statusLabel = document.getElementById('statusLabel');
+    const previewLabel = document.getElementById('previewLabel');
+
+    window.onload = function() {
+        fetchAndShowValues();
+    };
+
+    function logMessage(msg) {
+        statusLabel.style.display = 'block';
+        statusDiv.style.display = 'block';
+        statusDiv.innerText += msg + "\n";
+        statusDiv.scrollTop = statusDiv.scrollHeight;
+    }
+
+    function setActionLoading(isLoading, text = "Memproses...") {
+        deleteBtn.disabled = isLoading;
+        viewBtn.disabled = isLoading;
+        if(isLoading) {
+            deleteBtn.innerText = text;
+        } else {
+            deleteBtn.innerText = "Hapus Semua";
+            viewBtn.innerText = "Refresh";
+        }
+    }
+
+    async function upstashFetch(command) {
+        const response = await fetch(`${CONFIG.URL}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${CONFIG.TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(command)
+        });
+        return response.json();
+    }
+
+    async function fetchAndShowValues() {
+        setActionLoading(true, "Membaca...");
+        statusDiv.innerText = "";
+        dataContainer.innerHTML = "";
+        previewLabel.style.display = 'none';
+        mapWrapper.innerHTML = "Pilih atau sentuh salah satu tombol data di sebelah kiri untuk memuat peta lokasi.";
+
+        let cursor = "0";
+        let allDataObjects = {};
+        logMessage("Memulai pemindaian key dengan prefiks '" + CONFIG.PREFIX + "'...");
+
+        try {
+            do {
+                const res = await upstashFetch(["SCAN", cursor, "MATCH", `${CONFIG.PREFIX}*`, "COUNT", "100"]);
+                if (res.error) throw new Error(res.error);
+
+                cursor = res.result[0];
+                const keys = res.result[1];
+
+                if (keys && keys.length > 0) {
+                    logMessage(`Menemukan ${keys.length} key, mengambil nilainya...`);
+                    
+                    const valuesRes = await upstashFetch(["MGET", ...keys]);
+                    if (valuesRes.error) throw new Error(valuesRes.error);
+
+                    keys.forEach((key, index) => {
+                        let rawValue = valuesRes.result[index];
+                        try {
+                            allDataObjects[key] = JSON.parse(rawValue);
+                        } catch(e) {
+                            allDataObjects[key] = rawValue;
+                        }
+                    });
+                }
+            } while (cursor !== "0");
+
+            const totalKeys = Object.keys(allDataObjects).length;
+            if (totalKeys === 0) {
+                logMessage("Tidak ada data yang ditemukan dengan prefiks tersebut.");
+                dataContainer.innerHTML = "<div style='color: #ff0055;'>Database Kosong</div>";
+            } else {
+                logMessage(`Sukses memuat semua value.`);
+                previewLabel.style.display = 'block';
+                
+                Object.keys(allDataObjects).forEach((key) => {
+                    const valueData = allDataObjects[key];
+                    
+                    // Membuat kontainer wrapper (Flexbox) untuk menyejajarkan tombol data & ikon hapus
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'data-item-wrapper';
+
+                    // Tombol Data Koordinat Utama
+                    const button = document.createElement('button');
+                    button.className = 'data-item-btn';
+                    
+                    let previewText = typeof valueData === 'object' ? JSON.stringify(valueData) : valueData;
+                    if(previewText.length > 60) previewText = previewText.substring(0, 60) + "...";
+                    
+                    button.innerHTML = `<strong>${key}</strong><br><span style="font-size:11px; color:#a8b2d1;">${previewText}</span>`;
+                    
+                    button.onclick = function() {
+                        document.querySelectorAll('.data-item-btn').forEach(b => b.classList.remove('active'));
+                        button.classList.add('active');
+                        renderMapFromData(valueData);
+                    };
+                    
+                    // Tombol Ikon Hapus (Tong Sampah / Silang)
+                    const deleteSingleBtn = document.createElement('button');
+                    deleteSingleBtn.className = 'btn-delete-single';
+                    deleteSingleBtn.innerHTML = '🗑️'; // Anda bisa mengubah ke '❌' jika lebih suka
+                    deleteSingleBtn.title = `Hapus data ${key}`;
+                    
+                    deleteSingleBtn.onclick = async function(e) {
+                        e.stopPropagation(); // Mencegah peta terpicu saat mengklik hapus
+                        
+                        if (confirm(`Apakah Anda yakin ingin menghapus key ini?\n[ ${key} ]`)) {
+                            deleteSingleBtn.disabled = true;
+                            deleteSingleBtn.innerText = "⏳";
+                            try {
+                                logMessage(`Menghapus single key: ${key}...`);
+                                const delRes = await upstashFetch(["DEL", key]);
+                                if (delRes.error) throw new Error(delRes.error);
+                                
+                                logMessage(`Key '${key}' sukses dihapus.`);
+                                // Hapus elemen dari tampilan UI secara langsung
+                                wrapper.remove();
+                                
+                                // Jika kontainer data kosong setelah dihapus
+                                if(dataContainer.children.length === 0) {
+                                    previewLabel.style.display = 'none';
+                                    dataContainer.innerHTML = "<div style='color: #ff0055;'>Database Kosong</div>";
+                                }
+                            } catch (err) {
+                                logMessage(`Gagal menghapus key: ${err.message}`);
+                                deleteSingleBtn.disabled = false;
+                                deleteSingleBtn.innerHTML = '🗑️';
+                            }
+                        }
+                    };
+
+                    // Satukan ke dalam wrapper
+                    wrapper.appendChild(button);
+                    wrapper.appendChild(deleteSingleBtn);
+                    
+                    dataContainer.appendChild(wrapper);
+                });
+            }
+
+        } catch (error) {
+            logMessage(`Gagal melihat data: ${error.message}`);
+        } finally {
+            setActionLoading(false);
+        }
+    }
+
+    function renderMapFromData(data) {
+        let lat = null;
+        let lon = null;
+        let targetString = "";
+
+        if (typeof data === 'object' && data !== null) {
+            if (data.koordinat) {
+                targetString = data.koordinat;
+            } else {
+                lat = data.lat || data.latitude || data.location?.lat || data.coords?.latitude;
+                lon = data.lon || data.lng || data.longitude || data.location?.lon || data.coords?.longitude;
+            }
+        } else if (typeof data === 'string') {
+            targetString = data;
+        }
+
+        if (targetString) {
+            const regex = /(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/;
+            const match = targetString.match(regex);
+            if (match) {
+                lat = match[1];
+                lon = match[2];
+            }
+        }
+
+        if (lat && lon) {
+            mapWrapper.innerHTML = `
+                <iframe 
+                    src="https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed" 
+                    allowfullscreen="" 
+                    loading="lazy"
+                    style="width: 100%; height: 100%; border: none;">
+                </iframe>`;
+            logMessage(`Peta berhasil dimuat untuk posisi: ${lat}, ${lon}`);
+        } else {
+            mapWrapper.innerHTML = `
+                <div style="padding: 20px; text-align: left; font-size:12px; color: #39ff14; width:100%; box-sizing:border-box;">
+                    <span style="color:#ff0055; font-weight:bold;">[DATA TIDAK BERISI KOORDINAT]</span><br><br>
+                    <strong>Isi Data Mentah:</strong><br>
+                    <pre style="white-space: pre-wrap; word-break: break-all; color:#39ff14;">${JSON.stringify(data, null, 2)}</pre>
+                </div>`;
+            logMessage(`Gagal mendeteksi koordinat geografis dari data.`);
+        }
+    }
+
+    async function startDeletion() {
+        if (!confirm("Apakah Anda yakin ingin menghapus SELURUH data dengan prefiks ini?")) return;
+        
+        setActionLoading(true, "Menghapus...");
+        statusDiv.innerText = "";
+        dataContainer.innerHTML = "";
+        previewLabel.style.display = 'none';
+        mapWrapper.innerHTML = "Pilih atau sentuh salah satu tombol data di sebelah kiri untuk memuat peta lokasi.";
+        
+        let cursor = "0";
+        let totalDeleted = 0;
+
+        logMessage("Memulai pembersihan database...");
+
+        try {
+            do {
+                const res = await upstashFetch(["SCAN", cursor, "MATCH", `${CONFIG.PREFIX}*`, "COUNT", "100"]);
+                if (res.error) throw new Error(res.error);
+
+                cursor = res.result[0];
+                const keys = res.result[1];
+
+                if (keys && keys.length > 0) {
+                    logMessage(`Menghapus ${keys.length} key...`);
+                    const delRes = await upstashFetch(["DEL", ...keys]);
+                    if (!delRes.error) {
+                        totalDeleted += delRes.result;
+                    }
+                }
+            } while (cursor !== "0");
+
+            logMessage(`Selesai! Total ${totalDeleted} data berhasil dihapus.`);
+
+        } catch (error) {
+            logMessage(`Terjadi kesalahan: ${error.message}`);
+        } finally {
+            setActionLoading(false);
+        }
+    }
+</script>
+
+</body>
+</html>

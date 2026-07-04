@@ -513,543 +513,540 @@
         }
     });
 
-    // 2. Database Internal Sistem
-    const dbPenipuMedia = [
-        { 
-            "id": "m1", 
-            "telp": "08218181046", 
-            "pelapor": "patricia gouw",
-            "desk": "jasa tiket integrasi",
-            "foto": "https://img.youtube.com/vi/3Zl_kcoccxI/hqdefault.jpg",
-            "lng": 115.16750, 
-            "lat": -8.74806, 
-            "lokasi": "bali"
-        },
-        { 
-           "id": "m2", 
-            "telp": "083162920031", 
-            "pelapor": "fajrul",
-            "desk": "topup saldo pegawai bulog mitra bukalapak kirim OTP",
-            "foto": "https://img.youtube.com/vi/QHZiTTgknFw/hqdefault.jpg",
-            "lng": 98.67580374408064, 
-            "lat":  3.5968226974134474, 
-            "lokasi": "medan"  
-        },
-        { 
-           "id": "m3", 
-            "telp": "081218996313", 
-            "pelapor": "laki-laki",
-            "desk": "kasir indomaret kembalikan vocer game minta OTP",
-            "foto": "https://img.youtube.com/vi/wJScIElSOYo/hqdefault.jpg",
-            "lng": 112.73775582892155, 
-            "lat":  -7.361908164145374, 
-            "lokasi": "sidoarjo"  
-        },
-        { 
-           "id": "m4", 
-            "telp": "081290029216", 
-            "pelapor": "laki-laki",
-            "desk": "polisi mencari tersangka pencurian",
-            "foto": "https://img.youtube.com/vi/j7CFTTg79hY/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-          },
-        { 
-           "id": "m5", 
-            "telp": "081282443317", 
-            "pelapor": "perempuan",
-            "desk": "modus random",
-            "foto": "https://img.youtube.com/vi/89F2twS9IEQ/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-        },
-        { 
-           "id": "m6", 
-            "telp": "082186942494", 
-            "pelapor": "perempuan",
-            "desk": "hadiah telkomsel minta OTP",
-            "foto": "https://img.youtube.com/vi/k4JQZnmY-Wo/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-         },
-        { 
-           "id": "m7", 
-            "telp": "081275455918", 
-            "pelapor": "laki-laki",
-            "desk": "modus random",
-            "foto": "https://img.youtube.com/vi/sCKpHIDh6Zw/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": "jakarta"  
-         },
-        { 
-           "id": "m8", 
-            "telp": "082334635763", 
-            "pelapor": "laki-laki",
-            "desk": "polisi bantu kecelakaan minta kirim uang",
-            "foto": "https://img.youtube.com/vi/mN861F9zaCY/hqdefault.jpg",
-            "lng": 106.811111, 
-            "lat":  -6.262950, 
-            "lokasi": "jakarta"  
-         },
-        { 
-           "id": "m9", 
-            "telp": "081310925831", 
-            "pelapor": "laki-laki",
-            "desk": "temen pinjem uang, ditangkep polisi",
-            "foto": "https://img.youtube.com/vi/w3GDEvNN4l8/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": "jakarta"  
-        },
-        { 
-           "id": "m10", 
-            "telp": "081262017077", 
-            "pelapor": "perempuan",
-            "desk": "kirim perhiasan tapi transfer dulu",
-            "foto": "https://img.youtube.com/vi/AwL_10JClvM/hqdefault.jpg",
-            "lng": 100.3629745291403, 
-            "lat":  -0.94801645999772, 
-            "lokasi": "padang"  
-        },
-        { 
-           "id": "m11", 
-            "telp": "082379645989", 
-            "pelapor": "perempuan",
-            "desk": "kirim perhiasan tapi transfer dulu",
-            "foto": "https://img.youtube.com/vi/oGAQl5g4qhc/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-        },
-        { 
-           "id": "m12", 
-            "telp": "081399577020", 
-            "pelapor": "laki-laki",
-            "desk": "ditilang minta uang untuk polisi",
-            "foto": "https://img.youtube.com/vi/3n74W61agx8/hqdefault.jpg",
-            "lng": 106.86875607441078, 
-            "lat":  -6.200623816861982, 
-            "lokasi": "matraman"  
-        },
-        { 
-           "id": "m13", 
-            "telp": "088286040038", 
-            "pelapor": "laki-laki",
-            "desk": "kecelakaan korban polisi minta uang",
-            "foto": "https://img.youtube.com/vi/1FjsU2BQKT8/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-     },
-        { 
-           "id": "m14", 
-            "telp": "081328180173", 
-            "pelapor": "laki-laki",
-            "desk": "kecelakaan korban polisi minta uang",
-            "foto": "https://img.youtube.com/vi/z5u4pIwT6jc/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-        },
-        { 
-           "id": "m15", 
-            "telp": "085166139795", 
-            "pelapor": "0081220860037",
-            "desk": "penipuan pinjam uang uang",
-            "foto": "https://img.youtube.com/vi/ShH3PcUj1kk/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-         },
-        { 
-           "id": "m16", 
-            "telp": "0857092777871", 
-            "pelapor": "laki-laki",
-            "desk": "kantor grab verifikasi opo",
-            "foto": "https://img.youtube.com/vi/qYJ5AnvGf2k/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-        },
-        { 
-           "id": "m17", 
-            "telp": "087711033474", 
-            "pelapor": "laki-laki",
-            "desk": "teman kerjasama bagi hasil pinjam uang",
-            "foto": "https://img.youtube.com/vi/0zfADKTwZGs/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-        },
-        { 
-           "id": "m18", 
-            "telp": "082193483311", 
-            "pelapor": "laki-laki",
-            "desk": "perubahan tarif layanan BANK BRI",
-            "foto": "https://img.youtube.com/vi/A6IukkHSP9o/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-             },
-        { 
-           "id": "m19", 
-            "telp": "083853923692", 
-            "pelapor": "laki-laki",
-            "desk": "hadiah pemenang bantuan dari artis Rp50.000.000 dengan bayar admin Rp400.000",
-            "foto": "https://img.youtube.com/vi/JsgbHnU5Fl8/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-                  },
-        { 
-           "id": "m20", 
-            "telp": "081386748473", 
-            "pelapor": "laki-laki",
-            "desk": "temen ngaku Di Tilang Oleh Polisi bantu dilepas dengan kirim uang",
-            "foto": "https://img.youtube.com/vi/MsKgQdSN-Y8/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-                     },    
-        { 
-           "id": "m21", 
-            "telp": "085669932541", 
-            "pelapor": "laki-laki",
-            "desk": "topup BRI LINK",
-            "foto": "https://img.youtube.com/vi/go9kVnEpWQI/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-       },                 
-        { 
-           "id": "m22", 
-            "telp": "081281907279", 
-            "pelapor": "perempuan",
-            "desk": "ngaku saudara ditilang petugas pinjam uang",
-            "foto": "https://img.youtube.com/vi/ARFcqm6od5g/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-        },
-        { 
-           "id": "m23", 
-            "telp": "085711581873", 
-            "pelapor": "perempuan",
-            "desk": "ngaku temen ditilang petugas pinjam uang",
-            "foto": "https://img.youtube.com/vi/brruPQCo8yM/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-          },
-        { 
-           "id": "m24", 
-            "telp": "085377058041", 
-            "pelapor": "laki-laki",
-            "desk": "topup BRI LINK",
-            "foto": "https://img.youtube.com/vi/WZj0I8Y0Srk/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-            },
-        { 
-           "id": "m25", 
-            "telp": "08122237613", 
-            "pelapor": "perempuan",
-            "desk": "teman lama pinjam uang",
-            "foto": "https://img.youtube.com/vi/dMoIucQCpic/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-        },
-        { 
-           "id": "m26", 
-            "telp": "081362451100", 
-            "pelapor": "perempuan",
-            "desk": "anak kecelakaan polisi minta uang",
-            "foto": "https://img.youtube.com/vi/Yn0XHrK0928/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-   },
-        { 
-           "id": "m27", 
-            "telp": "081226286357", 
-            "pelapor": "laki-laki",
-            "desk": "jual kendaraan OL",
-            "foto": "https://img.youtube.com/vi/UaO4BaQHG4k/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-       },
-        { 
-           "id": "m28", 
-            "telp": "081386285654", 
-            "pelapor": "laki-laki",
-            "desk": "teman lama kena tilang pinjam uang",
-            "foto": "https://img.youtube.com/vi/aKvsN-ep2Mw/hqdefault.jpg",
-            "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-         },
-        { 
-           "id": "m29", 
-            "telp": "081311140001", 
-            "pelapor": "laki-laki",
-            "desk": "hadiah harus topup Ecash admin",
-            "foto": "https://img.youtube.com/vi/8abXkYNUiyw/hqdefault.jpg",
-            "lng":  106.80958308312752, 
-            "lat":  -6.207812736622092, 
-            "lokasi": "jakarta"  
-           },
-        { 
-           "id": "m30", 
-            "telp": "081367467340", 
-            "pelapor": "laki-laki",
-            "desk": "teman lama pinjam modal usaha",
-            "foto": "https://img.youtube.com/vi/jzZabCC-HEU/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-        },
-        { 
-           "id": "m31", 
-            "telp": "081513950075", 
-            "pelapor": "laki-laki",
-            "desk": "keluarga kecelakaan bayar penanganan berkas polisi",
-            "foto": "https://img.youtube.com/vi/vI1B7MiAY5Y/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-        },
-        { 
-           "id": "m32", 
-            "telp": "082112076456", 
-            "pelapor": "laki-laki",
-            "desk": "teman lama kena tilang pinjam uang",
-            "foto": "https://img.youtube.com/vi/gWx2yXlUDUI/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": "cibubur"  
-              },
-        { 
-           "id": "m33", 
-            "telp": "082368509752", 
-            "pelapor": "laki-laki",
-            "desk": "keluarga ditangkap polisi meminta uang tebus",
-            "foto": "https://img.youtube.com/vi/TaBGBkocDec/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-       },  
-        { 
-           "id": "m34", 
-            "telp": "085260501928", 
-            "pelapor": "perempuan",
-            "desk": "temukan tas minta transfer uang imbalan",
-            "foto": "https://img.youtube.com/vi/p4f3I0VBnDk/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-         },
-        { 
-           "id": "m35", 
-            "telp": "085260491330", 
-            "pelapor": "perempuan",
-            "desk": "nemu uang banyak minta kirim pulsa diancam ",
-            "foto": "https://img.youtube.com/vi/GGpgcjhxPjw/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-        },
-        { 
-           "id": "m36", 
-            "telp": "085362837040", 
-            "pelapor": "perempuan",
-            "desk": "nemu uang banyak minta kirim pulsa diancam",
-            "foto": "https://img.youtube.com/vi/GGpgcjhxPjw/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-             },
-        { 
-           "id": "m37", 
-            "telp": "087796636224", 
-            "pelapor": "laki-laki",
-            "desk": "nemu uang banyak minta kirim pulsa",
-            "foto": "https://img.youtube.com/vi/vv_0fpSdi0E/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-                 },
-        { 
-           "id": "m38", 
-            "telp": "0822668751866", 
-            "pelapor": "laki-laki",
-            "desk": "nemu dompet minta kirim pulsa",
-            "foto": "https://img.youtube.com/vi/Ihzi6Uz-VBU/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-                  },
-        { 
-           "id": "m39", 
-            "telp": "081370744533", 
-            "pelapor": "laki-laki",
-            "desk": "polisi minta uang tebusan untuk kakak",
-            "foto": "https://img.youtube.com/vi/RCAvNzdQnaI/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-              },
-        { 
-           "id": "m40", 
-            "telp": "081276455918",    
-            "pelapor": "laki-laki",
-            "desk": "nemu tas isi uang sama emas mau bagi hasil tapi kirim uang dulu",
-            "foto": "https://img.youtube.com/vi/Cflg_qGhPOI/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-              },
-        { 
-           "id": "m41", 
-            "telp": "+1(628)500-1280", 
-            "pelapor": "laki-laki",
-            "desk": "promo vocer tukar koin berbayar",
-            "foto": "https://img.youtube.com/vi/V9frGEHjhHU/hqdefault.jpg",
-             "lng": 0,   
-            "lat":  0, 
-            "lokasi": ""  
-              },
-        { 
-           "id": "m42", 
-            "telp": "083131670640", 
-            "pelapor": "laki-laki",
-            "desk": "CS dana finance untuk kirimkan pin akun",
-            "foto": "https://img.youtube.com/vi/_fLo1lv96zM/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-              },
-        { 
-           "id": "m43", 
-            "telp": "082112532169", 
-            "pelapor": "laki-laki",
-            "desk": "pacar ditilang polisi minta uang",
-            "foto": "https://img.youtube.com/vi/06l9RqEsbak/hqdefault.jpg",
-             "lng": 0,   
-            "lat":  0, 
-            "lokasi": ""  
-              },
-        { 
-           "id": "m44", 
-            "telp": "0816380577", 
-            "pelapor": "laki-laki",
-            "desk": "CS bank BSI penukaran poin dengan barang dengan biaya",
-            "foto": "https://img.youtube.com/vi/GDp1K3jLt00/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0,     
-            "lokasi": ""  
-              },
-        { 
-           "id": "m45", 
-            "telp": "081262384644", 
-            "pelapor": "laki-laki",
-            "desk": "nemu tas isi barang berharga tapi minta saldo pulsa",
-            "foto": "https://img.youtube.com/vi/hDZC6cmLA6U/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0,      
-            "lokasi": ""  
-              },
-        { 
-           "id": "m46", 
-            "telp": "085372951209", 
-            "pelapor": "laki-laki",
-            "desk": "nemu tas isi barang berharga tapi minta saldo pulsa",
-            "foto": "https://img.youtube.com/vi/hDZC6cmLA6U/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-              },
-        { 
-           "id": "m47", 
-            "telp": "085775255447", 
-            "pelapor": "laki-laki",
-            "desk": "ngaku polisi minta uang nebus kendaraan",
-            "foto": "https://img.youtube.com/vi/ter2sGI0L70/hqdefault.jpg",  
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-              },
-        { 
-           "id": "m48", 
-            "telp": "081295259349", 
-            "pelapor": "perempuan",
-            "desk": "ngaku temen ditangkep polisi minta uang nebus kendaraan",   
-            "foto": "https://img.youtube.com/vi/mjiJuCUMhoM/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-           },
-        { 
-           "id": "m49", 
-            "telp": "081368302012", 
-            "pelapor": "laki-laki",
-            "desk": "ngaku temen",
-            "foto": "https://img.youtube.com/vi/FC8DQGgSuBk/hqdefault.jpg",   
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-            },
-        { 
-           "id": "m50", 
-            "telp": "081333947903", 
-            "pelapor": "laki-laki",
-            "desk": "phising dana OTP",
-            "foto": "https://img.youtube.com/vi/4-RSnrBiCXE/hqdefault.jpg",    
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-          },
-        { 
-           "id": "m51", 
-            "telp": "0857092777871", 
-            "pelapor": "laki-laki",
-            "desk": "CS grab palsu minta  verifikasi ovo OTP",   
-            "foto": "https://img.youtube.com/vi/kJbkmU5tQkA/hqdefault.jpg",  
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-             },
-        { 
-           "id": "m52", 
-            "telp": "", 
-            "pelapor": "",
-            "desk": "",
-            "foto": "https://img.youtube.com/vi/xxx/hqdefault.jpg",
-             "lng": 0, 
-            "lat":  0, 
-            "lokasi": ""  
-              }
-      
-      
-      
-      
-      
+   
+// 2. Database Internal Sistem
+const dbPenipuMedia = [
+    { 
+        "id": "m1", 
+        "telp": "08218181046", 
+        "pelapor": "patricia gouw",
+        "desk": "jasa tiket integrasi",
+        "foto": "https://img.youtube.com/vi/3Zl_kcoccxI/hqdefault.jpg",
+        "lng": 115.16750, 
+        "lat": -8.74806, 
+        "lokasi": "bali"
+    },
+    { 
+        "id": "m2", 
+        "telp": "083162920031", 
+        "pelapor": "fajrul",
+        "desk": "topup saldo pegawai bulog mitra bukalapak kirim OTP",
+        "foto": "https://img.youtube.com/vi/QHZiTTgknFw/hqdefault.jpg",
+        "lng": 98.67580374408064, 
+        "lat":  3.5968226974134474, 
+        "lokasi": "medan"  
+    },
+    { 
+        "id": "m3", 
+        "telp": "081218996313", 
+        "pelapor": "laki-laki",
+        "desk": "kasir indomaret kembalikan vocer game minta OTP",
+        "foto": "https://img.youtube.com/vi/wJScIElSOYo/hqdefault.jpg",
+        "lng": 112.73775582892155, 
+        "lat":  -7.361908164145374, 
+        "lokasi": "sidoarjo"  
+    },
+    { 
+        "id": "m4", 
+        "telp": "081290029216", 
+        "pelapor": "laki-laki",
+        "desk": "polisi mencari tersangka pencurian",
+        "foto": "https://img.youtube.com/vi/j7CFTTg79hY/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m5", 
+        "telp": "081282443317", 
+        "pelapor": "perempuan",
+        "desk": "modus random",
+        "foto": "https://img.youtube.com/vi/89F2twS9IEQ/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m6", 
+        "telp": "082186942494", 
+        "pelapor": "perempuan",
+        "desk": "hadiah telkomsel minta OTP",
+        "foto": "https://img.youtube.com/vi/k4JQZnmY-Wo/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m7", 
+        "telp": "081275455918", 
+        "pelapor": "laki-laki",
+        "desk": "modus random",
+        "foto": "https://img.youtube.com/vi/sCKpHIDh6Zw/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": "jakarta"  
+    },
+    { 
+        "id": "m8", 
+        "telp": "082334635763", 
+        "pelapor": "laki-laki",
+        "desk": "polisi bantu kecelakaan minta kirim uang",
+        "foto": "https://img.youtube.com/vi/mN861F9zaCY/hqdefault.jpg",
+        "lng": 106.811111, 
+        "lat":  -6.262950, 
+        "lokasi": "jakarta"  
+    },
+    { 
+        "id": "m9", 
+        "telp": "081310925831", 
+        "pelapor": "laki-laki",
+        "desk": "temen pinjem uang, ditangkep polisi",
+        "foto": "https://img.youtube.com/vi/w3GDEvNN4l8/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": "jakarta"  
+    },
+    { 
+        "id": "m10", 
+        "telp": "081262017077", 
+        "pelapor": "perempuan",
+        "desk": "kirim perhiasan tapi transfer dulu",
+        "foto": "https://img.youtube.com/vi/AwL_10JClvM/hqdefault.jpg",
+        "lng": 100.3629745291403, 
+        "lat":  -0.94801645999772, 
+        "lokasi": "padang"  
+    },
+    { 
+        "id": "m11", 
+        "telp": "082379645989", 
+        "pelapor": "perempuan",
+        "desk": "kirim perhiasan tapi transfer dulu",
+        "foto": "https://img.youtube.com/vi/oGAQl5g4qhc/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m12", 
+        "telp": "081399577020", 
+        "pelapor": "laki-laki",
+        "desk": "ditilang minta uang untuk polisi",
+        "foto": "https://img.youtube.com/vi/3n74W61agx8/hqdefault.jpg",
+        "lng": 106.86875607441078, 
+        "lat":  -6.200623816861982, 
+        "lokasi": "matraman"  
+    },
+    { 
+        "id": "m13", 
+        "telp": "088286040038", 
+        "pelapor": "laki-laki",
+        "desk": "kecelakaan korban polisi minta uang",
+        "foto": "https://img.youtube.com/vi/1FjsU2BQKT8/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m14", 
+        "telp": "081328180173", 
+        "pelapor": "laki-laki",
+        "desk": "kecelakaan korban polisi minta uang",
+        "foto": "https://img.youtube.com/vi/z5u4pIwT6jc/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m15", 
+        "telp": "085166139795", 
+        "pelapor": "081220860037",
+        "desk": "penipuan pinjam uang uang",
+        "foto": "https://img.youtube.com/vi/ShH3PcUj1kk/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m16", 
+        "telp": "0857092777871", 
+        "pelapor": "laki-laki",
+        "desk": "kantor grab verifikasi opo",
+        "foto": "https://img.youtube.com/vi/qYJ5AnvGf2k/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m17", 
+        "telp": "087711033474", 
+        "pelapor": "laki-laki",
+        "desk": "teman kerjasama bagi hasil pinjam uang",
+        "foto": "https://img.youtube.com/vi/0zfADKTwZGs/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m18", 
+        "telp": "082193483311", 
+        "pelapor": "laki-laki",
+        "desk": "perubahan tarif layanan BANK BRI",
+        "foto": "https://img.youtube.com/vi/A6IukkHSP9o/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m19", 
+        "telp": "083853923692", 
+        "pelapor": "laki-laki",
+        "desk": "hadiah pemenang bantuan dari artis Rp50.000.000 dengan bayar admin Rp400.000",
+        "foto": "https://img.youtube.com/vi/JsgbHnU5Fl8/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m20", 
+        "telp": "081386748473", 
+        "pelapor": "laki-laki",
+        "desk": "temen ngaku Di Tilang Oleh Polisi bantu dilepas dengan kirim uang",
+        "foto": "https://img.youtube.com/vi/MsKgQdSN-Y8/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },    
+    { 
+        "id": "m21", 
+        "telp": "085669932541", 
+        "pelapor": "laki-laki",
+        "desk": "topup BRI LINK",
+        "foto": "https://img.youtube.com/vi/go9kVnEpWQI/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },                 
+    { 
+        "id": "m22", 
+        "telp": "081281907279", 
+        "pelapor": "perempuan",
+        "desk": "ngaku saudara ditilang petugas pinjam uang",
+        "foto": "https://img.youtube.com/vi/ARFcqm6od5g/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m23", 
+        "telp": "085711581873", 
+        "pelapor": "perempuan",
+        "desk": "ngaku temen ditilang petugas pinjam uang",
+        "foto": "https://img.youtube.com/vi/brruPQCo8yM/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m24", 
+        "telp": "085377058041", 
+        "pelapor": "laki-laki",
+        "desk": "topup BRI LINK",
+        "foto": "https://img.youtube.com/vi/WZj0I8Y0Srk/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m25", 
+        "telp": "08122237613", 
+        "pelapor": "perempuan",
+        "desk": "teman lama pinjam uang",
+        "foto": "https://img.youtube.com/vi/dMoIucQCpic/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m26", 
+        "telp": "081362451100", 
+        "pelapor": "perempuan",
+        "desk": "anak kecelakaan polisi minta uang",
+        "foto": "https://img.youtube.com/vi/Yn0XHrK0928/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m27", 
+        "telp": "081226286357", 
+        "pelapor": "laki-laki",
+        "desk": "jual kendaraan OL",
+        "foto": "https://img.youtube.com/vi/UaO4BaQHG4k/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m28", 
+        "telp": "081386285654", 
+        "pelapor": "laki-laki",
+        "desk": "teman lama kena tilang pinjam uang",
+        "foto": "https://img.youtube.com/vi/aKvsN-ep2Mw/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m29", 
+        "telp": "081311140001", 
+        "pelapor": "laki-laki",
+        "desk": "hadiah harus topup Ecash admin",
+        "foto": "https://img.youtube.com/vi/8abXkYNUiyw/hqdefault.jpg",
+        "lng":  106.80958308312752, 
+        "lat":  -6.207812736622092, 
+        "lokasi": "jakarta"  
+    },
+    { 
+        "id": "m30", 
+        "telp": "081367467340", 
+        "pelapor": "laki-laki",
+        "desk": "teman lama pinjam modal usaha",
+        "foto": "https://img.youtube.com/vi/jzZabCC-HEU/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m31", 
+        "telp": "081513950075", 
+        "pelapor": "laki-laki",
+        "desk": "keluarga kecelakaan bayar penanganan berkas polisi",
+        "foto": "https://img.youtube.com/vi/vI1B7MiAY5Y/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m32", 
+        "telp": "082112076456", 
+        "pelapor": "laki-laki",
+        "desk": "teman lama kena tilang pinjam uang",
+        "foto": "https://img.youtube.com/vi/gWx2yXlUDUI/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": "cibubur"  
+    },
+    { 
+        "id": "m33", 
+        "telp": "082368509752", 
+        "pelapor": "laki-laki",
+        "desk": "keluarga ditangkap polisi meminta uang tebus",
+        "foto": "https://img.youtube.com/vi/TaBGBkocDec/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },  
+    { 
+        "id": "m34", 
+        "telp": "085260501928", 
+        "pelapor": "perempuan",
+        "desk": "temukan tas minta transfer uang imbalan",
+        "foto": "https://img.youtube.com/vi/p4f3I0VBnDk/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m35", 
+        "telp": "085260491330", 
+        "pelapor": "perempuan",
+        "desk": "nemu uang banyak minta kirim pulsa diancam ",
+        "foto": "https://img.youtube.com/vi/GGpgcjhxPjw/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m36", 
+        "telp": "085362837040", 
+        "pelapor": "perempuan",
+        "desk": "nemu uang banyak minta kirim pulsa diancam",
+        "foto": "https://img.youtube.com/vi/GGpgcjhxPjw/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m37", 
+        "telp": "087796636224", 
+        "pelapor": "laki-laki",
+        "desk": "nemu uang banyak minta kirim pulsa",
+        "foto": "https://img.youtube.com/vi/vv_0fpSdi0E/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m38", 
+        "telp": "0822668751866", 
+        "pelapor": "laki-laki",
+        "desk": "nemu dompet minta kirim pulsa",
+        "foto": "https://img.youtube.com/vi/Ihzi6Uz-VBU/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m39", 
+        "telp": "081370744533", 
+        "pelapor": "laki-laki",
+        "desk": "polisi minta uang tebusan untuk kakak",
+        "foto": "https://img.youtube.com/vi/RCAvNzdQnaI/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m40", 
+        "telp": "081276455918",   
+        "pelapor": "laki-laki",
+        "desk": "nemu tas isi uang sama emas mau bagi hasil tapi kirim uang dulu",
+        "foto": "https://img.youtube.com/vi/Cflg_qGhPOI/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m41", 
+        "telp": "+1(628)500-1280", 
+        "pelapor": "laki-laki",
+        "desk": "promo vocer tukar koin berbayar",
+        "foto": "https://img.youtube.com/vi/V9frGEHjhHU/hqdefault.jpg",
+        "lng": 0,    
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m42", 
+        "telp": "083131670640", 
+        "pelapor": "laki-laki",
+        "desk": "CS dana finance untuk kirimkan pin akun",
+        "foto": "https://img.youtube.com/vi/_fLo1lv96zM/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m43", 
+        "telp": "082112532169", 
+        "pelapor": "laki-laki",
+        "desk": "pacar ditilang polisi minta uang",
+        "foto": "https://img.youtube.com/vi/06l9RqEsbak/hqdefault.jpg",
+        "lng": 0,    
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m44", 
+        "telp": "0816380577", 
+        "pelapor": "laki-laki",
+        "desk": "CS bank BSI penukaran poin dengan barang dengan biaya",
+        "foto": "https://img.youtube.com/vi/GDp1K3jLt00/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0,      
+        "lokasi": ""  
+    },
+    { 
+        "id": "m45", 
+        "telp": "081262384644", 
+        "pelapor": "laki-laki",
+        "desk": "nemu tas isi barang berharga tapi minta saldo pulsa",
+        "foto": "https://img.youtube.com/vi/hDZC6cmLA6U/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0,      
+        "lokasi": ""  
+    },
+    { 
+        "id": "m46", 
+        "telp": "085372951209", 
+        "pelapor": "laki-laki",
+        "desk": "nemu tas isi barang berharga tapi minta saldo pulsa",
+        "foto": "https://img.youtube.com/vi/hDZC6cmLA6U/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m47", 
+        "telp": "085775255447", 
+        "pelapor": "laki-laki",
+        "desk": "ngaku polisi minta uang nebus kendaraan",
+        "foto": "https://img.youtube.com/vi/ter2sGI0L70/hqdefault.jpg",  
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m48", 
+        "telp": "081295259349", 
+        "pelapor": "perempuan",
+        "desk": "ngaku temen ditangkep polisi minta uang nebus kendaraan",   
+        "foto": "https://img.youtube.com/vi/mjiJuCUMhoM/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m49", 
+        "telp": "081368302012", 
+        "pelapor": "laki-laki",
+        "desk": "ngaku temen",
+        "foto": "https://img.youtube.com/vi/FC8DQGgSuBk/hqdefault.jpg",   
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m50", 
+        "telp": "081333947903", 
+        "pelapor": "laki-laki",
+        "desk": "phising dana OTP",
+        "foto": "https://img.youtube.com/vi/4-RSnrBiCXE/hqdefault.jpg",     
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m51", 
+        "telp": "0857092777871", 
+        "pelapor": "laki-laki",
+        "desk": "CS grab palsu minta  verifikasi ovo OTP",   
+        "foto": "https://img.youtube.com/vi/kJbkmU5tQkA/hqdefault.jpg",  
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m52", 
+        "telp": "083895648796", 
+        "pelapor": "087811160192",
+        "desk": "tracking sadap whatsapp",
+        "foto": "https://img.youtube.com/vi/Z-K8jQhSn4A/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    },
+    { 
+        "id": "m53", 
+        "telp": "083189962146", 
+        "pelapor": "087811160192",
+        "desk": "tracking sadap whatsapp",
+        "foto": "https://img.youtube.com/vi/Z-K8jQhSn4A/hqdefault.jpg",
+        "lng": 0, 
+        "lat":  0, 
+        "lokasi": ""  
+    }
 
-      
-      
-      
-      
-      
-      
-
-      
-      
       
       
       

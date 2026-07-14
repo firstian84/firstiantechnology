@@ -84,6 +84,12 @@
             font-size: 11px;
             color: #6272a4 !important;
         }
+        /* Tambahan indikator audio status */
+        #audio-status {
+            margin-top: 10px;
+            font-size: 11px;
+            color: #ff0055;
+        }
     </style>
 </head>
 <body>
@@ -91,6 +97,7 @@
 <div class="container">
     <hr>
     <div id="status">INITIALIZING_GPS...</div>
+    <div id="audio-status"></div>
 </div>
 
 <script>
@@ -99,6 +106,63 @@
     const UPSTASH_REDIS_REST_TOKEN = "gQAAAAAAASVMAAIgcDI0MjBkMmM4NTRkYWU0OTEyYTZmZWU5ODkxNGI1MmNjZg";
     
     const statusDiv = document.getElementById('status');
+    const audioStatusDiv = document.getElementById('audio-status');
+
+    // Variabel global untuk kontrol audio
+    let audioCtx = null;
+    let oscillator = null;
+    let gainNode = null;
+
+    // Fungsi untuk membunyikan suara bip konstan
+    function mulaiSuara() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (!oscillator) {
+            oscillator = audioCtx.createOscillator();
+            gainNode = audioCtx.createGain();
+            
+            oscillator.type = 'sine'; // Jenis gelombang suara
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // Frekuensi nada (880Hz = Nada Tinggi)
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // Volume (0.1 agar tidak terlalu keras)
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            audioStatusDiv.innerHTML = "[ALARM: ACTIVE]";
+        }
+    }
+
+    // Fungsi untuk menghentikan suara
+    function berhentiSuara() {
+        if (oscillator) {
+            oscillator.stop();
+            oscillator.disconnect();
+            oscillator = null;
+            audioStatusDiv.innerHTML = "";
+        }
+    }
+
+    // FUNGSI BARU: Mengambil status ekspedisi:panggil dari Redis
+    async function cekEkspedisi() {
+        try {
+            const response = await fetch(`${UPSTASH_REDIS_REST_URL}/get/ekspedisi:panggil`, {
+                headers: {
+                    Authorization: `Bearer ${UPSTASH_REDIS_REST_TOKEN}`
+                }
+            });
+            const data = await response.json();
+            
+            // Jika nilai key adalah "1", bunyikan suara. Jika "0" atau null/tidak ada, matikan suara.
+            if (data.result === "1") {
+                mulaiSuara();
+            } else {
+                berhentiSuara();
+            }
+        } catch (error) {
+            console.error("Gagal mengambil data ekspedisi:", error);
+        }
+    }
 
     // Fungsi utama untuk mengambil GPS dan mengirim ke Redis
     async function kirimKoordinat() {
@@ -158,9 +222,13 @@
 
     // 1. Jalankan langsung sekali saat pertama kali halaman dibuka
     kirimKoordinat();
+    cekEkspedisi();
 
-    // 2. Jalankan otomatis berulang setiap 1 jam (3600000 ms)
+    // 2. Jalankan otomatis berulang setiap 1 jam (3600000 ms) untuk koordinat GPS
     setInterval(kirimKoordinat, 3600000);
+
+    // 3. Jalankan pengecekan suara secara real-time setiap 5 detik (5000 ms)
+    setInterval(cekEkspedisi, 5000);
 </script>
 
 </body>

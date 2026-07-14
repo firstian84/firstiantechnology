@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER_TRACKER v1.0</title>
+    <style>
+        /* Tema Cyberpunk Hitam / Futuristik */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0a0a0c;
+            color: #00ffcc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background-image: radial-gradient(circle at center, #141519 0%, #050508 100%);
+        }
+        .container {
+            background: #0d0e12;
+            padding: 30px;
+            border-radius: 4px;
+            border: 2px solid #00ffcc;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2), inset 0 0 10px rgba(0, 255, 204, 0.1);
+            width: 360px;
+            text-align: center;
+            position: relative;
+        }
+        /* Dekorasi sudut khas cyberpunk */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: #0a0a0c;
+            padding: 0 5px;
+            font-size: 10px;
+            color: #ff0055;
+            letter-spacing: 2px;
+        }
+        h2 { 
+            color: #fff; 
+            margin-bottom: 20px; 
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            font-size: 22px;
+        }
+        p {
+            color: #8892b0;
+            font-size: 13px;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00ffcc, transparent);
+            margin: 20px 0;
+        }
+        #status {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #00ffcc;
+            line-height: 1.6;
+            text-shadow: 0 0 5px rgba(0, 255, 204, 0.5);
+        }
+        .pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff0055;
+            box-shadow: 0 0 10px #ff0055;
+            animation: pulsing 1s infinite;
+            margin-right: 8px;
+        }
+        @keyframes pulsing {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 15px #ff0055, 0 0 25px #ff0055; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+        small {
+            font-size: 11px;
+            color: #6272a4 !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+
+    <hr>
+    <div id="status">INITIALIZING_GPS...</div>
+</div>
+
+<script>
+    // Konfigurasi Upstash HTTP REST API
+    const UPSTASH_REDIS_REST_URL = "https://super-camel-75084.upstash.io";
+    const UPSTASH_REDIS_REST_TOKEN = "gQAAAAAAASVMAAIgcDI0MjBkMmM4NTRkYWU0OTEyYTZmZWU5ODkxNGI1MmNjZg";
+    
+    const statusDiv = document.getElementById('status');
+
+    // Fungsi utama untuk mengambil GPS dan mengirim ke Redis
+    async function kirimKoordinat() {
+        if (!navigator.geolocation) {
+            statusDiv.innerHTML = "<span style='color: #ff0055; text-shadow: 0 0 5px #ff0055;'>[ERR] GEOLOCATION_NOT_SUPPORTED</span>";
+            return;
+        }
+
+        statusDiv.innerHTML = "FETCHING_GPS_DATA...";
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+                const timestamp = new Date().toISOString();
+
+                // Format data JSON string
+                const dataPayload = JSON.stringify({
+                    timestamp: timestamp,
+                    lat: lat,
+                    long: long
+                });
+
+                statusDiv.innerHTML = `GPS_LOCKED (${lat.toFixed(5)}, ${long.toFixed(5)})<br>UPLOADING_PAYLOAD...`;
+
+                try {
+                    const response = await fetch(`${UPSTASH_REDIS_REST_URL}/rpush/truktutup1/${encodeURIComponent(dataPayload)}`, {
+                        headers: {
+                            Authorization: `Bearer ${UPSTASH_REDIS_REST_TOKEN}`
+                        }
+                    });
+
+                    const result = await response.json();
+
+                    if (result.result) {
+                        statusDiv.innerHTML = `
+                            <span style="color: #00ffcc; font-weight: bold; text-shadow: 0 0 8px #00ffcc;">>> SUCCESS</span><br>
+                            <small>${new Date().toLocaleTimeString()}</small><br>
+                     
+                        `;
+                    } else {
+                        statusDiv.innerHTML = `<span style="color: #ff0055; text-shadow: 0 0 5px #ff0055;">[FAIL] ${JSON.stringify(result)}</span>`;
+                    }
+                } catch (error) {
+                    statusDiv.innerHTML = `<span style="color: #ff0055; text-shadow: 0 0 5px #ff0055;">[CONN_ERR] ${error.message.toUpperCase()}</span>`;
+                }
+            },
+            (error) => {
+                statusDiv.innerHTML = `<span style="color: #ff0055; text-shadow: 0 0 5px #ff0055;">[GPS_ERR] ${error.message.toUpperCase()}</span>`;
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 8000
+            }
+        );
+    }
+
+    // 1. Jalankan langsung sekali saat pertama kali halaman dibuka
+    kirimKoordinat();
+
+    // 2. Jalankan otomatis berulang setiap 10dtk=10000   3600000=1jam
+    setInterval(kirimKoordinat, 3600000);
+</script>
+
+</body>
+</html>

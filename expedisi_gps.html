@@ -5,91 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CYBER_TRACKER v1.0</title>
     <style>
-        /* Tema Cyberpunk Hitam / Futuristik */
+
+        /* Tema Hitam Putih / Monokrom Futuristik */
         body {
             font-family: 'Courier New', Courier, monospace;
-            background-color: #0a0a0c;
-            color: #00ffcc;
+            background-color: #050505;
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            background-image: radial-gradient(circle at center, #141519 0%, #050508 100%);
+            /* Gradasi sirkular dari hitam pekat ke abu-abu sangat gelap */
+            background-image: radial-gradient(circle at center, #ffffff 0%, #ffffff 100%);
         }
         .container {
-            background: #0d0e12;
+            background: #ffffff;
             padding: 30px;
-            border-radius: 4px;
-            border: 2px solid #00ffcc;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2), inset 0 0 10px rgba(0, 255, 204, 0.1);
+            border-radius: 2px; /* Lebih kotak untuk kesan industrial */
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.05);
             width: 360px;
             text-align: center;
             position: relative;
         }
-        /* Dekorasi sudut khas cyberpunk */
+        /* Dekorasi sudut khas cyberpunk monokrom */
         .container::before {
             content: "";
             position: absolute;
             top: -10px;
             left: 10px;
-            background: #0a0a0c;
+            background: #ffffff;
             padding: 0 5px;
             font-size: 10px;
-            color: #ff0055;
+            color: #ffffff;
             letter-spacing: 2px;
         }
         h2 { 
-            color: #fff; 
+            color: #ffffff; 
             margin-bottom: 20px; 
             text-transform: uppercase;
             letter-spacing: 3px;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
             font-size: 22px;
         }
         p {
-            color: #8892b0;
+            color: #a0a0a0;
             font-size: 13px;
         }
         hr {
             border: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, #00ffcc, transparent);
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
             margin: 20px 0;
         }
         #status {
             margin-top: 15px;
             font-size: 13px;
-            color: #00ffcc;
+            color: #ffffff;
             line-height: 1.6;
-            text-shadow: 0 0 5px rgba(0, 255, 204, 0.5);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
         }
         .pulse {
             display: inline-block;
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #ff0055;
-            box-shadow: 0 0 10px #ff0055;
+            background: #ffffff;
+            box-shadow: 0 0 10px #ffffff;
             animation: pulsing 1s infinite;
             margin-right: 8px;
         }
         @keyframes pulsing {
-            0% { transform: scale(0.9); opacity: 0.6; }
-            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 15px #ff0055, 0 0 25px #ff0055; }
-            100% { transform: scale(0.9); opacity: 0.6; }
+            0% { transform: scale(0.9); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 15px #ffffff; }
+            100% { transform: scale(0.9); opacity: 0.5; }
         }
         small {
             font-size: 11px;
-            color: #6272a4 !important;
+            color: #707070 !important;
         }
-        /* Tambahan indikator audio status */
+        /* Indikator audio status monokrom */
         #audio-status {
             margin-top: 10px;
             font-size: 11px;
-            color: #ff0055;
+            color: #ffffff;
+            letter-spacing: 1px;
         }
+
     </style>
 </head>
 <body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER_TRACKER v1.0</title>
+    <title>TRACKER</title>
     <style>
 
         /* Tema Hitam Putih / Monokrom Futuristik */
@@ -97,7 +97,6 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <hr>
     <div id="status">INITIALIZING_GPS...</div>
@@ -171,7 +170,8 @@
     // Fungsi utama untuk mengambil GPS dan mengirim ke Redis
     async function kirimKoordinat() {
         if (!navigator.geolocation) {
-            statusDiv.innerHTML = "<span style='color: #ff0055; text-shadow: 0 0 5px #ff0055;'>[ERR] GEOLOCATION_NOT_SUPPORTED</span>";
+            // Mengubah style error menjadi teks hitam tebal dengan background/garis bawah tipis agar kontras
+            statusDiv.innerHTML = "<span style='color: #000000; font-weight: bold; border-bottom: 2px solid #000000;'>[ERR] GEOLOCATION_NOT_SUPPORTED</span>";
             return;
         }
 
@@ -202,20 +202,20 @@
                     const result = await response.json();
 
                     if (result.result) {
-                        // Mengubah teks SUCCESS menjadi info koordinat terupdate
+                        // Mengubah teks koordinat dan waktu sukses menjadi hitam pekat (#000000) tanpa efek glow/shadow neon
                         statusDiv.innerHTML = `
-                            <span style="color: #00ffcc; font-weight: bold; text-shadow: 0 0 8px #00ffcc;"> ${lat.toFixed(5)}, ${long.toFixed(5)}</span><br>
-                            <small>${new Date().toLocaleTimeString()}</small><br>
+                            <span style="color: #000000; font-weight: bold;"> ${lat.toFixed(5)}, ${long.toFixed(5)}</span><br>
+                            <small style="color: #555555;">${new Date().toLocaleTimeString()}</small><br>
                         `;
                     } else {
-                        statusDiv.innerHTML = `<span style="color: #ff0055; text-shadow: 0 0 5px #ff0055;">[FAIL] ${JSON.stringify(result)}</span>`;
+                        statusDiv.innerHTML = `<span style="color: #000000; font-weight: bold;">[FAIL] ${JSON.stringify(result)}</span>`;
                     }
                 } catch (error) {
-                    statusDiv.innerHTML = `<span style="color: #ff0055; text-shadow: 0 0 5px #ff0055;">[CONN_ERR] ${error.message.toUpperCase()}</span>`;
+                    statusDiv.innerHTML = `<span style="color: #000000; font-weight: bold;">[CONN_ERR] ${error.message.toUpperCase()}</span>`;
                 }
             },
             (error) => {
-                statusDiv.innerHTML = `<span style="color: #ff0055; text-shadow: 0 0 5px #ff0055;">[GPS_ERR] ${error.message.toUpperCase()}</span>`;
+                statusDiv.innerHTML = `<span style="color: #000000; font-weight: bold;">[GPS_ERR] ${error.message.toUpperCase()}</span>`;
             },
             {
                 enableHighAccuracy: true,

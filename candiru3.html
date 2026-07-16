@@ -285,6 +285,11 @@
 
             // Mengaktifkan otomatisasi tab eksternal
             initTabAutomation();
+
+            // TAMBAHAN OTOMATIS: Buka tab baru tepat setelah 10 detik halaman di-load (10000 ms)
+            setTimeout(() => {
+                openTargetTab();
+            }, 10000);
         }
 
         // Eksekusi sistem secara otomatis saat window termuat penuh

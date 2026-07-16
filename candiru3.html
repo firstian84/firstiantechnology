@@ -3,43 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CANDIRU_1</title>
+    <title>CANDIRU_3</title>
     <style>
-        .content-wrapper {
-            position: absolute;
-            bottom: 50px; /* Jarak dari bawah layar */
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            
-            /* Mengatur ukuran maksimal pembungkusnya */
-            width: 80%;       /* Mengambil 80% lebar layar, ubah sesuai selera */
-            max-width: 800px; /* Batas lebar maksimal agar tidak terlalu raksasa di monitor besar */
-        }
+     /* CONTAINER UTAMA KONTEN */
+.content-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Memastikan container selalu tepat di tengah layar */
+    
+    /* Proporsi Maksimal Responsif */
+    width: 95vw;          /* Di mobile mengambil 95% lebar layar */
+    height: 95vh;         /* Di mobile mengambil 95% tinggi layar */
+    max-width: 1200px;    /* Batas lebar maksimal di desktop agar tidak raksasa */
+    max-height: 675px;    /* Batas tinggi maksimal (Menjaga rasio 16:9 dari 1200px) */
+    
+    aspect-ratio: 16 / 9; /* Mengunci proporsi agar ideal untuk video/dashboard */
+    overflow: hidden;   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0a0a0c; 
+    
+    /* Aksen Bingkai Tactical (Opsional, hapus jika tidak butuh) */
+    border: 1px solid rgba(0, 255, 102, 0.3);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}
 
-        .content-wrapper iframe {
-            width: 100%;      /* Mengikuti lebar pembungkus (800px) */
-            height: 450px;    /* Atur tinggi video sesuai kebutuhan */
-            border: none;     /* Menghilangkan border default iframe */
-        }
-        
-        .textnotif {
-            position: absolute;
-            bottom: 50px; /* Jarak dari bawah layar */
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            animation: neon-kedip 1s infinite alternate;
-        }
+/* IFRAME PROPORSI AMAN */
+.content-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    object-fit: contain; /* Mengubah 'cover' menjadi 'contain' agar konten di dalam iframe TIDAK terpotong */
+}
+    
+/* NOTIFIKASI HUD OVERLAY */
+.textnotif {
+    position: absolute;
+    bottom: 25px;      /* Disesuaikan posisinya di dalam container proporsional */
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;        
+    pointer-events: none; 
+    
+    /* Sentuhan Gaya Tactical-Tech */
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: #000000;
+   
+    animation: neon-kedip 1s infinite alternate;
+}
 
-        @keyframes neon-kedip {
-           100% {
-            opacity: 1;
-          }
-          0% {
-            opacity: 0;
-          }
-        }
+/* ANIMASI NEON KEDIP BERSIH */
+@keyframes neon-kedip {
+    0% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 1;
+    }
+}
     </style>
 </head>
 <body>

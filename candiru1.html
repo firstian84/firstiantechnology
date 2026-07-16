@@ -7,35 +7,46 @@
     <style>/* CONTAINER UTAMA KONTEN */
 .content-wrapper {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;       /* Mengambil 100% lebar total viewport */
-    height: 100vh;      /* Mengambil 100% tinggi total viewport */
-    overflow: hidden;   /* Mencegah scrollbar muncul akibat kebocoran dimensi */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Memastikan container selalu tepat di tengah layar */
+    
+    /* Proporsi Maksimal Responsif */
+    width: 95vw;          /* Di mobile mengambil 95% lebar layar */
+    height: 95vh;         /* Di mobile mengambil 95% tinggi layar */
+    max-width: 1200px;    /* Batas lebar maksimal di desktop agar tidak raksasa */
+    max-height: 675px;    /* Batas tinggi maksimal (Menjaga rasio 16:9 dari 1200px) */
+    
+    aspect-ratio: 16 / 9; /* Mengunci proporsi agar ideal untuk video/dashboard */
+    overflow: hidden;   
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #0a0a0c; /* Background gelap standar sistem */
+    background: #0a0a0c; 
+    
+    /* Aksen Bingkai Tactical (Opsional, hapus jika tidak butuh) */
+    border: 1px solid rgba(0, 255, 102, 0.3);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
 }
 
-/* IFRAME FULLSCREEN RESPONSIF */
+/* IFRAME PROPORSI AMAN */
 .content-wrapper iframe {
     width: 100%;
     height: 100%;
     border: none;
     display: block;
-    object-fit: cover; /* Memastikan jika berupa video/media akan mengisi seluruh ruang */
+    object-fit: contain; /* Mengubah 'cover' menjadi 'contain' agar konten di dalam iframe TIDAK terpotong */
 }
     
-/* NOTIFIKASI HUD OVERLAY (Melayang di atas iframe) */
+/* NOTIFIKASI HUD OVERLAY */
 .textnotif {
     position: absolute;
-    bottom: 40px;      /* Menjaga jarak aman dari batas bawah layar */
+    bottom: 25px;      /* Disesuaikan posisinya di dalam container proporsional */
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-    z-index: 10;        /* Memastikan teks berada di lapisan teratas di atas iframe */
-    pointer-events: none; /* Klik user akan menembus teks langsung ke iframe */
+    z-index: 10;        
+    pointer-events: none; 
     
     /* Sentuhan Gaya Tactical-Tech */
     font-family: 'Courier New', Courier, monospace;

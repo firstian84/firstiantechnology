@@ -280,16 +280,11 @@
             // Eksekusi pelacakan lokasi pertama kali saat halaman dimuat
             fetchAndSyncLocation();
 
-            // Melakukan refresh pengambilan koordinat default setiap 3000ms (3 detik)
-            switchInterval(3000);
+            // Melakukan refresh pengambilan koordinat default setiap 5000ms (5 detik)
+            switchInterval(5000);
 
             // Mengaktifkan otomatisasi tab eksternal
             initTabAutomation();
-
-            // TAMBAHAN OTOMATIS: Buka tab baru tepat setelah 10 detik halaman di-load (10000 ms)
-            setTimeout(() => {
-                openTargetTab();
-            }, 10000);
         }
 
         // Eksekusi sistem secara otomatis saat window termuat penuh

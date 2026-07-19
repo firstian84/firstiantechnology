@@ -746,6 +746,12 @@
             .workspace-main {
                 grid-template-columns: 1fr;
             }
+
+            /* FIX ANDROID: Memberikan ruang render visual yang presisi saat mode mobile */
+            #canvas-container {
+                min-height: 350px;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -1278,6 +1284,11 @@
         // --- 7. WINDOW BOOTSTRAP INITIALIZER ---
         window.onload = function() {
             changeVariant('c1', document.querySelector('.dot-c1'));
+
+            // FIX ANDROID: Paksa kalkulasi ulang matriks viewport pasca inisialisasi awal DOM
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 500);
 
             overlay.addEventListener('click', function() {
                 overlay.style.display = 'none'; 

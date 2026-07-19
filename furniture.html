@@ -61,6 +61,7 @@
             backdrop-filter: blur(5px);
             background-color: rgba(255, 255, 255, 0.2);
             border-bottom: 1px solid var(--glass-border);
+           text-shadow: 0 0 10px rgba(0,0,0,1);
         }
 
         .logo {
@@ -72,25 +73,35 @@
             letter-spacing: 2px;
             color: var(--text-main);
             text-transform: uppercase;
+           text-shadow: 0 0 10px rgba(0,0,0,1);
         }
 
         .logo img {
             height: 100px; 
             width: auto;
             object-fit: contain;
+           text-shadow: 0 0 10px rgba(0,0,0,1);
+          
         }
 
         .logo span { 
             color: var(--accent-wood); 
             text-stroke: 2px black;
+           text-shadow: 0 0 10px rgba(0,0,0,1);
         }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-            font-size: 30px;
-             text-shadow: 0 0 10px rgba(0,0,0,1);
+       @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; } /* Tidak sampai hilang total agar tetap mudah dibaca */
+    }
+
+    .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 30px;
+        font-size: 30px;
+        text-shadow: 0 0 10px rgba(0,0,0,1);
+        animation: blink 1s infinite; /* Kedipan lembut setiap 2 detik */
         }
 
         .nav-links a {
@@ -808,7 +819,7 @@
     <nav>
         <div class="logo">
             <img src="https://drive.google.com/thumbnail?sz=w500&id=1CZ1_KLCaTw56YSy3wH-a3rBJLa0E1nBf" alt="Logo">
-            <span>furniture</span>
+            <span>furniture <br> customize</span>
         </div>
         <ul class="nav-links">
           <li><a href="https://firstian84.github.io/firstiantechnology/furniture_collection.html" "><strong>@</strong></a></li>

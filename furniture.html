@@ -18,17 +18,26 @@
         }
 
         :root {
-            --bg-primary: #121614;
-            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-primary: #ffffff;
+            --bg-card: rgba(0, 0, 0, 0.03);
             --accent-wood: #b58252;
             --accent-fabric: #4a6b5d;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --glass-border: rgba(0, 0, 0, 0.08);
             
             /* Variabel Warna Utama Kode Kedua (Nuansa Biru) */
             --blue-light: #2575fc; 
             --blue-dark: #6a11cb;  
+
+            /* Variabel Modul Workspace Monitor */
+            --bg-deep: #ffffff;
+            --bg-panel: rgba(245, 247, 250, 0.85);
+            --border-neon: rgba(140, 145, 155, 0.3);
+            --border-neon-glow: rgba(200, 205, 215, 0.5);
+            --text-glow: #111827;
+            --text-bright: #111827;
+            --panel-blur: blur(12px);
         }
 
         body {
@@ -48,6 +57,7 @@
             align-items: center;
             z-index: 100;
             backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.8);
             border-bottom: 1px solid var(--glass-border);
         }
 
@@ -87,7 +97,7 @@
         
         .nav-links a:hover, .nav-links a.active {
             color: var(--text-main);
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            text-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         /* --- HERO SECTION --- */
@@ -97,10 +107,9 @@
             align-items: center;
             padding: 0 5%;
             position: relative;
-            /* Memberikan overlay gelap tipis di atas gambar agar teks putih bawaan HTML Anda tetap terbaca */
             background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
-       top: 50px;
-      }
+            top: 50px;
+        }
 
         .hero-content2 {
             max-width: 600px;
@@ -125,7 +134,7 @@
         /* --- BUTTON HORIZONTAL ROW SECTION --- */
         .button-grid-section {
             padding: 40px 0px 0px 0px;
-            background-color: #ffffff; /* Mengubah background section galeri menjadi putih */
+            background-color: #ffffff;
             overflow: hidden;
         }
 
@@ -176,7 +185,7 @@
             background-repeat: no-repeat;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); /* Mengurangi kepekatan shadow agar clean */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
 
         .image-button-custom::after {
@@ -205,8 +214,6 @@
         #btn7 { background-image: url('https://firstian84.github.io/firstiantechnology/furn_sketch1.png'); }
         #btn4 { background-image: url('https://firstian84.github.io/firstiantechnology/furn_sketch2.png'); }
         #btn5 { background-image: url('https://firstian84.github.io/firstiantechnology/furn_viewport.png'); }
-
-      
             
         /* --- MODAL SYSTEM --- */
         .modal-custom {
@@ -215,19 +222,18 @@
             z-index: 2000;             
             left: 0; top: 0;
             width: 100%; height: 100%;
-            background-color: rgba(255, 255, 255, 0.95); /* Mengubah backdrop modal menjadi putih transparan */
+            background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(5px);
             justify-content: center;   
             align-items: center;  
-          
         }
 
         .modal-content-custom {
             max-width: 85%;
             max-height: 80vh;
             border-radius: 12px;
-            border: 1px solid rgba(0,0,0,0.1); /* Border modal disesuaikan */
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1); /* Shadow modal dibuat lebih smooth */
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
             animation: zoomIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
             object-fit: contain;
         }
@@ -236,7 +242,7 @@
             position: absolute;
             top: 25px;
             right: 40px;
-            color: #111827; /* Tombol close diubah menjadi gelap */
+            color: #111827;
             font-size: 45px;
             font-weight: 300;
             cursor: pointer;
@@ -255,7 +261,7 @@
         /* --- PRODUCT CUSTOMIZER SECTION --- */
         .customizer-section {
             padding: 80px 5% 40px 5%; 
-            background: #ffffff; /* Tetap putih bersih */
+            background: #ffffff;
         }
 
         .section-title {
@@ -320,12 +326,12 @@
             font-weight: 700;
             margin-bottom: 25px;
         }
-.option-group {
-    margin-bottom: 0px; 
-    display: flex;            /* Mengaktifkan mode flexbox */
-    align-items: center;      /* Menyelaraskan konten di tengah secara vertikal */
-    justify-content: center;  /* Menyelaraskan konten di tengah secara horizontal */
-}
+
+        .option-group {
+            margin-bottom: 0px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .option-title {
@@ -365,7 +371,7 @@
             justify-content: center;
             align-items: center;
             padding: 30px 0 60px 0; 
-            background-color: #ffffff; /* Tetap putih bersih */
+            background-color: #ffffff;
         }
 
         .btn-web-animated {
@@ -400,13 +406,285 @@
         #interaction-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.02); /* Dikurangi opacity-nya agar transparan bersih */
+            background: rgba(0,0,0,0.02);
             z-index: 9999;
             cursor: pointer;
         }
 
+        /* --- WORKSPACE MONITOR STYLING (REFERENSI) --- */
+        .workspace-section {
+            background-color: var(--bg-deep);
+            color: var(--text-bright);
+            padding: 40px 20px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .workspace-main {
+            display: grid;
+            grid-template-columns: 320px 320px 1fr 280px;
+            gap: 15px;
+            height: 600px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow: hidden;
+        }
+
+        .column-center {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ui-panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-neon);
+            border-radius: 6px;
+            backdrop-filter: var(--panel-blur);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .panel-hdr {
+            padding: 10px 15px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-glow);
+            border-bottom: 1px solid rgba(140, 145, 155, 0.2);
+            background: #f9fafb;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .panel-body {
+            padding: 12px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .technical-img-container {
+            width: 100%;
+            flex: 1;
+            min-height: 180px;
+            background: #f3f4f6;
+            border: 1px solid rgba(140, 145, 155, 0.2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: zoom-in;
+            overflow: hidden;
+        }
+
+        .technical-img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            opacity: 0.85;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .technical-img-container:hover img {
+            opacity: 1;
+        }
+
+        .viewer-hud-line-h, .viewer-hud-line-v {
+            position: absolute;
+            background: rgba(17, 24, 39, 0.4);
+            pointer-events: none;
+            display: none;
+        }
+        .viewer-hud-line-h { width: 100%; height: 1px; left: 0; }
+        .viewer-hud-line-v { width: 1px; height: 100%; top: 0; }
+
+        .viewer-coords-badge {
+            position: absolute;
+            background: #ffffff;
+            border: 1px solid var(--text-glow);
+            color: var(--text-glow);
+            font-family: monospace;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            pointer-events: none;
+            display: none;
+            z-index: 3;
+        }
+
+        #canvas-container {
+            flex: 1;
+            background: #f3f4f6;
+            border: 1px solid rgba(140, 145, 155, 0.2);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hud-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            pointer-events: none;
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            z-index: 2;
+        }
+        .hud-overlay span { color: var(--text-glow); }
+
+        .loading-screen {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-glow);
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: #ffffff;
+            border: 1px solid var(--text-glow);
+            padding: 12px 24px;
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 5;
+            transition: opacity 0.5s ease;
+        }
+
+        .metric-card {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 4px;
+            padding: 8px 12px;
+        }
+
+        .metric-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .btn-action {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-neon);
+            color: var(--text-bright);
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-action:hover {
+            background: rgba(0, 0, 0, 0.08);
+            border-color: var(--text-glow);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-action.active {
+            background: rgba(0, 0, 0, 0.1);
+            border-color: var(--text-bright);
+        }
+
+        .hud-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .hud-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            background: var(--bg-panel);
+            border: 2px solid var(--text-glow);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            padding: 25px 15px 15px 15px;
+            max-width: 90vw;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 75vh;
+            object-fit: contain;
+            border: 1px solid rgba(140, 145, 155, 0.3);
+            border-radius: 4px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -35px; right: 0;
+            color: var(--text-glow);
+            font-size: 12px;
+            font-family: monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            background: #ffffff;
+            border: 1px solid var(--border-neon);
+            padding: 4px 10px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--text-glow);
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-caption {
+            margin-top: 10px;
+            font-size: 11px;
+            font-family: monospace;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .modal-caption span { color: var(--text-glow); }
+
         /* --- RESPONSIVE LAYOUT --- */
-              /* --- RESPONSIVE LAYOUT & ULTRA SMALL BUTTONS FOR ANDROID --- */
+        @media (max-width: 1024px) {
+            .workspace-main {
+                grid-template-columns: 1fr 1fr;
+                height: auto;
+            }
+        }
+
         @media (max-width: 768px) {
             nav { 
                 position: fixed;
@@ -428,28 +706,25 @@
                 background-color: #ffffff;
             }
 
-            /* 1. Mengaktifkan Scroll Geser Jari (Touch) pada Android */
             .gallery-scroll-container {
                 display: block;
                 width: 100%;
-                overflow-x: auto; /* Membuka jalur scroll horizontal */
+                overflow-x: auto;
                 scroll-behavior: smooth;
-                -webkit-overflow-scrolling: touch; /* Membuat scroll terasa sangat ringan/native di Android */
+                -webkit-overflow-scrolling: touch;
             }
             
-            /* 2. Memastikan Barisan Tombol Tetap Sejajar Horizontal */
             .gallery-grid {
                 display: flex;
-                flex-wrap: nowrap; /* Mencegah tombol turun ke bawah */
+                flex-wrap: nowrap;
                 gap: 8px;
-                padding: 0 15px; /* Memberi ruang di awal dan akhir geseran */
-                width: max-content; /* Memaksa lebar kontainer mengikuti total lebar tombol */
+                padding: 0 15px;
+                width: max-content;
             }
 
-            /* 3. Ukuran Tombol Mikro */
             .image-button-custom {
-                flex: 0 0 60px;  /* Lebar super kecil */
-                height: 45px;    /* Tinggi super kecil */
+                flex: 0 0 60px;  
+                height: 45px;    
                 border-radius: 6px;
                 box-shadow: none;
                 display: inline-block;
@@ -466,6 +741,10 @@
             .hero { 
                 height: 50vh;  
                 top: 50px;
+            }
+
+            .workspace-main {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -499,7 +778,6 @@
 
     <section class="button-grid-section">
         <div class="grid-title"></div>
-
         <div class="gallery-scroll-container" id="scrollContainer">
             <div class="gallery-grid">
                 <button class="image-button-custom" id="btn6" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_location.png')"></button>
@@ -519,32 +797,23 @@
     <section class="customizer-section" id="customizer">
         <div class="section-title">
             <h2>Interaktif Pilihan</h2>
-          
-           
-                <div class="option-group">
-                  
-                    <div class="color-pickers">
-                        <div class="color-dot dot-c1 active" onclick="changeVariant('c1', this)"></div>
-                        <div class="color-dot dot-c2" onclick="changeVariant('c2', this)"></div>
-                        <div class="color-dot dot-c3" onclick="changeVariant('c3', this)"></div>
-                    </div>
+            <div class="option-group">
+                <div class="color-pickers">
+                    <div class="color-dot dot-c1 active" onclick="changeVariant('c1', this)"></div>
+                    <div class="color-dot dot-c2" onclick="changeVariant('c2', this)"></div>
+                    <div class="color-dot dot-c3" onclick="changeVariant('c3', this)"></div>
+                </div>
+            </div>
         </div>
 
-      
-      
-      
         <div class="customizer-container">
             <div class="product-display" id="tiltCard">
                 <img src="https://lh3.googleusercontent.com/d/1SacgdbZug4ZkB6IwZSV3lL8lGdmxvNq4" class="product-image" id="productImg" alt="Product Layout">
             </div>
             <div class="customizer-controls">
                 <h3 id="productName">Koleksi Eksklusif</h3>
-                
                 <ul class="furniture-list" id="furnitureList"></ul>
-
                 <div class="price" id="productPrice">Total Paket: Rp21.000.000</div>
-               
-                </div>
             </div>
         </div>
     </section>
@@ -554,6 +823,283 @@
             DISKUSI RnD P.O
         </button>
     </div>
+
+    <!-- --- SECTION REFERENSI: WORKSPACE MONITOR --- -->
+    <section class="workspace-section">
+        <div class="workspace-main">
+            <!-- KOLOM 1: DESIGN ANALYTICS -->
+            <div class="column">
+                <div class="ui-panel" style="flex: 1;">
+                    <div class="panel-hdr">Desain & Dimensi Mebel</div>
+                    <div class="panel-body">
+                        <div class="technical-img-container image-hud-viewer" data-caption="Desain & Dimensi Mebel // furn_des1.png">
+                            <img src="https://firstian84.github.io/firstiantechnology/furn_des1.png" alt="Desain Mebel">
+                            <div class="viewer-hud-line-h"></div>
+                            <div class="viewer-hud-line-v"></div>
+                            <div class="viewer-coords-badge">X: 0 Y: 0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">Source Target</div>
+                            <div style="font-size: 11px; font-family: monospace; color: var(--text-glow);">furn_des1.png</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KOLOM 2: CONSTRUCTION & JOINT DETAIL ANALYTICS -->
+            <div class="column">
+                <div class="ui-panel" style="flex: 1;">
+                    <div class="panel-hdr">Analisis Konstruksi & Joint Detail</div>
+                    <div class="panel-body">
+                        <div class="technical-img-container image-hud-viewer" data-caption="Analisis Konstruksi & Joint Detail // furn_konst1.png">
+                            <img src="https://firstian84.github.io/firstiantechnology/furn_konst1.png" alt="Konstruksi Mebel">
+                            <div class="viewer-hud-line-h"></div>
+                            <div class="viewer-hud-line-v"></div>
+                            <div class="viewer-coords-badge">X: 0 Y: 0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">Structure Data</div>
+                            <div style="font-size: 11px; font-family: monospace; color: var(--text-glow);">furn_konst1.png</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KOLOM 3: MAIN 3D ENGINE VIEWPORT -->
+            <div class="column-center">
+                <div id="loading" class="loading-screen">Initialize 3D Stream...</div>
+                <div id="canvas-container">
+                    <div class="hud-overlay">
+                        RENDER_MODE: <span id="hud-mode">SOLID</span><br>
+                        CAM_X: <span id="hud-x">0.0</span> | CAM_Y: <span id="hud-y">0.0</span> | CAM_Z: <span id="hud-z">0.0</span>
+                    </div>
+                </div>
+                <button class="btn-action" id="btn-reset-view" style="width: 100%;">Reset 3D Space</button>
+            </div>
+
+            <!-- KOLOM 4: MODIFIERS & CONTROL -->
+            <div class="column">
+                <div class="ui-panel" style="flex: 1;">
+                    <div class="panel-hdr">Material & Telemetry FX</div>
+                    <div class="panel-body">
+                        <div class="metric-card">
+                            <div class="metric-title">3D Asset Target</div>
+                            <div style="font-size: 11px; font-family: monospace; color: var(--text-glow);">breket_LED_STRIP.obj</div>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                            <div class="metric-title">Visual Shader</div>
+                            <button class="btn-action" id="btn-wireframe">Toggle Wireframe</button>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                            <div class="metric-title">Material Preset</div>
+                            <button class="btn-action active" id="mat-alloy">Chrome Alloy</button>
+                        </div>
+
+                        <div class="metric-card" style="margin-top: auto; border-color: rgba(140, 145, 155, 0.2);">
+                            <div class="metric-title" style="color: var(--text-glow);">Navigasi Modul</div>
+                            <div style="font-size: 11px; line-height: 1.5; opacity: 0.8;">
+                                Klik pada gambar modul di sebelah kiri untuk memicu pandangan penuh <b>Telemetry Preview Expanded Modal</b>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GLOBAL TELEMETRY OVERLAY MODAL -->
+    <div id="image-modal" class="hud-modal">
+        <div class="modal-content">
+            <div class="modal-close" id="modal-close-trigger">[ Close_Node ]</div>
+            <img id="modal-target-img" src="" alt="Expanded View">
+            <div class="modal-caption" id="modal-target-caption">NODE // DETAILS</div>
+        </div>
+    </div>
+
+    <!-- Import Map Library Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- INTERACTIVE IMAGE VIEWER HUD & POPUP MODAL LOGIC ---
+        const viewers = document.querySelectorAll('.image-hud-viewer');
+        const modal = document.getElementById('image-modal');
+        const modalImg = document.getElementById('modal-target-img');
+        const modalCaption = document.getElementById('modal-target-caption');
+        const modalClose = document.getElementById('modal-close-trigger');
+        
+        viewers.forEach(viewer => {
+            const lineH = viewer.querySelector('.viewer-hud-line-h');
+            const lineV = viewer.querySelector('.viewer-hud-line-v');
+            const badge = viewer.querySelector('.viewer-coords-badge');
+            const imgElement = viewer.querySelector('img');
+
+            viewer.addEventListener('mousemove', (e) => {
+                const rect = viewer.getBoundingClientRect();
+                const x = Math.round(e.clientX - rect.left);
+                const y = Math.round(e.clientY - rect.top);
+
+                lineH.style.display = 'block';
+                lineH.style.top = `${y}px`;
+                
+                lineV.style.display = 'block';
+                lineV.style.left = `${x}px`;
+
+                badge.style.display = 'block';
+                badge.style.left = `${x + 12}px`;
+                badge.style.top = `${y + 12}px`;
+                badge.innerText = `LOC_X:${x} LOC_Y:${y}`;
+            });
+
+            viewer.addEventListener('mouseleave', () => {
+                lineH.style.display = 'none';
+                lineV.style.display = 'none';
+                badge.style.display = 'none';
+            });
+
+            viewer.addEventListener('click', () => {
+                modalImg.src = imgElement.src;
+                modalCaption.innerHTML = `SYS_TELEMETRY // <span>${viewer.getAttribute('data-caption')}</span>`;
+                modal.classList.add('show');
+            });
+        });
+
+        const closeModal = () => modal.classList.remove('show');
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) closeModal();
+        });
+
+        // --- THREE.JS 3D ENGINE ARCHITECTURE ---
+        let activeMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0xcccccc, 
+            roughness: 0.3,
+            metalness: 0.6
+        });
+
+        let loadedModel = null;
+
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(100, 80, 180); 
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        scene.add(ambientLight);
+
+        const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.6);
+        dirLight1.position.set(100, 150, 100);
+        scene.add(dirLight1);
+
+        const dirLight2 = new THREE.DirectionalLight(0xaaaaaa, 0.4); 
+        dirLight2.position.set(-100, -50, -100);
+        scene.add(dirLight2);
+
+        const gridHelper = new THREE.GridHelper(200, 40, 0x888888, 0x444444);
+        gridHelper.position.y = -35;
+        gridHelper.material.opacity = 0.2;
+        gridHelper.material.transparent = true;
+        scene.add(gridHelper);
+
+        const loader = new OBJLoader();
+        const urlModelObj = 'https://firstian84.github.io/firstiantechnology/breket_LED_STRIP.obj';
+   
+        loader.load(
+            urlModelObj, 
+            function (object) {
+                document.getElementById('loading').style.opacity = '0';
+                setTimeout(() => document.getElementById('loading').style.display = 'none', 500);
+                
+                loadedModel = object;
+                applyShaderSettings();
+
+                const box = new THREE.Box3().setFromObject(object);
+                const center = box.getCenter(new THREE.Vector3());
+                object.position.x += (object.position.x - center.x);
+                object.position.y += (object.position.y - center.y) - 10;
+                object.position.z += (object.position.z - center.z);
+
+                scene.add(object);
+            },
+            function (xhr) {
+                if (xhr.total > 0) {
+                    const persen = Math.round((xhr.loaded / xhr.total * 100));
+                    document.getElementById('loading').innerText = `STREAMING: ${persen}%`;
+                }
+            },
+            function (error) {
+                console.error(error);
+                document.getElementById('loading').innerText = 'ERROR NODE';
+            }
+        );
+
+        function applyShaderSettings() {
+            if (!loadedModel) return;
+            loadedModel.traverse(function (child) {
+                if (child.isMesh) {
+                    child.material = activeMaterial;
+                }
+            });
+        }
+
+        const hudX = document.getElementById('hud-x');
+        const hudY = document.getElementById('hud-y');
+        const hudZ = document.getElementById('hud-z');
+        const hudMode = document.getElementById('hud-mode');
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); 
+            
+            hudX.innerText = camera.position.x.toFixed(1);
+            hudY.innerText = camera.position.y.toFixed(1);
+            hudZ.innerText = camera.position.z.toFixed(1);
+            hudMode.innerText = activeMaterial.wireframe ? "WIREFRAME" : "SOLID";
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        document.getElementById('btn-reset-view').addEventListener('click', () => {
+            camera.position.set(100, 80, 180);
+            controls.target.set(0, 0, 0);
+        });
+
+        document.getElementById('btn-wireframe').addEventListener('click', function() {
+            activeMaterial.wireframe = !activeMaterial.wireframe;
+            this.classList.toggle('active', activeMaterial.wireframe);
+        });
+
+        window.addEventListener('resize', () => {
+            if(container.clientWidth > 0 && container.clientHeight > 0) {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            }
+        });
+    </script>
 
     <script>
         // --- 1. HERO SLIDESHOW MATRIX DATA ---

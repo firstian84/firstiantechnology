@@ -92,14 +92,15 @@
         }
 
         .nav-links a {
-            color: var(--text-muted);
+           color: var(--text-muted);
             text-decoration: none;
             font-weight: 500;
         }
         
         .nav-links a:hover, .nav-links a.active {
-            color: var(--text-main);
+             color: #ffa500;
             text-shadow: 0 0 10px rgba(0,0,0,0.1);
+
         }
 
         /* --- HERO SECTION --- */
@@ -434,6 +435,7 @@
             flex-direction: column;
             gap: 15px;
             overflow: hidden;
+
         }
 
         .column-center {
@@ -442,6 +444,7 @@
             gap: 15px;
             position: relative;
             overflow: hidden;
+
         }
 
         .ui-panel {
@@ -702,7 +705,10 @@
                 border-bottom: 1px solid var(--glass-border);
             }
             
-            .nav-links { display: none; } 
+            .nav-links {     display: flex;
+            list-style: none;
+            gap: 30px;} 
+      color: var(--text-muted);
             
             .button-grid-section {
                 padding: 20px 15px;
@@ -802,7 +808,7 @@
             <span>furniture</span>
         </div>
         <ul class="nav-links">
-            <li><a href="#" class="active">Utama</a></li>
+            <li><a href="https://firstian84.github.io/firstiantechnology/furniture.html" class="active">Utama</a></li>
             <li><a href="#">Koleksi</a></li>
     
         </ul>

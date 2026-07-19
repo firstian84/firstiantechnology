@@ -219,6 +219,7 @@
             backdrop-filter: blur(5px);
             justify-content: center;   
             align-items: center;  
+          
         }
 
         .modal-content-custom {
@@ -319,9 +320,12 @@
             font-weight: 700;
             margin-bottom: 25px;
         }
-
-        .option-group {
-            margin-bottom: 0px; 
+.option-group {
+    margin-bottom: 0px; 
+    display: flex;            /* Mengaktifkan mode flexbox */
+    align-items: center;      /* Menyelaraskan konten di tengah secara vertikal */
+    justify-content: center;  /* Menyelaraskan konten di tengah secara horizontal */
+}
         }
 
         .option-title {
@@ -515,8 +519,20 @@
     <section class="customizer-section" id="customizer">
         <div class="section-title">
             <h2>Interaktif Pilihan</h2>
+          
+           
+                <div class="option-group">
+                  
+                    <div class="color-pickers">
+                        <div class="color-dot dot-c1 active" onclick="changeVariant('c1', this)"></div>
+                        <div class="color-dot dot-c2" onclick="changeVariant('c2', this)"></div>
+                        <div class="color-dot dot-c3" onclick="changeVariant('c3', this)"></div>
+                    </div>
         </div>
 
+      
+      
+      
         <div class="customizer-container">
             <div class="product-display" id="tiltCard">
                 <img src="https://lh3.googleusercontent.com/d/1SacgdbZug4ZkB6IwZSV3lL8lGdmxvNq4" class="product-image" id="productImg" alt="Product Layout">
@@ -527,14 +543,7 @@
                 <ul class="furniture-list" id="furnitureList"></ul>
 
                 <div class="price" id="productPrice">Total Paket: Rp21.000.000</div>
-                
-                <div class="option-group">
-                    <div class="option-title">Pilih Varian</div>
-                    <div class="color-pickers">
-                        <div class="color-dot dot-c1 active" onclick="changeVariant('c1', this)"></div>
-                        <div class="color-dot dot-c2" onclick="changeVariant('c2', this)"></div>
-                        <div class="color-dot dot-c3" onclick="changeVariant('c3', this)"></div>
-                    </div>
+               
                 </div>
             </div>
         </div>

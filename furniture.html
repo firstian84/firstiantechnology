@@ -702,32 +702,39 @@
             .nav-links { display: none; } 
             
             .button-grid-section {
-                padding: 10px 0px;
+                padding: 20px 15px;
                 background-color: #ffffff;
             }
 
+            /* HILANGKAN SLIDER: Diubah menjadi container normal untuk grid */
             .gallery-scroll-container {
                 display: block;
                 width: 100%;
-                overflow-x: auto;
-                scroll-behavior: smooth;
-                -webkit-overflow-scrolling: touch;
+                overflow-x: visible;
             }
             
+            /* DITENGAH-TENGAH: Menggunakan CSS Grid otomatis terpusat (center) tanpa bungkus lebar tak terbatas */
             .gallery-grid {
-                display: flex;
-                flex-wrap: nowrap;
-                gap: 8px;
-                padding: 0 15px;
-                width: max-content;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+                justify-content: center;
+                justify-items: center;
+                align-items: center;
+                gap: 12px;
+                padding: 0;
+                width: 100%;
+                max-width: 450px;
+                margin: 0 auto;
             }
 
+            /* UKURAN TOMBOL MOBILE: Dioptimalkan agar pas di dalam baris grid tengah */
             .image-button-custom {
-                flex: 0 0 60px;  
-                height: 45px;    
-                border-radius: 6px;
-                box-shadow: none;
-                display: inline-block;
+                flex: none;  
+                width: 70px;  
+                height: 50px;    
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                display: block;
             }
             
             .customizer-container { 

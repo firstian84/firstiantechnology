@@ -109,14 +109,14 @@
            color: #80eeee;
             text-decoration: none;
             font-weight: 500;
+            
         }
-        
         .nav-links a:hover, .nav-links a.active {
-             color: #ffa500;
-            text-shadow: 0 0 10px rgba(0,0,0,0.1);
-
-        }
-
+    color: #ffa500;
+    /* Meningkatkan kontras glow agar sesuai dengan warna oranye */
+    text-shadow: 0 0 10px rgba(255, 165, 0, 0.8), 0 0 20px rgba(255, 165, 0, 0.4);
+    transition: all 0.3s ease-in-out;
+}
         /* --- HERO SECTION --- */
         .hero {
             height: 200vh; 

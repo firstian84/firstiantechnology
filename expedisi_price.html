@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Harga Solusi Logistik</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --bg-light: #f8fafc;
+            --text-main: #334155;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Section Styling */
+        section {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--bg-light);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Tech Grid */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tech-card {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .tech-card h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Price Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: var(--bg-light);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Section: Teknologi -->
+        <section>
+            <h2>Arsitektur Teknologi Pendukung</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h3>IoT & GPS Tracker</h3>
+                    <p>Validasi posisi armada, suhu muatan, dan rute secara real-time.</p>
+                </div>
+                <div class="tech-card">
+                    <h3>API Geospasial</h3>
+                    <p>Akurasi titik koordinat tujuan dan kalkulasi rute lalu lintas.</p>
+                </div>
+                <div class="tech-card">
+                    <h3>AI & OCR Scanner</h3>
+                    <p>Validasi otomatis dokumen surat jalan dan data fisik muatan.</p>
+                </div>
+                <div class="tech-card">
+                    <h3>Cloud Sentral</h3>
+                    <p>Penyimpanan data operasional dan finansial dalam satu dashboard.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Price List -->
+        <section>
+            <h2>Daftar Harga Solusi (Price List)</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Komponen Solusi</th>
+                            <th>Detail Spesifikasi</th>
+                            <th>Biaya (IDR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Transportation Management System (TMS)</strong></td>
+                            <td>Software utama, dashboard pusat, integrasi API dasar.</td>
+                            <td>Rp 15.000.000 – Rp 35.000.000 (Lisensi)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Modul AI & OCR Scanner</strong></td>
+                            <td>Pemindai otomatis surat jalan & validasi via kamera.</td>
+                            <td>Rp 5.000.000 – Rp 10.000.000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GPS Tracker & IoT Sensor</strong></td>
+                            <td>Perangkat keras + platform monitoring per unit (Tahunan).</td>
+                            <td>Rp 1.200.000 – Rp 2.500.000 / unit</td>
+                        </tr>
+                        <tr>
+                            <td><strong>API Geospasial & Maps</strong></td>
+                            <td>Kuota pemetaan rute & titik koordinat (Bulanan).</td>
+                            <td>Rp 2.000.000 – Rp 5.000.000 / bulan</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Maintenance & Cloud Server</strong></td>
+                            <td>Server awan performa tinggi & dukungan teknis 24/7.</td>
+                            <td>Rp 1.500.000 – Rp 4.000.000 / bulan</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+       
+    </footer>
+
+</body>
+</html>

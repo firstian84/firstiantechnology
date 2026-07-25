@@ -23,7 +23,6 @@
         }
 
         body {
-            /* Latar belakang murni gradasi Oranye tanpa warna hitam */
             background: linear-gradient(135deg, #ff7a00 0%, #ff5500 50%, #cc3300 100%);
             color: var(--text-main);
             line-height: 1.6;
@@ -33,7 +32,7 @@
 
         .container {
             max-width: 1100px;
-            margin: 2rem auto;
+            margin: 1.5rem auto;
             padding: 0 1rem;
         }
 
@@ -43,40 +42,49 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             border-radius: 16px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             color: #ffffff;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
             border-bottom: 2px solid rgba(255, 255, 255, 0.2);
             padding-bottom: 0.5rem;
+        }
+
+        /* Wrapper untuk Scroll Tabel di Mobile */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 1rem;
+            border-radius: 8px;
         }
 
         /* Price Table */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
             color: #ffffff;
-            table-layout: fixed; /* Memungkinkan kontrol lebar kolom secara presisi */
+            min-width: 600px; /* Memastikan tabel tidak terlalu gepeng di HP */
         }
 
         th, td {
-            padding: 12px 15px;
+            padding: 12px 14px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            word-wrap: break-word;
+            font-size: 0.9rem;
         }
 
         th {
-            background-color: rgba(0, 0, 0, 0.2);
+            background-color: rgba(0, 0, 0, 0.25);
             color: white;
             font-weight: 600;
+            white-space: nowrap;
         }
 
         tr:hover {
@@ -85,16 +93,28 @@
 
         .note {
             margin-top: 1rem;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-style: italic;
             color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
         }
 
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 1.5rem;
             color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+        }
+
+        /* Penyesuaian khusus layar sangat kecil (Android kecil) */
+        @media screen and (max-width: 480px) {
+            section {
+                padding: 1rem;
+            }
+            th, td {
+                padding: 10px 10px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -104,26 +124,21 @@
         
         <!-- Section: Ekspedisi & Sistem Manajemen -->
         <section>
-            <h2>Layanan Ekspedisi</h2>
-            <div style="overflow-x: auto;">
+            <h2>PENAMBAHAN LAYANAN EXPEDISI</h2>
+            <div class="table-responsive">
                 <table>
-                    <colgroup>
-                        <col style="width: 30%;">
-                        <col style="width: 50%;">
-                        <col style="width: 20%;">
-                    </colgroup>
                     <thead>
                         <tr>
-                            <th>PILIHAN</th>
-                            <th>RINCIAN</th>
-                            <th>BIAYA</th>
+                            <th style="width: 25%;">PILIHAN</th>
+                            <th style="width: 55%;">RINCIAN</th>
+                            <th style="width: 20%;">BIAYA</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><strong>Analog Document Control</strong></td>
                             <td>Data serah terima barang pada setiap pos aman. Tanpa intercom.</td>
-                            <td>0</td>
+                            <td>Rp 0</td>
                         </tr>
                         <tr>
                             <td><strong>Transport Management</strong></td>
@@ -143,12 +158,12 @@
                         <tr>
                             <td><strong>Integrasi Pengawalan Militer Tertutup</strong></td>
                             <td>Real-time dokumen + GPS car + intercom + camera live + camera dvr + tracking phone + tracking profile + tracking face 360 + pengawalan militer tertutup.</td>
-                            <td>Rp 10.000.000</td>
+                            <td>Rp 20.000.000</td>
                         </tr>
                         <tr>
                             <td><strong>Integrasi Pengawalan Militer Terbuka</strong></td>
                             <td>Real-time dokumen + GPS car + intercom + camera live + camera dvr + tracking phone + tracking profile + tracking face 360 + pengawalan militer terbuka.</td>
-                            <td>Rp 20.000.000</td>
+                            <td>Rp 30.000.000</td>
                         </tr>
                     </tbody>
                 </table>
@@ -158,16 +173,12 @@
         <!-- Section: Sewa Kendaraan -->
         <section>
             <h2>Pilihan Sewa Kendaraan</h2>
-            <div style="overflow-x: auto;">
+            <div class="table-responsive">
                 <table>
-                    <colgroup>
-                        <col style="width: 70%;">
-                        <col style="width: 30%;">
-                    </colgroup>
                     <thead>
                         <tr>
-                            <th>Jenis Kendaraan / Layanan</th>
-                            <th>Biaya (IDR)</th>
+                            <th style="width: 70%;">Jenis Kendaraan / Layanan</th>
+                            <th style="width: 30%;">Biaya (IDR)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -191,16 +202,16 @@
                 </table>
             </div>
             <div class="note">
-                #Semua pilihan belum termasuk bensin, tol, parkir, dan tip. <br>
-              #Pembayaran dilunasi diawal P.O
-              
+                # Semua pilihan belum termasuk bensin, tol, parkir, dan tip. <br>
+                # Pembayaran dilunasi di awal P.O
             </div>
         </section>
 
     </div>
 
     <footer>
-        <p>&copy; 2026 firstianTECHNOLOGY expedisi
+        <p>&copy; 2026 firstianTECHNOLOGY ekspedisi</p>
+    </footer>
 
 </body>
 </html>

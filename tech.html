@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firstian Technology - Limitless Creation</title>
+    <title></title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -165,12 +165,12 @@
             animation: pulse-wa-main 2s infinite;
             transition: all 0.3s ease;
             width: 100%;
-            max-width: 280px;
-            height: 60px;
+            max-width: 250px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 18px;
+            border-radius: 14px;
         }
 
         .btn-wa-animated:hover {
@@ -185,11 +185,11 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             width: 100%;
             max-width: 280px;
-            height: 60px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 18px;
+            border-radius: 14px;
             font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -211,21 +211,21 @@
 
         .social-row { 
             display: flex; 
-            gap: 15px; 
+            gap: 6px; 
             justify-content: center; 
-            padding: 10px; 
+            padding: 2px 5px; 
             flex-wrap: wrap; 
         }
-        
+      
         .btn-social {
-            width: 55px; 
-            height: 55px; 
-            border-radius: 16px;
+            width: 44px; 
+            height: 44px; 
+            border-radius: 12px;
             display: flex; 
             align-items: center; 
             justify-content: center;
             color: white; 
-            font-size: 22px; 
+            font-size: 18px; 
             transition: 0.4s;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -276,7 +276,6 @@
             pointer-events: none;
             z-index: -997;
         }
-      
       
         .btn-red-access {
             background: linear-gradient(45deg, var(--neon-red), #990024);
@@ -350,7 +349,7 @@
     <section id="services" class="py-20 px-4 md:px-12 relative max-w-7xl mx-auto">
         <div class="mb-16 text-center">
             <div class="reveal h-1.5 w-24 bg-cyan-400 mx-auto mb-4 rounded-full shadow-[0_0_15px_#00f2ff]"></div>
-            <h2 class="reveal text-3xl md:text-4xl font-bold tracking-widest uppercase gradient-text">Our Expertise & Services</h2>
+            <h2 class="reveal text-3xl md:text-4xl font-bold tracking-widest uppercase gradient-text"></h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -482,13 +481,10 @@
                 </a>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="reveal flex flex-col items-center justify-center gap-6 bg-black/40 p-8 rounded-3xl border border-white/10 backdrop-blur-md">
-                <h3 class="text-xl font-bold text-white mb-2">Ready to Connect?</h3>
+            <!-- Action Buttons (Jarak Diatur Menjadi Sangat Rapat / gap-1) -->
+            <div class="reveal flex flex-col items-center justify-center gap-1 bg-black/40 p-6 rounded-3xl border border-white/10 backdrop-blur-md">
+                <h3 class="text-xl font-bold text-white mb-2"></h3>
                 
-              
-              
-            <div class="reveal flex flex-col items-center justify-center gap-6">
                 <button onclick="window.open('https://firstian84.github.io/firstiantechnology/po2.html', '_blank')" class="btn-red-access text-white">
                     <i class="fas fa-external-link-alt mr-3"></i> PROJECT ORDER
                 </button>
@@ -497,7 +493,7 @@
                     <i class="fab fa-whatsapp text-3xl mr-2"></i> WhatsApp Us
                 </button>
 
-                <div class="social-row mt-4">
+                <div class="social-row mt-1">
                     <button onclick="openIG()" class="btn-social btn-ig" title="Instagram"><i class="fab fa-instagram"></i></button>
                     <button onclick="openFB()" class="btn-social btn-fb" title="Facebook"><i class="fab fa-facebook-f"></i></button>
                     <button onclick="openTokopedia()" class="btn-social btn-toped" title="Tokopedia"><i class="fas fa-shopping-bag"></i></button>
@@ -602,7 +598,7 @@
         window.addEventListener('DOMContentLoaded', handleVisit);
         setInterval(updateDashboardData, 5000); 
       
-      // --- THREE.JS BACKGROUND ---
+        // --- THREE.JS BACKGROUND ---
         const canvas = document.querySelector('#bg-canvas');
         const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
         const scene = new THREE.Scene();

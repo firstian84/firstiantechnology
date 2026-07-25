@@ -76,14 +76,13 @@
 
     <section class="py-20 lg:py-28 px-6 relative z-10">
         <div class="container mx-auto text-center max-w-4xl relative">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 border border-white/40 text-white text-xs font-semibold tracking-wide mb-8"></div>
-            
+         
             <h1 class="text-4xl sm:text-6xl font-black tracking-tight mb-6 text-white leading-tight">
                 Kirim Barang Aman, <br><span class="text-orange-100">Terpantau data</span>
             </h1>
             
             <p class="text-base sm:text-lg text-white/90 mb-12 max-w-2xl mx-auto leading-relaxed">
-                Platform ekspedisi keamanan maksimal distribusi digital terpercaya.
+                Ekspedisi keamanan maksimal distribusi digital terpercaya.
             </p>
             
             <div id="fitur-utama" class="glass-panel p-6 sm:p-8 rounded-2xl max-w-2xl mx-auto shadow-2xl">
@@ -250,7 +249,6 @@
             const beratAkhir = Math.max(beratAktual, beratVolumetrik);
             const beratBulat = Math.ceil(beratAkhir);
 
-            const hargaReguler = 12000 * beratBulat;
             const hargaExpress = 25000 * beratBulat;
 
             hasilBox.classList.remove('hidden');
@@ -267,18 +265,11 @@
                     <p class="text-sm font-bold text-white">Jalur pengiriman: ${asal.toUpperCase()} ke ${tujuan.toUpperCase()}</p>
                     ${infoDimensiText}
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
                     <div class="p-4 bg-white/10 border border-white/20 rounded-xl flex justify-between items-center">
                         <div>
-                            <span class="block text-xs font-bold text-white/70">REGULAR VALUE</span>
-                            <span class="text-xs text-white/90">(2-3 Hari Kerja)</span>
-                        </div>
-                        <strong class="text-white text-lg">Rp ${hargaReguler.toLocaleString('id-ID')}</strong>
-                    </div>
-                    <div class="p-4 bg-white/10 border border-white/20 rounded-xl flex justify-between items-center">
-                        <div>
-                            <span class="block text-xs font-bold text-white/70">EXPRESS HIGH</span>
-                            <span class="text-xs text-orange-200">(1 Hari Esok)</span>
+                            <span class="block text-xs font-bold text-white/70">PENGIRIMAN KHUSUS</span>
+                            <span class="text-xs text-orange-200">(3-5 Hari)</span>
                         </div>
                         <strong class="text-white text-lg">Rp ${hargaExpress.toLocaleString('id-ID')}</strong>
                     </div>

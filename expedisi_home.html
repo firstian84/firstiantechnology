@@ -71,12 +71,11 @@
         <div class="container mx-auto max-w-6xl">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 
-                <!-- Kolom Kiri: QR Code (Sesuai Referensi) -->
+                <!-- Kolom Kiri: QR Code (Diperbaiki untuk Android & Mobile) -->
                 <div class="lg:col-span-4 flex justify-center lg:justify-start">
-                    <div>
-                        <!-- Menggunakan API generator QR Code untuk menampilkan QR link dinamis -->
-                      <img src="https://firstian84.github.io/firstiantechnology/expedisi_qr.png?size=400x400&data=https://firstian84.github.io/firstiantechnology/expedisi_home.html" alt="QR Code Link" class="w-100 h-100">
-                        <p class="text-center text-xs font-semibold text-white/80 mt-3"></p>
+                    <div class="glass-panel p-4 rounded-2xl text-center">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://firstian84.github.io/firstiantechnology/expedisi_home.html" alt="QR Code Link" class="w-48 h-48 sm:w-56 sm:h-56 object-contain rounded-xl bg-white p-2 shadow-md">
+                        <p class="text-xs font-semibold text-white/90 mt-3">Scan untuk akses via Mobile</p>
                     </div>
                 </div>
 

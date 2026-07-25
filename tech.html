@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+    <title>Firstian Technology - Limitless Creation</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -27,10 +28,40 @@
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: #020205;
+            background-color: #030308;
             color: #e5e7eb;
             overflow-x: hidden;
             width: 100%;
+            margin: 0;
+        }
+      
+        /* Efek Spotlight di Tengah */
+        #spotlight-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, rgba(0, 242, 255, 0.2) 0%, rgba(3, 3, 8, 0.95) 100%);
+            z-index: -998;
+            pointer-events: none;
+        }
+    
+        /* --- PARALLAX BACKGROUND --- */
+        #parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 150vh;
+            background-image: url('https://drive.google.com/thumbnail?sz=w500&id=1CZ1_KLCaTw56YSy3wH-a3rBJLa0E1nBf');
+            background-size: contain;
+            background-position: center center;
+            background-repeat: no-repeat;
+            z-index: 0;
+            will-change: transform;
+            opacity: 1;
+            filter: blur(0px);
         }
 
         /* --- VISITOR COUNTER STYLING --- */
@@ -45,81 +76,59 @@
             font-family: 'Helvetica Neue', Arial, sans-serif;
             color: white;
             text-decoration: none;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 800;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border-radius: 20px;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 30px;
             cursor: pointer;
             letter-spacing: 1px;
             text-transform: uppercase;
             background: rgba(0, 242, 254, 0.1);
             border: 1px solid rgba(0, 242, 254, 0.4);
-            text-shadow: 0 0 5px rgba(0, 242, 254, 0.8);
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3), inset 0 0 5px rgba(0, 242, 254, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
             animation: neon-pulse 2s infinite alternate;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .visit-counter-btn:hover {
-            transform: scale(1.1) translateY(-2px);
+            transform: scale(1.05) translateY(-2px);
             background: linear-gradient(135deg, var(--color-visit-glow) 0%, var(--color-visit-glow2) 100%);
             border-color: transparent;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 1), 0 0 40px rgba(79, 172, 254, 0.7);
-            text-shadow: 0 0 10px #fff;
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.8);
             color: #000;
         }
 
         @keyframes neon-pulse {
-            from { box-shadow: 0 0 10px rgba(0, 242, 254, 0.3); text-shadow: 0 0 5px rgba(0, 242, 254, 0.8); }
-            to { box-shadow: 0 0 18px rgba(0, 242, 254, 0.6); text-shadow: 0 0 10px rgba(0, 242, 254, 1); }
+            from { box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
+            to { box-shadow: 0 0 20px rgba(0, 242, 254, 0.5); }
         }
 
-        /* --- BACKGROUND & CARDS --- */
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .ai-aura {
-            position: fixed;
-            width: 50vw;
-            height: 50vw;
-            background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
-            filter: blur(100px);
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: -1;
-            top: -10%;
-            right: -10%;
-        }
-
-        .glass-card {
-            background-color: rgba(10, 10, 20, 0.6);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-blend-mode: overlay;
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 242, 255, 0.2);
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
+        /* --- CARDS --- */
+       .glass-card {
+        background-color: rgba(0, 0, 0, 0.2);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        backdrop-filter: blur(2px);
+        border: 1px solid rgba(0, 242, 255, 1);
+        box-shadow: inset 0 0 15px rgba(0, 242, 255, 0.25), 0 10px 30px rgba(0, 0, 0, 0.5);
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        position: relative;
+        overflow: hidden;
+    }
       
-        .card-arch { background-image: url('https://lh3.googleusercontent.com/d/1BlpxtPeNnp4m0__FS1TEVO-1I-UFWuGg'); }
-        .card-multi { background-image: url('https://lh3.googleusercontent.com/d/1_qLAxaIZOxqRS3AqHty296esXOH-_FOG'); }
-        .card-tactical { background-image: url('https://lh3.googleusercontent.com/d/129eyMKUTaDjLrkBX4XU2cXxFXY0ZubRP'); }
-        .card-tech { background-image: url('https://lh3.googleusercontent.com/d/1rcF_Ij4XWHiOWkMnBQHcNI2Y-qjr78wd'); }
-        .card-cakra { background-image: url('https://lh3.googleusercontent.com/d/1Lhd3UIKsnk8yf10EJ0O9kmpqau63qKaD'); }
-        .card-prod { background-image: url('https://lh3.googleusercontent.com/d/1WGjnUSFOVPfIfW7xLbt6edFAnQqjIi0v'); }
-
+        .card-arch { background-image: linear-gradient(to bottom, rgba(3,3,8,0.85), rgba(3,3,8,0.95)), url('https://lh3.googleusercontent.com/d/1BlpxtPeNnp4m0__FS1TEVO-1I-UFWuGg'); }
+        .card-multi { background-image: linear-gradient(to bottom, rgba(3,3,8,0.85), rgba(3,3,8,0.95)), url('https://lh3.googleusercontent.com/d/1_qLAxaIZOxqRS3AqHty296esXOH-_FOG'); }
+        .card-tactical { background-image: linear-gradient(to bottom, rgba(3,3,8,0.85), rgba(3,3,8,0.95)), url('https://lh3.googleusercontent.com/d/129eyMKUTaDjLrkBX4XU2cXxFXY0ZubRP'); }
+        .card-tech { background-image: linear-gradient(to bottom, rgba(3,3,8,0.85), rgba(3,3,8,0.95)), url('https://lh3.googleusercontent.com/d/1rcF_Ij4XWHiOWkMnBQHcNI2Y-qjr78wd'); }
+        .card-cakra { background-image: linear-gradient(to bottom, rgba(3,3,8,0.85), rgba(3,3,8,0.95)), url('https://lh3.googleusercontent.com/d/1Lhd3UIKsnk8yf10EJ0O9kmpqau63qKaD'); }
+        .card-prod { background-image: linear-gradient(to bottom, rgba(3,3,8,0.85), rgba(3,3,8,0.95)), url('https://lh3.googleusercontent.com/d/1WGjnUSFOVPfIfW7xLbt6edFAnQqjIi0v'); }
+        .card-exp { background-image: linear-gradient(to bottom, rgba(3,3,8,0.85), rgba(3,3,8,0.95)), url('https://lh3.googleusercontent.com/d/1jLv902PNq1_JWLoLRX0RwC9xNClidN4U'); }
+      
         .glass-card::after {
             content: "";
             position: absolute;
@@ -128,19 +137,17 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(transparent, rgba(0, 242, 255, 0.1), transparent);
-            transition: 0.5s;
+            transition: 0.6s;
         }
 
         .glass-card:hover::after {
             top: 100%;
-            transition: 1.5s;
         }
 
         .glass-card:hover {
             border-color: var(--neon-blue);
-            transform: translateY(-15px) scale(1.03);
-            box-shadow: 0 0 40px rgba(0, 242, 255, 0.4), inset 0 0 20px rgba(0, 242, 255, 0.1);
-            background-color: rgba(15, 15, 30, 0.4);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 242, 255, 0.25), inset 0 0 15px rgba(0, 242, 255, 0.1);
         }
 
         .gradient-text {
@@ -148,16 +155,17 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
-            filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));
+            filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.4));
         }
 
         /* --- BUTTONS --- */
         .btn-wa-animated {
             background: linear-gradient(45deg, var(--wa-green), var(--wa-dark));
-            box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
             animation: pulse-wa-main 2s infinite;
-            transition: transform 0.3s ease;
-            width: 250px;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 280px;
             height: 60px;
             display: flex;
             align-items: center;
@@ -165,12 +173,18 @@
             border-radius: 18px;
         }
 
+        .btn-wa-animated:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(37, 211, 102, 0.8);
+        }
+
         .btn-red-access {
             background: linear-gradient(45deg, var(--neon-red), #990024);
-            box-shadow: 0 0 20px rgba(255, 0, 60, 0.5);
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            width: 250px;
+            width: 100%;
+            max-width: 280px;
             height: 60px;
             display: flex;
             align-items: center;
@@ -185,54 +199,40 @@
 
         .btn-red-access:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 35px rgba(255, 0, 60, 0.8);
+            box-shadow: 0 0 35px rgba(255, 0, 60, 0.7);
             background: linear-gradient(45deg, #ff3364, var(--neon-red));
         }
 
-        .btn-red-access::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: 0.5s;
-        }
-
-        .btn-red-access:hover::before {
-            left: 100%;
-        }
-
         @keyframes pulse-wa-main {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
         .social-row { 
             display: flex; 
-            gap: 12px; 
+            gap: 15px; 
             justify-content: center; 
-            padding: 15px; 
+            padding: 10px; 
             flex-wrap: wrap; 
         }
         
         .btn-social {
-            width: 50px; 
-            height: 50px; 
-            border-radius: 12px;
+            width: 55px; 
+            height: 55px; 
+            border-radius: 16px;
             display: flex; 
             align-items: center; 
             justify-content: center;
             color: white; 
-            font-size: 20px; 
+            font-size: 22px; 
             transition: 0.4s;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
         }
 
-        .btn-social:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--neon-blue); }
+        .btn-social:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 0 20px var(--neon-blue); }
         .btn-ig:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%); border-color: transparent; }
         .btn-fb:hover { background: #1877F2; border-color: transparent; }
         .btn-toped:hover { background: #42b549; border-color: transparent; }
@@ -241,166 +241,219 @@
         .reveal { opacity: 0; }
 
         .address-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 242, 255, 0.1);
+            background: rgba(15, 15, 30, 0.6);
+            border: 1px solid rgba(0, 242, 255, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
         .address-btn:hover { 
-            background: rgba(0, 242, 255, 0.15); 
+            background: rgba(0, 242, 255, 0.1); 
             border-color: var(--neon-blue); 
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+            transform: translateX(5px);
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.2);
+        }
+      
+        /* --- FULL SCREEN AI AURA --- */
+        .ai-aura {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 30%, rgba(0, 242, 255, 0.25) 0%, rgba(112, 0, 255, 0.15) 40%, transparent 80%);
+            filter: blur(120px);
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: -999;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -997;
         }
     </style>
 </head>
 <body>
+    <!-- Full Screen AI Aura Background -->
+    <div class="ai-aura"></div>
+    <canvas id="bg-canvas"></canvas>
+  
+    <!-- Parallax Background Element -->
+    <div id="parallax-bg"></div>
+    
+    <!-- Efek Spotlight Ditengah -->
+    <div id="spotlight-overlay"></div>
 
     <div id="visitor-container">
         <div class="visit-counter-btn" id="visitor-btn">
-            <i class="fas fa-eye"></i> KUNJUNGAN : <span id="visitor-val">0</span>
+            <i class="fas fa-eye text-cyan-400"></i> KUNJUNGAN : <span id="visitor-val">0</span>
         </div>
     </div>
 
-    <div class="ai-aura"></div>
-    <canvas id="bg-canvas"></canvas>
-
-    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 md:px-6 pt-10">
-        <h1 class="reveal text-5xl sm:text-6xl md:text-8xl font-bold mb-6 tracking-tight leading-tight">
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 md:px-6 pt-10 relative">
+        <h1 class="reveal text-5xl sm:text-7xl md:text-8xl font-bold mb-6 tracking-tight leading-tight">
             Limitless<br><span class="gradient-text">Creation.</span>
         </h1>
-        <p class="reveal max-w-3xl text-gray-300 text-base md:text-lg mb-10 leading-relaxed backdrop-blur-xl p-8 rounded-3xl bg-black/40 border border-white/10 shadow-2xl">
-            Since opening our industries in 2015, we’ve had one goal in mind : Put science to priority and creating without limmitation affordable designs for our growing community of clients. We offer a lowhighend services. Browse our site to see some of our latest work and give us a call today to set up an introductory meeting. From hands-on creative work to practical advice, we want to ensure that all of our clients find exactly what they’re looking for. A firm belief in sustainable and functional design defines the kind of services offered here @firstian technology innovation. 
+        <p class="reveal max-w-3xl text-gray-300 text-base md:text-lg mb-10 leading-relaxed backdrop-blur-xl p-8 rounded-3xl bg-black/50 border border-white/10 shadow-2xl">
+            Since opening our industries in 2015, we’ve had one goal in mind: Put science to priority and creating without limitation affordable designs for our growing community of clients. We offer high-end services at accessible standards. Browse our site to see some of our latest work and give us a call today to set up an introductory meeting. A firm belief in sustainable and functional design defines the kind of services offered here @ Firstian Technology Innovation. 
         </p>
     </section>
 
+    <!-- Services Section -->
     <section id="services" class="py-20 px-4 md:px-12 relative max-w-7xl mx-auto">
         <div class="mb-16 text-center">
             <div class="reveal h-1.5 w-24 bg-cyan-400 mx-auto mb-4 rounded-full shadow-[0_0_15px_#00f2ff]"></div>
-            <h2 class="reveal text-4xl font-bold tracking-widest uppercase"></h2>
+            <h2 class="reveal text-3xl md:text-4xl font-bold tracking-widest uppercase gradient-text">Our Expertise & Services</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div onclick="window.open('https://sites.google.com/view/1farchie/home', '_blank')" class="reveal glass-card card-arch p-8 rounded-3xl cursor-pointer group">
-                <i data-lucide="layers" class="text-blue-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase">Architectural Interior</h3>
-                <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• Site location analist, Countour analist, View analist</li>
-                    <li>• Circulation analist, Feng Shui analist, Reference images</li>
-                    <li>• Mesh modeling design, Room concept, Revision design</li>
-                    <li>• Image detail, Master plan, Site plan</li>
-                    <li>• Color scheme, 3D images, Quantity material</li>
-                    <li>• Quantity product, cad drawn</li>
-                    <li>• construction, supervision, quality control</li>
+            <!-- Card 1 -->
+            <div onclick="window.open('https://sites.google.com/view/1farchie/home', '_blank')" class="glass-card card-arch p-8 rounded-3xl cursor-pointer group">
+                <i data-lucide="layers" class="text-cyan-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-white">Architectural Interior</h3>
+                <ul class="text-sm text-gray-300 space-y-2 font-medium">
+                    <li>• Site location, Contour, & View analysis</li>
+                    <li>• Circulation, Feng Shui, & Concept design</li>
+                    <li>• Mesh modeling, 3D images, & Master plan</li>
+                    <li>• Material estimation & CAD drawings</li>
+                    <li>• Construction, supervision, & quality control</li>
                 </ul>
             </div>
 
-            <div onclick="window.open('https://sites.google.com/view/1fcgi/home', '_blank')" class="reveal glass-card card-multi p-8 rounded-3xl cursor-pointer group">
+            <!-- Card 2 -->
+            <div onclick="window.open('https://sites.google.com/view/1fcgi/home', '_blank')" class="glass-card card-multi p-8 rounded-3xl cursor-pointer group">
                 <i data-lucide="monitor" class="text-purple-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase">CGI - Creative Multimedia</h3>
-                <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• Story Board, design, Modelling, Textureing</li>
-                    <li>• level design, world design, Animated</li>
-                    <li>• Skinning, riggid body, face motion</li>
-                    <li>• physic effect, particle effect, Lighting</li>
-                    <li>• Rendering, Composite, Artistic</li>
-                    <li>• Scripting, movie production, game development</li>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-white">CGI - Creative Multimedia</h3>
+                <ul class="text-sm text-gray-300 space-y-2 font-medium">
+                    <li>• Storyboard, design, modeling, & texturing</li>
+                    <li>• Level design, world design, & animation</li>
+                    <li>• Skinning, rigid body, & face motion</li>
+                    <li>• Physics, particle effects, & advanced lighting</li>
+                    <li>• Rendering, composition, & game development</li>
                 </ul>
             </div>
-        
-            <div onclick="window.open('https://sites.google.com/view/ringamansejati/home', '_blank')" class="reveal glass-card card-tactical p-8 rounded-3xl cursor-pointer group">
-                <i data-lucide="shield-check" class="text-green-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase">Tactical & Security</h3>
-                <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• delivers personnel with skills paramedic, fire rescue, martial arts</li>
-                    <li>• Tatchman, patrol, Escort</li>
-                    <li>• Paramedic & Fire Rescue</li>
-                    <li>• Tiplomatic negotiations, indentification, User computers program</li>
-                    <li>• Technology tactical tools, private investigation, private bodyguard</li>
-                    <li>• National KUHP</li>
-                    <li>• Security technology hardware and software robotic system</li>
-                </ul>
-            </div>
-
-            <div onclick="window.open('https://sites.google.com/view/1finnovation/home', '_blank')" class="reveal glass-card card-tech p-8 rounded-3xl cursor-pointer group">
-                <i data-lucide="cpu" class="text-yellow-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase">Industrial Tech</h3>
-                <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• Digital design, algoritm, sensoring</li>
-                    <li>• Controller, calibration, real scale modelling</li>
-                    <li>• Assemble product, prototype, build quality product </li>
+      
+            <!-- Card 3 -->
+            <div onclick="window.open('https://sites.google.com/view/ringamansejati/home', '_blank')" class="glass-card card-tactical p-8 rounded-3xl cursor-pointer group">
+                <i data-lucide="shield-check" class="text-emerald-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-white">Tactical & Security</h3>
+                <ul class="text-sm text-gray-300 space-y-2 font-medium">
+                    <li>• Paramedic, fire rescue, & martial arts personnel</li>
+                    <li>• Patrolling, watchman, & VIP escort services</li>
+                    <li>• Diplomatic negotiations & private bodyguard</li>
+                    <li>• National KUHP & legal security standards</li>
+                    <li>• Robotic security hardware & software systems</li>
                 </ul>
             </div>
 
-            <div onclick="window.open('https://youtu.be/3YqkwxiXZpo', '_blank')" class="reveal glass-card card-cakra p-8 rounded-3xl cursor-pointer group">
-                <i data-lucide="zap" class="text-orange-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase">Cakra</h3>
-                <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• physical, mental, and spiritual practices disciplines to increase positive thinking</li>
-                    <li>• increase concentration level, increase efective thinking ability</li>
-                    <li>• add special skills besides profession, increase awareness</li>
-                    <li>• increase senses level, increase inner electrostatic control</li>
-                    <li>• self confidence, wellness</li>
-                    <li>• self defence touchless for extreme emotion threat</li>
+            <!-- Card 4 -->
+            <div onclick="window.open('https://sites.google.com/view/1finnovation/home', '_blank')" class="glass-card card-tech p-8 rounded-3xl cursor-pointer group">
+                <i data-lucide="cpu" class="text-blue-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-white">Industrial Tech</h3>
+                <ul class="text-sm text-gray-300 space-y-2 font-medium">
+                    <li>• Digital design, algorithms, & sensor systems</li>
+                    <li>• Controllers, calibration, & real-scale modeling</li>
+                    <li>• Product assembly, prototyping, & build quality</li>
                 </ul>
             </div>
 
-            <div onclick="window.open('https://firstian84.github.io/prosales/report.html', '_blank')" class="reveal glass-card card-prod p-8 rounded-3xl cursor-pointer group">
+            <!-- Card 5 -->
+            <div onclick="window.open('https://youtu.be/3YqkwxiXZpo', '_blank')" class="glass-card card-cakra p-8 rounded-3xl cursor-pointer group">
+                <i data-lucide="zap" class="text-amber-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-white">Cakra</h3>
+                <ul class="text-sm text-gray-300 space-y-2 font-medium">
+                    <li>• Physical, mental, & spiritual disciplines</li>
+                    <li>• Heightened concentration & strategic thinking</li>
+                    <li>• Inner electrostatic control & sensory awareness</li>
+                    <li>• Advanced self-defense & emotional management</li>
+                </ul>
+            </div>
+
+            <!-- Card 6 -->
+            <div onclick="window.open('https://firstian84.github.io/prosales/report.html', '_blank')" class="glass-card card-prod p-8 rounded-3xl cursor-pointer group">
                 <i data-lucide="camera" class="text-pink-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
-                <h3 class="text-xl font-bold mb-4 uppercase">Media Production</h3>
-                <ul class="text-sm text-gray-300 space-y-2">
-                    <li>• Artistic Photography</li>
-                    <li>• Drone Footage</li>
-                    <li>• Green Screen VFX</li>
-                    <li>• High-End Video Editing</li>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-white">Media Production</h3>
+                <ul class="text-sm text-gray-300 space-y-2 font-medium">
+                    <li>• Artistic commercial photography</li>
+                    <li>• Professional cinematic drone footage</li>
+                    <li>• Green Screen VFX integration</li>
+                    <li>• High-end post-production video editing</li>
+                </ul>
+            </div>
+      
+            <!-- Card 7 -->
+            <div onclick="window.open('https://firstian84.github.io/firstiantechnology/expedisi_home.html', '_blank')" class="glass-card card-exp p-8 rounded-3xl cursor-pointer group md:col-span-2 lg:col-span-1">
+                <i data-lucide="truck" class="text-teal-400 mb-6 w-10 h-10 group-hover:scale-110 transition-transform"></i>
+                <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-white">Expedisi</h3>
+                <ul class="text-sm text-gray-300 space-y-2 font-medium">
+                    <li>• Large vehicle live tracking systems</li>
+                    <li>• Special guarded logistics security tech</li>
+                    <li>• Regular & luxury vehicle rental fleet</li>
                 </ul>
             </div>
         </div>
     </section>
 
+    <!-- Locations & Actions Section -->
     <section id="locations" class="py-20 px-4 md:px-12 max-w-7xl mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            <!-- Addresses -->
             <div class="reveal space-y-4">
-                <a href="https://maps.google.com/?q=Pondok+jaya+3+no.7A+mampang+prapatan" target="_blank" class="address-btn flex gap-4 p-5 rounded-2xl transition-all">
-                    <i data-lucide="home" class="text-blue-500 shrink-0 mt-1"></i>
+                <h3 class="text-2xl font-bold mb-6 text-cyan-400 uppercase tracking-widest">Our Locations</h3>
+                
+                <a href="https://maps.google.com/?q=Pondok+jaya+3+no.7A+mampang+prapatan" target="_blank" class="address-btn flex gap-4 p-5 rounded-2xl">
+                    <i data-lucide="home" class="text-cyan-400 shrink-0 mt-1 w-6 h-6"></i>
                     <div>
-                        <p class="font-bold">Living (Pondok Jaya)</p>
-                        <p class="text-sm text-gray-500 italic">Pondok jaya 3 no.7A mampang prapatan – south jakarta</p>
+                        <p class="font-bold text-white">Living (Pondok Jaya)</p>
+                        <p class="text-sm text-gray-400 italic">Pondok Jaya 3 No.7A, Mampang Prapatan – South Jakarta</p>
                     </div>
                 </a>
                 
-                <a href="https://maps.google.com/?q=Jl.+Teuku+Nyak+Arief+No.16+Kby.+Lama" target="_blank" class="address-btn flex gap-4 p-5 rounded-2xl transition-all">
-                    <i data-lucide="map-pin" class="text-blue-500 shrink-0 mt-1"></i>
+                <a href="https://maps.google.com/?q=Jl.+Teuku+Nyak+Arief+No.16+Kby.+Lama" target="_blank" class="address-btn flex gap-4 p-5 rounded-2xl">
+                    <i data-lucide="map-pin" class="text-cyan-400 shrink-0 mt-1 w-6 h-6"></i>
                     <div>
-                        <p class="font-bold">OFFICE-1 (M Center)</p>
-                        <p class="text-sm text-gray-500 italic">Jl. Teuku Nyak Arief No.16, Kby. Lama Utara, Jakarta Selatan</p>
+                        <p class="font-bold text-white">OFFICE-1 (M Center)</p>
+                        <p class="text-sm text-gray-400 italic">Jl. Teuku Nyak Arief No.16, Kby. Lama Utara, Jakarta Selatan</p>
                     </div>
                 </a>
                 
-                <a href="https://www.google.com/maps/place/18+Office+Park/@-6.2992519,106.8306275,403m/data=!3m1!1e3!4m10!1m2!2m1!1s18+Office+Park+TB+Simatupang!3m6!1s0x2e69edf7d1337775:0x628aa81aef1d10c2!8m2!3d-6.29915!4d106.8321!15sChwxOCBPZmZpY2UgUGFyayBUQiBTaW1hdHVwYW5nkgEIYnVzX3N0b3DgAQA!16s%2Fg%2F11tfp5qttp?entry=ttu&g_ep=EgoyMDI2MDYyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="address-btn flex gap-4 p-5 rounded-2xl transition-all">
-                    <i data-lucide="map-pin" class="text-blue-500 shrink-0 mt-1"></i>
+                <a href="https://www.google.com/maps/place/18+Office+Park/@-6.2992519,106.8306275,403m" target="_blank" class="address-btn flex gap-4 p-5 rounded-2xl">
+                    <i data-lucide="map-pin" class="text-cyan-400 shrink-0 mt-1 w-6 h-6"></i>
                     <div>
-                        <p class="font-bold">OFFICE-2 (18 Office Park)</p>
-                        <p class="text-sm text-gray-500 italic">Jl. TB Simatupang No.18 Kebagusan, South Jakarta City</p>
+                        <p class="font-bold text-white">OFFICE-2 (18 Office Park)</p>
+                        <p class="text-sm text-gray-400 italic">Jl. TB Simatupang No.18, Kebagusan, South Jakarta City</p>
                     </div>
                 </a>
                 
-                <a href="https://maps.google.com/?q=Jl.+Pondok+Jaya+VII+No.6B" target="_blank" class="address-btn flex gap-4 p-5 rounded-2xl transition-all">
-                    <i data-lucide="hammer" class="text-blue-500 shrink-0 mt-1"></i>
+                <a href="https://maps.google.com/?q=Jl.+Pondok+Jaya+VII+No.6B" target="_blank" class="address-btn flex gap-4 p-5 rounded-2xl">
+                    <i data-lucide="hammer" class="text-cyan-400 shrink-0 mt-1 w-6 h-6"></i>
                     <div>
-                        <p class="font-bold">WORKSHOP</p>
-                        <p class="text-sm text-gray-500 italic">Jl. Pondok Jaya VII No.6B, Pela Mampang, Jakarta Selatan</p>
+                        <p class="font-bold text-white">WORKSHOP</p>
+                        <p class="text-sm text-gray-400 italic">Jl. Pondok Jaya VII No.6B, Pela Mampang, Jakarta Selatan</p>
                     </div>
                 </a>
             </div>
 
-            <div class="reveal flex flex-col items-center justify-center gap-6">
+            <!-- Action Buttons -->
+            <div class="reveal flex flex-col items-center justify-center gap-6 bg-black/40 p-8 rounded-3xl border border-white/10 backdrop-blur-md">
+                <h3 class="text-xl font-bold text-white mb-2">Ready to Connect?</h3>
+                
                 <button onclick="window.open('https://firstian84.github.io/firstiantechnology/po2.html', '_blank')" class="btn-red-access text-white">
                     <i class="fas fa-external-link-alt mr-3"></i> PROJECT ORDER
                 </button>
 
                 <button onclick="openWA()" class="btn-wa-animated text-white" title="Chat WhatsApp">
-                    <i class="fab fa-whatsapp text-3xl"></i> 
+                    <i class="fab fa-whatsapp text-3xl mr-2"></i> WhatsApp Us
                 </button>
 
-                <div class="social-row">
+                <div class="social-row mt-4">
                     <button onclick="openIG()" class="btn-social btn-ig" title="Instagram"><i class="fab fa-instagram"></i></button>
                     <button onclick="openFB()" class="btn-social btn-fb" title="Facebook"><i class="fab fa-facebook-f"></i></button>
                     <button onclick="openTokopedia()" class="btn-social btn-toped" title="Tokopedia"><i class="fas fa-shopping-bag"></i></button>
@@ -416,19 +469,30 @@
         </audio>
     </div>
 
-    <footer class="py-12 border-t border-white/5 text-center text-[10px] md:text-xs text-gray-600 uppercase tracking-[0.2em]">
-        © 2026 Firstian Technology<span class="text-blue-500">.</span>
+    <footer class="py-12 border-t border-white/5 text-center text-xs text-gray-500 uppercase tracking-[0.2em]">
+        © 2026 firstianTECHNOLOGY<span class="text-cyan-400">.</span>
     </footer>
 
     <script>
         lucide.createIcons();
 
-        // --- GSAP SCROLL TRIGGER ---
+        // --- GSAP SCROLL TRIGGER & PARALLAX ---
         gsap.registerPlugin(ScrollTrigger);
         
+        gsap.to("#parallax-bg", {
+            yPercent: -15, 
+            ease: "none",
+            scrollTrigger: {
+                trigger: document.body,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: true
+            }
+        });
+
         gsap.utils.toArray(".reveal").forEach((el) => {
             gsap.fromTo(el, 
-                { opacity: 0, y: 50, scale: 0.95 },
+                { opacity: 0, y: 40, scale: 0.98 },
                 {
                     scrollTrigger: {
                         trigger: el,
@@ -438,13 +502,63 @@
                     opacity: 1,
                     y: 0,
                     scale: 1,
-                    duration: 1.5,
+                    duration: 1.2,
                     ease: "expo.out"
                 }
             );
         });
 
-        // --- THREE.JS BACKGROUND ---
+        // --- NAVIGATION & AUDIO ---
+        function openWA() { window.open("https://wa.me/6287796126529?text=Halo Firstian Technology, saya ingin bertanya tentang proyek...", "_blank"); }
+        function openIG() { window.open("https://www.instagram.com/firstian_technology?igsh=NzNsc3A5MmI5ODVu/", "_blank"); }
+        function openFB() { window.open("https://web.facebook.com/firstian.budiastomo", "_blank"); }
+        function openTokopedia() { window.open("https://tk.tokopedia.com/ZSCD8nj2x//", "_blank"); }
+        function openYT() { window.open("https://www.youtube.com/@firstianbudi/videos?sub_confirmation=1", "_blank"); }
+
+        var audio = document.getElementById("myAudio");
+        function playAudio() { audio.play().catch(e => console.log("User interaction required")); }
+        window.addEventListener('click', playAudio, { once: true });
+
+        // --- UPSTASH VISITOR COUNTER LOGIC ---
+        const URL_BASE = "https://enabled-crayfish-71186.upstash.io";
+        const TOKEN = "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY";
+
+        const formatNum = (num) => {
+            const value = parseInt(num);
+            return isNaN(value) ? 0 : value.toLocaleString('id-ID');
+        };
+
+        async function updateDashboardData() {
+            try {
+                const resVisit = await fetch(`${URL_BASE}/get/visitor_web`, { 
+                    headers: { Authorization: `Bearer ${TOKEN}` } 
+                });
+                const dataVisit = await resVisit.json();
+                const visitorElement = document.getElementById('visitor-val');
+                if (visitorElement && dataVisit.result !== null) {
+                    visitorElement.innerText = formatNum(dataVisit.result);
+                }
+            } catch (error) {
+                console.error("Gagal sinkronisasi data:", error);
+            }
+        }
+
+        async function handleVisit() {
+            try {
+                await fetch(`${URL_BASE}/incr/visitor_web`, { 
+                    headers: { Authorization: `Bearer ${TOKEN}` } 
+                });
+                updateDashboardData();
+            } catch (error) {
+                console.error("Error saat mencatat kunjungan:", error);
+                updateDashboardData();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', handleVisit);
+        setInterval(updateDashboardData, 5000); 
+      
+      // --- THREE.JS BACKGROUND ---
         const canvas = document.querySelector('#bg-canvas');
         const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
         const scene = new THREE.Scene();
@@ -544,57 +658,6 @@
         window.addEventListener('resize', onWindowResize);
         onWindowResize();
         animate();
-
-        // --- NAVIGATION & AUDIO ---
-        function openWA() { window.open("https://wa.me/6287796126529?text=Halo Firstian Technology, saya ingin bertanya tentang proyek...", "_blank"); }
-        function openIG() { window.open("https://www.instagram.com/firstian_technology?igsh=NzNsc3A5MmI5ODVu/", "_blank"); }
-        function openFB() { window.open("https://web.facebook.com/firstian.budiastomo", "_blank"); }
-        function openTokopedia() { window.open("https://tk.tokopedia.com/ZSCD8nj2x//", "_blank"); }
-        function openYT() { window.open("https://www.youtube.com/@firstianbudi/videos?sub_confirmation=1", "_blank"); }
-
-        var audio = document.getElementById("myAudio");
-        function playAudio() { audio.play().catch(e => console.log("User interaction required")); }
-        window.addEventListener('click', playAudio, { once: true });
-
-        // --- UPSTASH VISITOR COUNTER LOGIC ---
-        const URL_BASE = "https://enabled-crayfish-71186.upstash.io";
-        const TOKEN = "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY";
-
-        const formatNum = (num) => {
-            const value = parseInt(num);
-            return isNaN(value) ? 0 : value.toLocaleString('id-ID');
-        };
-
-        async function updateDashboardData() {
-            try {
-                const resVisit = await fetch(`${URL_BASE}/get/visitor_web`, { 
-                    headers: { Authorization: `Bearer ${TOKEN}` } 
-                });
-                const dataVisit = await resVisit.json();
-                const visitorElement = document.getElementById('visitor-val');
-                if (visitorElement && dataVisit.result !== null) {
-                    visitorElement.innerText = formatNum(dataVisit.result);
-                }
-            } catch (error) {
-                console.error("Gagal sinkronisasi data:", error);
-            }
-        }
-
-        async function handleVisit() {
-            try {
-                await fetch(`${URL_BASE}/incr/visitor_web`, { 
-                    headers: { Authorization: `Bearer ${TOKEN}` } 
-                });
-                updateDashboardData();
-            } catch (error) {
-                console.error("Error saat mencatat kunjungan:", error);
-                updateDashboardData();
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', handleVisit);
-        setInterval(updateDashboardData, 5000); 
-
     </script>
 </body>
 </html>

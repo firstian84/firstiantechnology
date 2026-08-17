@@ -259,6 +259,8 @@
             const checkEl = document.getElementById(`check-${step.id}`);
             const tsGpsEl = document.getElementById(`ts-gps-${step.id}`);
             const tsActEl = document.getElementById(`ts-act-${step.id}`);
+            const input1 = document.getElementById(`l1-${step.id}`);
+            const input2 = document.getElementById(`l2-${step.id}`);
             
             card.classList.remove('interacted', 'verified-ui');
             
@@ -276,6 +278,9 @@
             } else {
                 tsGpsEl.style.display = 'none';
             }
+
+            if (input1 && data?.link1 !== undefined && document.activeElement !== input1) input1.value = data.link1;
+            if (input2 && data?.link2 !== undefined && document.activeElement !== input2) input2.value = data.link2;
 
             const previewBox = document.getElementById(`preview-${step.id}`);
             previewBox.innerHTML = "";
@@ -303,6 +308,9 @@
 
     async function handleInteraction(id) {
         if (!currentActiveProject || currentActiveProject.steps[id]?.verified === 1) return;
+        if (!currentActiveProject.steps[id]) {
+            currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
+        }
         const step = currentActiveProject.steps[id];
         step.status = step.status === 1 ? 0 : 1;
         step.time = step.status ? getFormattedDate() : "";
@@ -311,7 +319,12 @@
     }
 
     function verifyWithGPS(id) {
-        if (!currentActiveProject || currentActiveProject.steps[id]?.verified === 1) return;
+        if (!currentActiveProject) return;
+        if (!currentActiveProject.steps[id]) {
+            currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
+        }
+        if (currentActiveProject.steps[id].verified === 1) return;
+        
         navigator.geolocation.getCurrentPosition(async (pos) => {
             const step = currentActiveProject.steps[id];
             step.verified = 1;
@@ -326,12 +339,29 @@
     }
 
     async function saveLinks(id) {
-        if (!currentActiveProject) return;
+        if (!currentActiveProject) {
+            alert("Belum ada proyek aktif!");
+            return;
+        }
+        if (!currentActiveProject.steps) {
+            currentActiveProject.steps = {};
+        }
+        if (!currentActiveProject.steps[id]) {
+            currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
+        }
+        
         const step = currentActiveProject.steps[id];
-        step.link1 = document.getElementById(`l1-${id}`).value;
-        step.link2 = document.getElementById(`l2-${id}`).value;
+        const input1 = document.getElementById(`l1-${id}`);
+        const input2 = document.getElementById(`l2-${id}`);
+
+        step.link1 = input1 ? input1.value.trim() : "";
+        step.link2 = input2 ? input2.value.trim() : "";
         step.status = 1;
-        if(!step.time) step.time = getFormattedDate();
+        
+        if (!step.time) {
+            step.time = getFormattedDate();
+        }
+
         await pushToDB();
         syncUI(currentActiveProject.steps);
     }

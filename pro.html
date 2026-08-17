@@ -25,19 +25,27 @@
         @keyframes deepPulseRed {
             0%, 100% { 
                 border-color: var(--border-red); 
-                box-shadow: 0 0 10px var(--accent-red-glow), inset 0 0 5px var(--accent-red-glow);
-                background: var(--card-bg);
+                box-shadow: 0 0 15px var(--accent-red-glow), inset 0 0 10px var(--accent-red-glow);
+                background: #350000;
             }
             50% { 
-                border-color: #ff5f5f; 
-                box-shadow: 0 0 30px var(--accent-red-glow), inset 0 0 15px var(--accent-red-glow);
-                background: #2a0000;
+                border-color: #ff3333; 
+                box-shadow: 0 0 35px 5px var(--accent-red-glow), inset 0 0 20px var(--accent-red-glow);
+                background: #5c0000;
             }
         }
 
-        @keyframes issuePulse {
-            0%, 100% { box-shadow: 0 0 5px rgba(255, 152, 0, 0.2); }
-            50% { box-shadow: 0 0 25px rgba(255, 152, 0, 0.6); border-color: #fff; }
+        @keyframes issuePulseRed {
+            0%, 100% { 
+                border-color: var(--border-red); 
+                box-shadow: 0 0 15px var(--accent-red-glow), inset 0 0 10px var(--accent-red-glow);
+                background: #350000;
+            }
+            50% { 
+                border-color: #ff3333; 
+                box-shadow: 0 0 35px 5px var(--accent-red-glow), inset 0 0 20px var(--accent-red-glow);
+                background: #5c0000;
+            }
         }
 
         html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
@@ -74,7 +82,7 @@
 
         .step-card.v-pulse { 
             animation: deepPulseRed 1.5s infinite ease-in-out; 
-            border: 1.5px solid var(--accent-red-main);
+            border: 2px solid var(--accent-red-main);
         }
 
         .verification-wrapper { position: absolute; right: 15px; top: 15px; display: flex; flex-direction: column; align-items: center; gap: 5px; z-index: 10; }
@@ -118,8 +126,8 @@
 
         /* --- ISSUE TRACKER --- */
         .issue-monitor-section { width: 100%; max-width: 900px; margin-top: 20px; padding-top: 30px; border-top: 2px dashed rgba(255,255,255,0.1); }
-        .issue-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 25px; position: relative; }
-        .issue-card.has-issue { background: #2a1b00 !important; border-color: var(--accent-yellow) !important; animation: issuePulse 2s infinite ease-in-out; }
+        .issue-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 25px; position: relative; transition: all 0.3s ease; }
+        .issue-card.has-issue { animation: issuePulseRed 1.5s infinite ease-in-out !important; border: 2px solid var(--accent-red-main) !important; }
         .issue-input { width: 100%; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 14px; color: white; margin-top: 10px; }
         .btn-update-issue { background: transparent; color: var(--accent-yellow); border: 1px solid var(--accent-yellow); padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
 
@@ -240,7 +248,6 @@
             }
             keys.sort((a, b) => b.localeCompare(a));
             
-            // Loop untuk mencari key valid yang memiliki struktur steps
             let validData = null;
             let validKey = null;
 
@@ -249,7 +256,6 @@
                 const rawData = await valRes.json();
                 if (rawData.result) {
                     let data = typeof rawData.result === 'string' ? JSON.parse(rawData.result) : rawData.result;
-                    // Pastikan data memiliki field steps, jika tidak abaikan (misal data form mentah)
                     if (data.steps) {
                         validData = data;
                         validKey = k;
@@ -284,12 +290,9 @@
             const input1 = document.getElementById(`l1-${step.id}`);
             const input2 = document.getElementById(`l2-${step.id}`);
             
-            card.classList.remove('interacted', 'verified-ui');
+            const isVerify = step.id === 'V1' || step.id === 'V2';
+            card.classList.remove('interacted', 'verified-ui', 'v-pulse');
             
-            if (data?.status === 1) card.classList.add('interacted');
-            tsActEl.innerText = data?.time ? `ACTIVE: ${data.time}` : "";
-            tsActEl.style.display = data?.time ? 'block' : 'none';
-
             const isVerified = data?.verified === 1;
             checkEl.checked = isVerified; 
             
@@ -298,8 +301,18 @@
                 tsGpsEl.innerText = `VERIFIED: ${data.verifyTime}\nLOC: ${data.lat}, ${data.lon}`;
                 tsGpsEl.style.display = 'block';
             } else {
+                if (isVerify) {
+                    card.classList.add('v-pulse');
+                }
                 tsGpsEl.style.display = 'none';
             }
+
+            if (data?.status === 1 && !isVerified) {
+                card.classList.add('interacted');
+            }
+
+            tsActEl.innerText = data?.time ? `ACTIVE: ${data.time}` : "";
+            tsActEl.style.display = data?.time && !isVerified ? 'block' : 'none';
 
             if (input1 && data?.link1 !== undefined && document.activeElement !== input1) input1.value = data.link1;
             if (input2 && data?.link2 !== undefined && document.activeElement !== input2) input2.value = data.link2;
@@ -399,7 +412,20 @@
     async function pushToDB() {
         await fetch(`${CONFIG.URL}/set/${currentActiveProject.key}`, {
             method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
-            body: JSON.stringify({ client: currentActiveProject.client, project_need: currentActiveProject.project_need || "", steps: currentActiveProject.steps })
+            body: JSON.stringify({ 
+                id: currentActiveProject.id || "PRJ-" + Math.floor(1000 + Math.random() * 9000),
+                client: currentActiveProject.client, 
+                contact: currentActiveProject.contact || "",
+                project_need: currentActiveProject.project_need || "", 
+                project_details: currentActiveProject.project_details || "",
+                budget: currentActiveProject.budget || "",
+                status: currentActiveProject.status || 0,
+                finver: currentActiveProject.finver ?? -1,
+                link: currentActiveProject.link || "",
+                location: currentActiveProject.location || { lat: 0, lng: 0 },
+                submitted_at_jakarta: currentActiveProject.submitted_at_jakarta || getFormattedDate(),
+                steps: currentActiveProject.steps 
+            })
         });
     }
 
@@ -410,20 +436,14 @@
         const name = document.getElementById('clientInput').value.toUpperCase().trim();
         if(!name) return;
         
-        let existingSteps = {};
-        let projectNeedVal = "";
+        let existingData = {};
         
         try {
             const checkRes = await fetch(`${CONFIG.URL}/get/${CONFIG.PREFIX}${name}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
             const checkData = await checkRes.json();
             if (checkData.result) {
                 const parsedData = typeof checkData.result === 'string' ? JSON.parse(checkData.result) : checkData.result;
-                if (parsedData.steps) {
-                    existingSteps = parsedData.steps;
-                }
-                if (parsedData.project_need) {
-                    projectNeedVal = parsedData.project_need;
-                }
+                existingData = parsedData;
             }
         } catch(err) {
             console.error(err);
@@ -431,15 +451,29 @@
 
         const steps = {}; 
         stepsTemplate.forEach(s => {
-            steps[s.id] = existingSteps[s.id] || { status:0, verified:0, lat:0, lon:0, time:"", verifyTime:"", link1:"", link2:"" };
+            steps[s.id] = existingData.steps?.[s.id] || { status:0, verified:0, lat:0, lon:0, time:"", verifyTime:"", link1:"", link2:"" };
         });
-        steps["ISSUE"] = existingSteps["ISSUE"] || { text: "", time: "" };
+        steps["ISSUE"] = existingData.steps?.ISSUE || { text: "", time: "" };
         
-        await fetch(`${CONFIG.URL}/set/${CONFIG.PREFIX}${name}`, {
-            method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
-            body: JSON.stringify({ client: name, project_need: projectNeedVal, steps })
-        });
-        closeModal(); updateProjectUI();
+        currentActiveProject = {
+            key: `${CONFIG.PREFIX}${name}`,
+            id: existingData.id || "PRJ-" + Math.floor(1000 + Math.random() * 9000),
+            client: name,
+            contact: existingData.contact || "",
+            project_need: existingData.project_need || "",
+            project_details: existingData.project_details || "",
+            budget: existingData.budget || "",
+            status: existingData.status || 0,
+            finver: existingData.finver ?? -1,
+            link: existingData.link || "",
+            location: existingData.location || { lat: 0, lng: 0 },
+            submitted_at_jakarta: existingData.submitted_at_jakarta || getFormattedDate(),
+            steps: steps
+        };
+
+        await pushToDB();
+        closeModal(); 
+        updateProjectUI();
     }
 
     async function deleteLatestProject() {

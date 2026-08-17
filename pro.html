@@ -170,7 +170,7 @@
     const CONFIG = {
         URL: "https://enabled-crayfish-71186.upstash.io",
         TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
-        PREFIX: "progress_"
+        PREFIX: "project_order"
     };
 
     let currentActiveProject = null;
@@ -242,7 +242,11 @@
             const valRes = await fetch(`${CONFIG.URL}/get/${keys[0]}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
             const data = JSON.parse((await valRes.json()).result);
             currentActiveProject = { key: keys[0], ...data };
-            document.getElementById('project-name-display').innerText = `PROJECT: ${data.client}`;
+            
+            let clientVal = data.client || "";
+            let projectNeedVal = data.project_need || "";
+            document.getElementById('project-name-display').innerText = `PROJECT: ${clientVal} ${projectNeedVal}`.trim();
+            
             syncUI(data.steps);
         } catch (e) { console.error(e); }
     }
@@ -256,15 +260,12 @@
             const tsGpsEl = document.getElementById(`ts-gps-${step.id}`);
             const tsActEl = document.getElementById(`ts-act-${step.id}`);
             
-            // Reset state visual
             card.classList.remove('interacted', 'verified-ui');
             
-            // Sync status Interaksi (Normal)
             if (data?.status === 1) card.classList.add('interacted');
             tsActEl.innerText = data?.time ? `ACTIVE: ${data.time}` : "";
             tsActEl.style.display = data?.time ? 'block' : 'none';
 
-            // Sync status Verifikasi (GPS)
             const isVerified = data?.verified === 1;
             checkEl.checked = isVerified; 
             
@@ -276,7 +277,6 @@
                 tsGpsEl.style.display = 'none';
             }
 
-            // Sync Preview Gambar
             const previewBox = document.getElementById(`preview-${step.id}`);
             previewBox.innerHTML = "";
             [data?.link1, data?.link2].forEach(link => {
@@ -290,7 +290,6 @@
             });
         });
 
-        // Sync Issue Tracker
         const issue = steps.ISSUE;
         const issueCard = document.getElementById('issue-card-main');
         if (issue?.text) {
@@ -348,7 +347,7 @@
     async function pushToDB() {
         await fetch(`${CONFIG.URL}/set/${currentActiveProject.key}`, {
             method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
-            body: JSON.stringify({ client: currentActiveProject.client, steps: currentActiveProject.steps })
+            body: JSON.stringify({ client: currentActiveProject.client, project_need: currentActiveProject.project_need || "", steps: currentActiveProject.steps })
         });
     }
 
@@ -361,9 +360,21 @@
         const steps = {}; 
         stepsTemplate.forEach(s => steps[s.id] = { status:0, verified:0, lat:0, lon:0, time:"", verifyTime:"", link1:"", link2:"" });
         steps["ISSUE"] = { text: "", time: "" };
+        
+        let projectNeedVal = "";
+        try {
+            const getRes = await fetch(`${CONFIG.URL}/get/${CONFIG.PREFIX}${name}_need`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
+            const getData = await getRes.json();
+            if (getData.result) {
+                projectNeedVal = getData.result;
+            }
+        } catch(err) {
+            console.error(err);
+        }
+
         await fetch(`${CONFIG.URL}/set/${CONFIG.PREFIX}${name}`, {
             method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
-            body: JSON.stringify({ client: name, steps })
+            body: JSON.stringify({ client: name, project_need: projectNeedVal, steps })
         });
         closeModal(); updateProjectUI();
     }

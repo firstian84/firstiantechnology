@@ -239,15 +239,37 @@
                 return;
             }
             keys.sort((a, b) => b.localeCompare(a));
-            const valRes = await fetch(`${CONFIG.URL}/get/${keys[0]}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
-            const data = JSON.parse((await valRes.json()).result);
-            currentActiveProject = { key: keys[0], ...data };
             
-            let clientVal = data.client || "";
-            let projectNeedVal = data.project_need || "";
-            document.getElementById('project-name-display').innerText = `PROJECT: ${clientVal} ${projectNeedVal}`.trim();
+            // Loop untuk mencari key valid yang memiliki struktur steps
+            let validData = null;
+            let validKey = null;
+
+            for (let k of keys) {
+                const valRes = await fetch(`${CONFIG.URL}/get/${k}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
+                const rawData = await valRes.json();
+                if (rawData.result) {
+                    let data = typeof rawData.result === 'string' ? JSON.parse(rawData.result) : rawData.result;
+                    // Pastikan data memiliki field steps, jika tidak abaikan (misal data form mentah)
+                    if (data.steps) {
+                        validData = data;
+                        validKey = k;
+                        break;
+                    }
+                }
+            }
+
+            if (!validData) {
+                document.getElementById('project-name-display').innerText = "NO WORKFLOW DATA FOUND";
+                return;
+            }
             
-            syncUI(data.steps);
+            currentActiveProject = { key: validKey, ...validData };
+            
+            let clientVal = validData.client || "";
+            let projectNeedVal = validData.project_need || "";
+            document.getElementById('project-name-display').innerText = `PROJECT: ${clientVal} - ${projectNeedVal}`.trim();
+            
+            syncUI(validData.steps);
         } catch (e) { console.error(e); }
     }
 
@@ -387,21 +409,32 @@
     async function confirmProject() {
         const name = document.getElementById('clientInput').value.toUpperCase().trim();
         if(!name) return;
-        const steps = {}; 
-        stepsTemplate.forEach(s => steps[s.id] = { status:0, verified:0, lat:0, lon:0, time:"", verifyTime:"", link1:"", link2:"" });
-        steps["ISSUE"] = { text: "", time: "" };
         
+        let existingSteps = {};
         let projectNeedVal = "";
+        
         try {
-            const getRes = await fetch(`${CONFIG.URL}/get/${CONFIG.PREFIX}${name}_need`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
-            const getData = await getRes.json();
-            if (getData.result) {
-                projectNeedVal = getData.result;
+            const checkRes = await fetch(`${CONFIG.URL}/get/${CONFIG.PREFIX}${name}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
+            const checkData = await checkRes.json();
+            if (checkData.result) {
+                const parsedData = typeof checkData.result === 'string' ? JSON.parse(checkData.result) : checkData.result;
+                if (parsedData.steps) {
+                    existingSteps = parsedData.steps;
+                }
+                if (parsedData.project_need) {
+                    projectNeedVal = parsedData.project_need;
+                }
             }
         } catch(err) {
             console.error(err);
         }
 
+        const steps = {}; 
+        stepsTemplate.forEach(s => {
+            steps[s.id] = existingSteps[s.id] || { status:0, verified:0, lat:0, lon:0, time:"", verifyTime:"", link1:"", link2:"" };
+        });
+        steps["ISSUE"] = existingSteps["ISSUE"] || { text: "", time: "" };
+        
         await fetch(`${CONFIG.URL}/set/${CONFIG.PREFIX}${name}`, {
             method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
             body: JSON.stringify({ client: name, project_need: projectNeedVal, steps })

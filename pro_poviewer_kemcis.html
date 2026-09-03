@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Project Controller</title>
+    <style>
+        :root {
+            --bg-color: #0d1117; 
+            --card-bg: #161b22; 
+            --card-bg-interacted: #111418; 
+            --accent-red-main: #ff1a1a; 
+            --accent-red-glow: rgba(255, 26, 26, 0.8);
+            --border-red: #cc0000;
+            --accent-blue-main: #00d2ff;
+            --accent-blue-glow: rgba(0, 210, 255, 0.4);
+            --border-blue: #00a3cc;
+            --accent-yellow: #ff9800;
+            --accent-green: #00ff88;
+            --text-main: #e6edf3;
+            --text-dim: #8b949e;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes deepPulseRed {
+            0%, 100% { 
+                border-color: var(--border-red); 
+                box-shadow: 0 0 15px var(--accent-red-glow), inset 0 0 10px var(--accent-red-glow);
+                background: #350000;
+            }
+            50% { 
+                border-color: #ff3333; 
+                box-shadow: 0 0 35px 5px var(--accent-red-glow), inset 0 0 20px var(--accent-red-glow);
+                background: #5c0000;
+            }
+        }
+
+        @keyframes issuePulseRed {
+            0%, 100% { 
+                border-color: var(--border-red); 
+                box-shadow: 0 0 15px var(--accent-red-glow), inset 0 0 10px var(--accent-red-glow);
+                background: #350000;
+            }
+            50% { 
+                border-color: #ff3333; 
+                box-shadow: 0 0 35px 5px var(--accent-red-glow), inset 0 0 20px var(--accent-red-glow);
+                background: #5c0000;
+            }
+        }
+
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; user-select: none; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            padding: 20px; overflow-x: hidden;
+        }
+
+        /* --- HEADER & CONTROLS --- */
+        .project-header { width: 100%; max-width: 900px; text-align: center; margin-bottom: 20px; padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        #project-name-display { font-size: 0.9rem; color: var(--accent-blue-main); letter-spacing: 3px; font-weight: 600; text-transform: uppercase; text-shadow: 0 0 8px var(--accent-blue-glow); }
+        
+        .container { width: 100%; max-width: 900px; }
+        h1 { text-align: center; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.4rem; font-weight: 800; background: linear-gradient(to right, var(--accent-red-main), #fff, var(--accent-blue-main)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* --- WORKFLOW --- */
+        .workflow-wrapper { position: relative; display: flex; flex-direction: column; gap: 20px; padding-bottom: 40px; }
+        .workflow-wrapper::before { content: ''; position: absolute; left: 25px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--accent-red-main) 0%, var(--border-blue) 100%); z-index: 0; opacity: 0.5; }
+
+        .step-card {
+            background: var(--card-bg); border: 1px solid #30363d; 
+            border-radius: 12px; padding: 15px 15px 15px 65px; position: relative;
+            transition: all 0.3s ease; cursor: pointer; z-index: 1; overflow: hidden;
+        }
+
+        .step-card.v-pulse { 
+            animation: deepPulseRed 1.5s infinite ease-in-out; 
+            border: 2px solid var(--accent-red-main);
+        }
+
+        .verification-wrapper { position: absolute; right: 15px; top: 15px; display: flex; flex-direction: column; align-items: center; gap: 5px; z-index: 10; }
+        .gps-checkbox { width: 24px; height: 24px; cursor: pointer; accent-color: var(--accent-green); }
+        .gps-label { font-size: 0.55rem; color: var(--text-dim); text-transform: uppercase; }
+
+        .step-number {
+            position: absolute; left: 12px; top: 15px; width: 32px; height: 32px;
+            background: var(--bg-color); border: 2px solid var(--text-dim);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800; color: var(--text-dim);
+        }
+
+        .v-pulse .step-number { border-color: var(--accent-red-main); color: var(--accent-red-main); box-shadow: 0 0 10px var(--accent-red-glow); }
+
+        .step-content h3 { font-size: 1.1rem; color: var(--text-main); text-transform: uppercase; }
+        .step-content p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.4; margin-bottom: 5px; }
+
+        .action-row { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .link-input-group { display: flex; flex-direction: row; gap: 6px; }
+        .link-input-small { width: 150px; flex-grow: 1; background: #0d1117; border: 1px solid #30363d; border-radius: 4px; padding: 4px 10px; color: #00d2ff; font-size: 0.7rem; outline: none; height: 28px; }
+        .btn-save-link { background: var(--accent-blue-main); border: none; color: black; font-weight: bold; font-size: 0.65rem; padding: 0 12px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+
+        .image-preview-container { display: flex; gap: 12px; width: 100%; overflow-x: auto; padding: 5px 0; min-height: 50px; }
+        .preview-img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid var(--accent-blue-main); cursor: zoom-in; flex-shrink: 0; }
+
+        /* --- STATES --- */
+        .status-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 4px; border: 1px solid #30363d; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+        .timestamp-active { font-size: 0.7rem; color: var(--accent-blue-main); margin-top: 8px; font-family: monospace; font-weight: bold; display: none; }
+        .timestamp-gps { font-size: 0.65rem; color: var(--accent-green); margin-top: 4px; font-family: monospace; display: none; }
+
+        .step-card.interacted { animation: none !important; border-color: var(--accent-blue-main) !important; background: var(--card-bg-interacted) !important; box-shadow: 0 0 15px var(--accent-blue-glow) !important; }
+        .step-card.interacted .timestamp-active { display: block; }
+        .step-card.interacted .step-number { border-color: var(--accent-blue-main); color: var(--accent-blue-main); box-shadow: 0 0 10px var(--accent-blue-glow); }
+        .step-card.interacted .status-badge { border-color: var(--accent-blue-main); color: var(--accent-blue-main); }
+
+        .step-card.verified-ui { animation: none !important; border-color: var(--accent-green) !important; box-shadow: 0 0 15px rgba(0, 255, 136, 0.2) !important; }
+        .step-card.verified-ui .timestamp-gps { display: block; }
+        .step-card.verified-ui .step-number { border-color: var(--accent-green); color: var(--accent-green); box-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
+        .step-card.verified-ui .status-badge { border-color: var(--accent-green); color: var(--accent-green); }
+
+        /* --- ISSUE TRACKER & INFO --- */
+        .project-details-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .project-details-card h3 { color: var(--accent-blue-main); font-size: 1rem; margin-bottom: 8px; text-transform: uppercase; }
+        .project-details-card p { font-size: 0.85rem; color: var(--text-dim); white-space: pre-line; line-height: 1.5; }
+
+        .issue-monitor-section { width: 100%; max-width: 900px; margin-top: 20px; padding-top: 30px; border-top: 2px dashed rgba(255,255,255,0.1); }
+        .issue-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 25px; position: relative; transition: all 0.3s ease; }
+        .issue-card.has-issue { animation: issuePulseRed 1.5s infinite ease-in-out !important; border: 2px solid var(--accent-red-main) !important; }
+        .issue-input { width: 100%; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 14px; color: white; margin-top: 10px; }
+        .btn-update-issue { background: transparent; color: var(--accent-yellow); border: 1px solid var(--accent-yellow); padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+<div class="project-header">
+    <div id="project-name-display">PROJECT: Yuni - Sperpart</div>
+</div>
+
+<div class="container">
+    <h1>MONITOR FASE KERJA</h1>
+    
+    <div class="project-details-card">
+        <h3>Detail Catatan Proyek (PRJ-5586)</h3>
+        <p>#3DModel+print Mercedes Benz case button dashboard 
+#50 pcs 
+#DP 50% 
+#Unit full untuk pelunasan 
+#Tanggal pelunasan???</p>
+    </div>
+
+    <div class="workflow-wrapper" id="workflow"></div>
+
+    <div class="issue-monitor-section">
+        <div class="issue-card" id="issue-card-main">
+            <div class="status-badge" style="border-color:var(--accent-yellow); color:var(--accent-yellow)">Issue Tracker</div>
+            <h3 id="issue-title">Status Kendala Lapangan</h3>
+            <p id="issue-desc-main">Mengecek...</p>
+            <input type="text" class="issue-input" id="issue-text-input" placeholder="Tulis kendala...">
+            <button class="btn-update-issue" onclick="saveIssue()">Update Kendala</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CONFIG = {
+        URL: "https://enabled-crayfish-71186.upstash.io",
+        TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
+        PREFIX: "project_order_081211767373"
+    };
+
+    let currentActiveProject = {
+        key: "project_order_081211767373",
+        id: "PRJ-5586",
+        client: "Yuni ",
+        contact: "081211767373",
+        project_need: "Sperpart",
+        project_details: "#3DModel+print Mercedes Benz case button dashboard \n#50 pcs \n#DP 50% \n#Unit full untuk pelunasan \n#Tanggal pelunasan???",
+        budget: "5000000",
+        status: 1,
+        finver: 1,
+        link: "",
+        location: { lat: -6.3078629, lng: 106.801301 },
+        submitted_at_jakarta: "9/2/2026, 1:55:13 PM",
+        steps: {}
+    };
+
+    const stepsTemplate = [
+        { id: "1", badge: "Planning", title: "Pra-Produksi", desc: "Pengumpulan data, survey kebutuhan klien, rancangan, anggaran." },
+        { id: "2", badge: "Design", title: "Revisi", desc: "Proses asistensi dan perbaikan desain berdasarkan feedback." },
+        { id: "V1", badge: "Verification", title: "Verifikasi Revisi", desc: "Validasi hasil revisi dan persetujuan desain final." },
+        { id: "3", badge: "Execution", title: "Produksi", desc: "Tahap fabrikasi utama dan pengerjaan fisik proyek." },
+        { id: "V2", badge: "Verification", title: "Verifikasi Produksi", desc: "Pengecekan fisik terhadap hasil produksi lapangan." },
+        { id: "4", badge: "Testing", title: "Quality Control (QC)", desc: "Inspeksi menyeluruh dan memastikan tidak ada cacat." },
+        { id: "5", badge: "Live", title: "Published", desc: "Implementasi produk dan deployment sistem ke server." },
+        { id: "6", badge: "Handover", title: "Serah Terima", desc: "Penandatanganan BAST dan pelatihan penggunaan." },
+        { id: "7", badge: "Closing", title: "Penagihan", desc: "Penerbitan invoice final dan pelunasan pembayaran." }
+    ];
+
+    function getFormattedDate() {
+        return new Date().toLocaleString('id-ID', { day:'2-digit', month:'short', year: 'numeric', hour:'2-digit', minute:'2-digit' }).replace(/\./g, ':');
+    }
+
+    function formatImgUrl(url) {
+        if (!url) return "";
+        if (url.includes("drive.google.com")) {
+            let id = url.split("/file/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
+            return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1000` : url;
+        }
+        return url;
+    }
+
+    function renderWorkflow() {
+        document.getElementById('workflow').innerHTML = stepsTemplate.map(step => {
+            const isVerify = step.id === 'V1' || step.id === 'V2';
+            return `
+                <div class="step-card ${isVerify ? 'v-pulse' : ''}" id="card-${step.id}" onclick="handleInteraction('${step.id}')">
+                    <div class="verification-wrapper" onclick="event.stopPropagation()">
+                        <input type="checkbox" class="gps-checkbox" id="check-${step.id}" onclick="verifyWithGPS('${step.id}'); return false;">
+                        <span class="gps-label">GPS</span>
+                    </div>
+                    <div class="status-badge">${step.badge}</div>
+                    <div class="step-number">${step.id}</div>
+                    <div class="step-content">
+                        <h3>${step.title}</h3>
+                        <p>${step.desc}</p>
+                        <div class="action-row" onclick="event.stopPropagation()">
+                            <div class="link-input-group">
+                                <input type="text" class="link-input-small" id="l1-${step.id}" placeholder="Link Img 1">
+                                <input type="text" class="link-input-small" id="l2-${step.id}" placeholder="Link Img 2">
+                                <button class="btn-save-link" onclick="saveLinks('${step.id}')">SAVE</button>
+                            </div>
+                            <div class="image-preview-container" id="preview-${step.id}"></div>
+                        </div>
+                        <div class="timestamp-active" id="ts-act-${step.id}"></div>
+                        <div class="timestamp-gps" id="ts-gps-${step.id}"></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    async function updateProjectUI() {
+        try {
+            const res = await fetch(`${CONFIG.URL}/get/${CONFIG.PREFIX}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
+            const rawData = await res.json();
+            if (rawData.result) {
+                let data = typeof rawData.result === 'string' ? JSON.parse(rawData.result) : rawData.result;
+                currentActiveProject = { key: CONFIG.PREFIX, ...data };
+                if (data.steps) {
+                    syncUI(data.steps);
+                }
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    function syncUI(steps) {
+        if(!steps) return;
+        stepsTemplate.forEach(step => {
+            const card = document.getElementById(`card-${step.id}`);
+            const data = steps[step.id];
+            const checkEl = document.getElementById(`check-${step.id}`);
+            const tsGpsEl = document.getElementById(`ts-gps-${step.id}`);
+            const tsActEl = document.getElementById(`ts-act-${step.id}`);
+            const input1 = document.getElementById(`l1-${step.id}`);
+            const input2 = document.getElementById(`l2-${step.id}`);
+            
+            const isVerify = step.id === 'V1' || step.id === 'V2';
+            card.classList.remove('interacted', 'verified-ui', 'v-pulse');
+            
+            const isVerified = data?.verified === 1;
+            checkEl.checked = isVerified; 
+            
+            if (isVerified) {
+                card.classList.add('verified-ui');
+                tsGpsEl.innerText = `VERIFIED: ${data.verifyTime}\nLOC: ${data.lat}, ${data.lon}`;
+                tsGpsEl.style.display = 'block';
+            } else {
+                if (isVerify) {
+                    card.classList.add('v-pulse');
+                }
+                tsGpsEl.style.display = 'none';
+            }
+
+            if (data?.status === 1 && !isVerified) {
+                card.classList.add('interacted');
+            }
+
+            tsActEl.innerText = data?.time ? `ACTIVE: ${data.time}` : "";
+            tsActEl.style.display = data?.time && !isVerified ? 'block' : 'none';
+
+            if (input1 && data?.link1 !== undefined && document.activeElement !== input1) input1.value = data.link1;
+            if (input2 && data?.link2 !== undefined && document.activeElement !== input2) input2.value = data.link2;
+
+            const previewBox = document.getElementById(`preview-${step.id}`);
+            previewBox.innerHTML = "";
+            [data?.link1, data?.link2].forEach(link => {
+                if (link) {
+                    const img = document.createElement('img');
+                    img.src = formatImgUrl(link);
+                    img.className = "preview-img";
+                    img.onclick = (e) => { e.stopPropagation(); window.open(link, '_blank'); };
+                    previewBox.appendChild(img);
+                }
+            });
+        });
+
+        const issue = steps.ISSUE;
+        const issueCard = document.getElementById('issue-card-main');
+        if (issue?.text) {
+            issueCard.classList.add('has-issue');
+            document.getElementById('issue-desc-main').innerText = issue.text;
+        } else {
+            issueCard.classList.remove('has-issue');
+            document.getElementById('issue-desc-main').innerText = "Aman Terkendali.";
+        }
+    }
+
+    async function handleInteraction(id) {
+        if (!currentActiveProject.steps) currentActiveProject.steps = {};
+        if (currentActiveProject.steps[id]?.verified === 1) return;
+        if (!currentActiveProject.steps[id]) {
+            currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
+        }
+        const step = currentActiveProject.steps[id];
+        step.status = step.status === 1 ? 0 : 1;
+        step.time = step.status ? getFormattedDate() : "";
+        await pushToDB();
+        syncUI(currentActiveProject.steps);
+    }
+
+    function verifyWithGPS(id) {
+        if (!currentActiveProject.steps) currentActiveProject.steps = {};
+        if (!currentActiveProject.steps[id]) {
+            currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
+        }
+        if (currentActiveProject.steps[id].verified === 1) return;
+        
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            const step = currentActiveProject.steps[id];
+            step.verified = 1;
+            step.status = 1;
+            step.lat = pos.coords.latitude.toFixed(6);
+            step.lon = pos.coords.longitude.toFixed(6);
+            step.verifyTime = getFormattedDate();
+            if(!step.time) step.time = step.verifyTime;
+            await pushToDB();
+            syncUI(currentActiveProject.steps);
+        }, (err) => alert("Aktifkan GPS untuk verifikasi!"), { enableHighAccuracy: true });
+    }
+
+    async function saveLinks(id) {
+        if (!currentActiveProject.steps) currentActiveProject.steps = {};
+        if (!currentActiveProject.steps[id]) {
+            currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
+        }
+        
+        const step = currentActiveProject.steps[id];
+        const input1 = document.getElementById(`l1-${id}`);
+        const input2 = document.getElementById(`l2-${id}`);
+
+        step.link1 = input1 ? input1.value.trim() : "";
+        step.link2 = input2 ? input2.value.trim() : "";
+        step.status = 1;
+        
+        if (!step.time) {
+            step.time = getFormattedDate();
+        }
+
+        await pushToDB();
+        syncUI(currentActiveProject.steps);
+    }
+
+    async function saveIssue() {
+        if (!currentActiveProject.steps) currentActiveProject.steps = {};
+        const text = document.getElementById('issue-text-input').value.trim();
+        currentActiveProject.steps["ISSUE"] = { text, time: getFormattedDate() };
+        await pushToDB();
+        syncUI(currentActiveProject.steps);
+    }
+
+    async function pushToDB() {
+        await fetch(`${CONFIG.URL}/set/${CONFIG.PREFIX}`, {
+            method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
+            body: JSON.stringify({ 
+                id: currentActiveProject.id,
+                client: currentActiveProject.client, 
+                contact: currentActiveProject.contact,
+                project_need: currentActiveProject.project_need, 
+                project_details: currentActiveProject.project_details,
+                budget: currentActiveProject.budget,
+                status: currentActiveProject.status,
+                finver: currentActiveProject.finver,
+                link: currentActiveProject.link,
+                location: currentActiveProject.location,
+                submitted_at_jakarta: currentActiveProject.submitted_at_jakarta,
+                steps: currentActiveProject.steps 
+            })
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { 
+        renderWorkflow(); 
+        updateProjectUI(); 
+    });
+    setInterval(updateProjectUI, 15000);
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Project Controller</title>
+    <title>Project Controller - Upstash Live Viewer</title>
     <style>
         :root {
             --bg-color: #0d1117; 
@@ -62,10 +62,12 @@
         .project-header { width: 100%; max-width: 900px; text-align: center; margin-bottom: 10px; padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         #project-name-display { font-size: 0.9rem; color: var(--accent-blue-main); letter-spacing: 3px; font-weight: 600; text-transform: uppercase; text-shadow: 0 0 8px var(--accent-blue-glow); }
         
-        .admin-controls { margin-bottom: 20px; display: flex; gap: 10px; }
+        .admin-controls { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         .btn-action { background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; text-transform: uppercase; }
         .btn-confirm { border-color: var(--accent-blue-main); color: var(--accent-blue-main); }
         .btn-delete:hover { border-color: var(--accent-red-main); color: var(--accent-red-main); }
+
+        .project-select { background: #161b22; border: 1px solid var(--border-blue); color: var(--accent-blue-main); padding: 8px 12px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; outline: none; cursor: pointer; }
 
         .container { width: 100%; max-width: 900px; }
         h1 { text-align: center; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.4rem; font-weight: 800; background: linear-gradient(to right, var(--accent-red-main), #fff, var(--accent-blue-main)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -128,13 +130,13 @@
         .issue-monitor-section { width: 100%; max-width: 900px; margin-top: 20px; padding-top: 30px; border-top: 2px dashed rgba(255,255,255,0.1); }
         .issue-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 25px; position: relative; transition: all 0.3s ease; }
         .issue-card.has-issue { animation: issuePulseRed 1.5s infinite ease-in-out !important; border: 2px solid var(--accent-red-main) !important; }
-        .issue-input { width: 100%; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 14px; color: white; margin-top: 10px; }
+        .issue-input { width: 100%; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 14px; color: white; margin-top: 10px; outline: none; }
         .btn-update-issue { background: transparent; color: var(--accent-yellow); border: 1px solid var(--accent-yellow); padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
 
         /* --- MODAL --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
         .modal-box { background: var(--card-bg); border: 1px solid var(--accent-blue-main); padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; }
-        .modal-box input { width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-blue); color: white; border-radius: 6px; margin-bottom: 20px; text-align: center; }
+        .modal-box input { width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-blue); color: white; border-radius: 6px; margin-bottom: 20px; text-align: center; outline: none; }
     </style>
 </head>
 <body>
@@ -155,6 +157,9 @@
 </div>
 
 <div class="admin-controls">
+    <select id="projectSelector" class="project-select" onchange="switchProject(this.value)">
+        <option value="">-- Pilih Proyek Lain --</option>
+    </select>
     <button class="btn-action" onclick="openModal()">New Project</button>
     <button class="btn-action btn-delete" onclick="deleteLatestProject()">Delete Project</button>
 </div>
@@ -181,6 +186,7 @@
         PREFIX: "project_order"
     };
 
+    let currentActiveProjectKey = null;
     let currentActiveProject = null;
 
     const stepsTemplate = [
@@ -238,49 +244,96 @@
         }).join('');
     }
 
+    // Mengambil seluruh keys dengan SCAN yang berawalan project_order*
+    async function fetchAllProjectKeys() {
+        try {
+            let cursor = 0;
+            let matchedKeys = [];
+
+            do {
+                const response = await fetch(`${CONFIG.URL}/scan/${cursor}/MATCH/${CONFIG.PREFIX}*`, {
+                    headers: { Authorization: `Bearer ${CONFIG.TOKEN}` }
+                });
+                const data = await response.json();
+                if (data.result) {
+                    cursor = Number(data.result[0]);
+                    const keys = data.result[1];
+                    if (keys && keys.length > 0) {
+                        matchedKeys.push(...keys);
+                    }
+                } else {
+                    break;
+                }
+            } while (cursor !== 0);
+
+            return matchedKeys;
+        } catch (e) {
+            console.error("Gagal scan keys:", e);
+            return [];
+        }
+    }
+
     async function updateProjectUI() {
         try {
-            const res = await fetch(`${CONFIG.URL}/keys/${CONFIG.PREFIX}*`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
-            const keys = (await res.json()).result;
+            const keys = await fetchAllProjectKeys();
+            const selector = document.getElementById('projectSelector');
+            
+            // Simpan pilihan user saat ini jika ada
+            const currentlySelected = currentActiveProjectKey || selector.value;
+
             if (!keys || keys.length === 0) {
                 document.getElementById('project-name-display').innerText = "NO ACTIVE PROJECT";
+                selector.innerHTML = '<option value="">-- Tidak ada proyek --</option>';
                 return;
             }
-            keys.sort((a, b) => b.localeCompare(a));
-            
-            let validData = null;
-            let validKey = null;
 
-            for (let k of keys) {
-                const valRes = await fetch(`${CONFIG.URL}/get/${k}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
-                const rawData = await valRes.json();
-                if (rawData.result) {
-                    let data = typeof rawData.result === 'string' ? JSON.parse(rawData.result) : rawData.result;
-                    if (data.steps) {
-                        validData = data;
-                        validKey = k;
-                        break;
-                    }
-                }
+            // Perbarui pilihan dropdown proyek
+            selector.innerHTML = '<option value="">-- Pilih Proyek Lain --</option>' + keys.map(k => {
+                const displayName = k.replace(CONFIG.PREFIX, "");
+                return `<option value="${k}" ${k === currentlySelected ? 'selected' : ''}>${displayName}</option>`;
+            }).join('');
+
+            // Tentukan key aktif (prioritaskan pilihan user, atau ambil key pertama/terbaru)
+            let targetKey = currentlySelected;
+            if (!targetKey || !keys.includes(targetKey)) {
+                targetKey = keys[keys.length - 1]; // Default ke key terakhir
+                selector.value = targetKey;
             }
 
-            if (!validData) {
-                document.getElementById('project-name-display').innerText = "NO WORKFLOW DATA FOUND";
+            currentActiveProjectKey = targetKey;
+
+            // Ambil data spesifik dari key tersebut
+            const valRes = await fetch(`${CONFIG.URL}/get/${targetKey}`, { 
+                headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } 
+            });
+            const rawData = await valRes.json();
+
+            if (!rawData.result) {
+                document.getElementById('project-name-display').innerText = "DATA KOSONG";
                 return;
             }
+
+            let data = typeof rawData.result === 'string' ? JSON.parse(rawData.result) : rawData.result;
+            currentActiveProject = { key: targetKey, ...data };
+
+            let clientVal = data.client || targetKey.replace(CONFIG.PREFIX, "");
+            let projectNeedVal = data.project_need || "";
+            document.getElementById('project-name-display').innerText = `PROJECT: ${clientVal} ${projectNeedVal ? '- ' + projectNeedVal : ''}`.trim();
             
-            currentActiveProject = { key: validKey, ...validData };
-            
-            let clientVal = validData.client || "";
-            let projectNeedVal = validData.project_need || "";
-            document.getElementById('project-name-display').innerText = `PROJECT: ${clientVal} - ${projectNeedVal}`.trim();
-            
-            syncUI(validData.steps);
-        } catch (e) { console.error(e); }
+            syncUI(data.steps);
+        } catch (e) { 
+            console.error(e); 
+        }
+    }
+
+    function switchProject(key) {
+        if (!key) return;
+        currentActiveProjectKey = key;
+        updateProjectUI();
     }
 
     function syncUI(steps) {
-        if(!steps) return;
+        if (!steps) steps = {};
         stepsTemplate.forEach(step => {
             const card = document.getElementById(`card-${step.id}`);
             const data = steps[step.id];
@@ -332,9 +385,11 @@
 
         const issue = steps.ISSUE;
         const issueCard = document.getElementById('issue-card-main');
+        const issueInputEl = document.getElementById('issue-text-input');
         if (issue?.text) {
             issueCard.classList.add('has-issue');
             document.getElementById('issue-desc-main').innerText = issue.text;
+            if (document.activeElement !== issueInputEl) issueInputEl.value = issue.text;
         } else {
             issueCard.classList.remove('has-issue');
             document.getElementById('issue-desc-main').innerText = "Aman Terkendali.";
@@ -342,7 +397,10 @@
     }
 
     async function handleInteraction(id) {
-        if (!currentActiveProject || currentActiveProject.steps[id]?.verified === 1) return;
+        if (!currentActiveProject) return;
+        if (!currentActiveProject.steps) currentActiveProject.steps = {};
+        if (currentActiveProject.steps[id]?.verified === 1) return;
+        
         if (!currentActiveProject.steps[id]) {
             currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
         }
@@ -355,6 +413,7 @@
 
     function verifyWithGPS(id) {
         if (!currentActiveProject) return;
+        if (!currentActiveProject.steps) currentActiveProject.steps = {};
         if (!currentActiveProject.steps[id]) {
             currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
         }
@@ -403,6 +462,7 @@
 
     async function saveIssue() {
         if (!currentActiveProject) return;
+        if (!currentActiveProject.steps) currentActiveProject.steps = {};
         const text = document.getElementById('issue-text-input').value.trim();
         currentActiveProject.steps["ISSUE"] = { text, time: getFormattedDate() };
         await pushToDB();
@@ -410,6 +470,7 @@
     }
 
     async function pushToDB() {
+        if (!currentActiveProject) return;
         await fetch(`${CONFIG.URL}/set/${currentActiveProject.key}`, {
             method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
             body: JSON.stringify({ 
@@ -437,9 +498,10 @@
         if(!name) return;
         
         let existingData = {};
+        const targetKey = `${CONFIG.PREFIX}${name}`;
         
         try {
-            const checkRes = await fetch(`${CONFIG.URL}/get/${CONFIG.PREFIX}${name}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
+            const checkRes = await fetch(`${CONFIG.URL}/get/${targetKey}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
             const checkData = await checkRes.json();
             if (checkData.result) {
                 const parsedData = typeof checkData.result === 'string' ? JSON.parse(checkData.result) : checkData.result;
@@ -455,8 +517,9 @@
         });
         steps["ISSUE"] = existingData.steps?.ISSUE || { text: "", time: "" };
         
+        currentActiveProjectKey = targetKey;
         currentActiveProject = {
-            key: `${CONFIG.PREFIX}${name}`,
+            key: targetKey,
             id: existingData.id || "PRJ-" + Math.floor(1000 + Math.random() * 9000),
             client: name,
             contact: existingData.contact || "",
@@ -473,17 +536,24 @@
 
         await pushToDB();
         closeModal(); 
+        document.getElementById('clientInput').value = "";
         updateProjectUI();
     }
 
     async function deleteLatestProject() {
         if (currentActiveProject && confirm(`Hapus Proyek ${currentActiveProject.client}?`)) {
             await fetch(`${CONFIG.URL}/del/${currentActiveProject.key}`, { method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
-            location.reload(); 
+            currentActiveProjectKey = null;
+            updateProjectUI();
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => { renderWorkflow(); updateProjectUI(); });
+    document.addEventListener('DOMContentLoaded', () => { 
+        renderWorkflow(); 
+        updateProjectUI(); 
+    });
+    
+    // Auto-sync polling setiap 15 detik
     setInterval(updateProjectUI, 15000);
 </script>
 </body>

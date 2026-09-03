@@ -62,12 +62,22 @@
         .project-header { width: 100%; max-width: 900px; text-align: center; margin-bottom: 10px; padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         #project-name-display { font-size: 0.9rem; color: var(--accent-blue-main); letter-spacing: 3px; font-weight: 600; text-transform: uppercase; text-shadow: 0 0 8px var(--accent-blue-glow); }
         
-        .admin-controls { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-        .btn-action { background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; text-transform: uppercase; }
+        .admin-controls { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; width: 100%; max-width: 900px; }
+        .btn-action { background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; text-transform: uppercase; height: 35px; }
         .btn-confirm { border-color: var(--accent-blue-main); color: var(--accent-blue-main); }
         .btn-delete:hover { border-color: var(--accent-red-main); color: var(--accent-red-main); }
 
-        .project-select { background: #161b22; border: 1px solid var(--border-blue); color: var(--accent-blue-main); padding: 8px 12px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; outline: none; cursor: pointer; }
+        .project-select { background: #161b22; border: 1px solid var(--border-blue); color: var(--accent-blue-main); padding: 8px 12px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; outline: none; cursor: pointer; height: 35px; }
+
+        /* --- GENERAL OVERVIEW SECTION (COMPACT/INLINE) --- */
+        .general-overview { background: var(--card-bg); border: 1px solid #30363d; border-radius: 6px; padding: 6px 12px; display: flex; align-items: center; gap: 10px; height: 35px; }
+        .general-overview h3 { font-size: 0.7rem; color: var(--accent-blue-main); text-transform: uppercase; letter-spacing: 1px; margin: 0; white-space: nowrap; }
+        .overview-grid { display: flex; gap: 6px; overflow-x: auto; align-items: center; }
+        .overview-card { background: #0d1117; border: 1px solid #30363d; border-radius: 4px; padding: 4px 8px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; display: flex; align-items: center; gap: 6px; height: 25px; }
+        .overview-card:hover { border-color: var(--accent-blue-main); }
+        .overview-card.active { border-color: var(--accent-green); background: rgba(0, 255, 136, 0.05); }
+        .overview-title { font-size: 0.65rem; font-weight: bold; color: var(--text-main); }
+        .overview-sub { font-size: 0.55rem; color: var(--text-dim); }
 
         .container { width: 100%; max-width: 900px; }
         h1 { text-align: center; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.4rem; font-weight: 800; background: linear-gradient(to right, var(--accent-red-main), #fff, var(--accent-blue-main)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -160,6 +170,14 @@
     <select id="projectSelector" class="project-select" onchange="switchProject(this.value)">
         <option value="">-- Pilih Proyek Lain --</option>
     </select>
+    
+    <div class="general-overview">
+        
+        <div class="overview-grid" id="overviewGrid">
+            <div class="overview-sub">Memuat...</div>
+        </div>
+    </div>
+
     <button class="btn-action" onclick="openModal()">New Project</button>
     <button class="btn-action btn-delete" onclick="deleteLatestProject()">Delete Project</button>
 </div>
@@ -244,7 +262,6 @@
         }).join('');
     }
 
-    // Mengambil seluruh keys dengan SCAN yang berawalan project_order*
     async function fetchAllProjectKeys() {
         try {
             let cursor = 0;
@@ -273,36 +290,72 @@
         }
     }
 
+    // Fungsi Render Tampilan General Overview Semua Kunci Proyek
+    async function renderGeneralOverview(keys) {
+        const overviewGrid = document.getElementById('overviewGrid');
+        if (!keys || keys.length === 0) {
+            overviewGrid.innerHTML = '<div class="overview-sub">Tidak ada data.</div>';
+            return;
+        }
+
+        let cardsHtml = "";
+        for (let k of keys) {
+            try {
+                const res = await fetch(`${CONFIG.URL}/get/${k}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
+                const json = await res.json();
+                if (json.result) {
+                    const data = typeof json.result === 'string' ? JSON.parse(json.result) : json.result;
+                    const clientName = data.client || k.replace(CONFIG.PREFIX, "");
+                    const isCurrent = k === currentActiveProjectKey;
+                    
+                    let completedSteps = 0;
+                    if (data.steps) {
+                        stepsTemplate.forEach(s => {
+                            if (data.steps[s.id]?.status === 1 || data.steps[s.id]?.verified === 1) completedSteps++;
+                        });
+                    }
+
+                    cardsHtml += `
+                        <div class="overview-card ${isCurrent ? 'active' : ''}" onclick="switchProject('${k}')">
+                            <div class="overview-title">📌 ${clientName}</div>
+                            <div class="overview-sub">(${completedSteps}/${stepsTemplate.length})</div>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error(`Gagal memuat overview untuk ${k}`, err);
+            }
+        }
+        overviewGrid.innerHTML = cardsHtml;
+    }
+
     async function updateProjectUI() {
         try {
             const keys = await fetchAllProjectKeys();
             const selector = document.getElementById('projectSelector');
             
-            // Simpan pilihan user saat ini jika ada
             const currentlySelected = currentActiveProjectKey || selector.value;
 
             if (!keys || keys.length === 0) {
                 document.getElementById('project-name-display').innerText = "NO ACTIVE PROJECT";
                 selector.innerHTML = '<option value="">-- Tidak ada proyek --</option>';
+                document.getElementById('overviewGrid').innerHTML = '<div class="overview-sub">Tidak ada data.</div>';
                 return;
             }
 
-            // Perbarui pilihan dropdown proyek
             selector.innerHTML = '<option value="">-- Pilih Proyek Lain --</option>' + keys.map(k => {
                 const displayName = k.replace(CONFIG.PREFIX, "");
                 return `<option value="${k}" ${k === currentlySelected ? 'selected' : ''}>${displayName}</option>`;
             }).join('');
 
-            // Tentukan key aktif (prioritaskan pilihan user, atau ambil key pertama/terbaru)
             let targetKey = currentlySelected;
             if (!targetKey || !keys.includes(targetKey)) {
-                targetKey = keys[keys.length - 1]; // Default ke key terakhir
+                targetKey = keys[keys.length - 1];
                 selector.value = targetKey;
             }
 
             currentActiveProjectKey = targetKey;
 
-            // Ambil data spesifik dari key tersebut
             const valRes = await fetch(`${CONFIG.URL}/get/${targetKey}`, { 
                 headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } 
             });
@@ -321,6 +374,7 @@
             document.getElementById('project-name-display').innerText = `PROJECT: ${clientVal} ${projectNeedVal ? '- ' + projectNeedVal : ''}`.trim();
             
             syncUI(data.steps);
+            renderGeneralOverview(keys);
         } catch (e) { 
             console.error(e); 
         }
@@ -553,7 +607,6 @@
         updateProjectUI(); 
     });
     
-    // Auto-sync polling setiap 15 detik
     setInterval(updateProjectUI, 15000);
 </script>
 </body>

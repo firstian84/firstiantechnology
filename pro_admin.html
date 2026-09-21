@@ -208,15 +208,16 @@
     let currentActiveProject = null;
 
     const stepsTemplate = [
-        { id: "1", badge: "Planning", title: "Pra-Produksi", desc: "Pengumpulan data, survey kebutuhan klien, rancangan, anggaran." },
+        { id: "1", badge: "Planning", title: "Pra-Produksi", desc: "Pengumpulan data, survey kebutuhan klien, rancangan, anggaran, sampel model" },
         { id: "2", badge: "Design", title: "Revisi", desc: "Proses asistensi dan perbaikan desain berdasarkan feedback." },
         { id: "V1", badge: "Verification", title: "Verifikasi Revisi", desc: "Validasi hasil revisi dan persetujuan desain final." },
         { id: "3", badge: "Execution", title: "Produksi", desc: "Tahap fabrikasi utama dan pengerjaan fisik proyek." },
         { id: "V2", badge: "Verification", title: "Verifikasi Produksi", desc: "Pengecekan fisik terhadap hasil produksi lapangan." },
         { id: "4", badge: "Testing", title: "Quality Control (QC)", desc: "Inspeksi menyeluruh dan memastikan tidak ada cacat." },
-        { id: "5", badge: "Live", title: "Published", desc: "Implementasi produk dan deployment sistem ke server." },
-        { id: "6", badge: "Handover", title: "Serah Terima", desc: "Penandatanganan BAST dan pelatihan penggunaan." },
-        { id: "7", badge: "Closing", title: "Penagihan", desc: "Penerbitan invoice final dan pelunasan pembayaran." }
+        { id: "5", badge: "Handover", title: "Serah Terima", desc: "BAST dan pelatihan penggunaan." },
+        { id: "6", badge: "Closing", title: "Penagihan", desc: "Penerbitan invoice final pelunasan pembayaran." },
+        { id: "7", badge: "Live", title: "Published", desc: "Notifikasi Penagihan keklien" }
+      
     ];
 
     function getFormattedDate() {

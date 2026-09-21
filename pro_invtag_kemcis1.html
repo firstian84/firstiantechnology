@@ -68,10 +68,11 @@
                     <p class="text-xs text-slate-500 mt-0.5">No: <input type="text" id="inv-no" value="INV-2026-001" class="border-b border-dashed border-slate-300 focus:border-blue-600 focus:outline-none px-1 font-semibold text-slate-700 bg-transparent"></p>
                 </div>
                 
-                <!-- Kontainer Logo dengan posisi yang dinaikkan -->
-                <div class="text-left sm:text-right flex flex-col items-start sm:items-end relative">
-                    <div class="relative z-20 left-[30px] top-[75px]">
-                        <img src="https://lh3.googleusercontent.com/d/1CZ1_KLCaTw56YSy3wH-a3rBJLa0E1nBf" alt="Logo Perusahaan" class="h-40 mb-1 object-contain opacity-30">
+                <!-- Kontainer Logo dengan Koordinat X, Y murni CSS (Mobile vs Desktop) -->
+                <div class="text-left sm:text-right flex flex-col items-start sm:items-end relative w-full sm:w-auto">
+                    <!-- Ubah nilai translate-x[...] dan translate-y[...] di bawah untuk mengatur posisi X dan Y -->
+                    <div class="relative z-20 my-2 sm:my-0 translate-x-[-25px] sm:translate-x-[30px] translate-y-[75px]">
+                        <img src="https://lh3.googleusercontent.com/d/1CZ1_KLCaTw56YSy3wH-a3rBJLa0E1nBf" alt="Logo Perusahaan" class="h-28 sm:h-40 mb-1 object-contain opacity-30">
                     </div>
                     
                     <h2 class="font-bold text-slate-800 text-sm">firstian TECHNOLOGY</h2>
@@ -420,7 +421,6 @@
             const element = document.getElementById('invoice-content');
             const invNo = document.getElementById('inv-no').value || 'INV-2026-001';
             
-            // Format nama file: 1tech_[No_Invoice].pdf
             const filename = `1tech${invNo}.pdf`;
 
             const options = {

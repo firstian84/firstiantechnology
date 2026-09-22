@@ -101,27 +101,27 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="border-b border-slate-200 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                            <th class="py-2 px-2">Deskripsi Item</th>
-                            <th class="py-2 px-2 w-20 text-center">Jumlah</th>
-                            <th class="py-2 px-2 w-32 text-right">Harga Satuan</th>
-                            <th class="py-2 px-2 w-32 text-right">Total</th>
-                            <th class="py-2 px-2 w-10 text-center no-print">Aksi</th>
+                            <th class="py-2 px-1">Deskripsi Item</th>
+                            <th class="py-2 px-1 w-16 text-center">Jumlah</th>
+                            <th class="py-2 px-1 w-36 text-right">Harga Satuan</th>
+                            <th class="py-2 px-1 w-36 text-right">Total</th>
+                            <th class="py-2 px-1 w-8 text-center no-print">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="item-list" class="divide-y divide-slate-100">
                         <!-- Baris Item Default -->
                         <tr class="transition hover:bg-slate-50/50">
-                            <td class="py-2 px-2">
+                            <td class="py-2 px-1">
                                 <textarea rows="1" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none auto-expand item-desc" placeholder="Deskripsi item atau layanan...">Jasa Pembuatan Website Custom</textarea>
                             </td>
-                            <td class="py-2 px-2 text-center align-top pt-2">
-                                <input type="number" value="1" min="1" oninput="calculateTotal()" class="w-16 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
+                            <td class="py-2 px-1 text-center align-top pt-2">
+                                <input type="number" value="1" min="1" oninput="calculateTotal()" class="w-14 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
                             </td>
-                            <td class="py-2 px-2 text-right align-top pt-2">
+                            <td class="py-2 px-1 text-right align-top pt-2">
                                 <input type="number" value="5000000" min="0" oninput="calculateTotal()" class="w-full text-right border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-price">
                             </td>
-                            <td class="py-2 px-2 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 5.000.000</td>
-                            <td class="py-2 px-2 text-center align-top pt-2 no-print">
+                            <td class="py-2 px-1 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 5.000.000</td>
+                            <td class="py-2 px-1 text-center align-top pt-2 no-print">
                                 <button onclick="removeRow(this)" class="text-rose-500 hover:text-rose-700 font-bold p-1 btn-delete text-sm">×</button>
                             </td>
                         </tr>
@@ -244,17 +244,17 @@
                             const tr = document.createElement('tr');
                             tr.className = "transition hover:bg-slate-50/50";
                             tr.innerHTML = `
-                                <td class="py-2 px-2">
+                                <td class="py-2 px-1">
                                     <textarea rows="1" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none auto-expand item-desc" placeholder="Deskripsi item atau layanan...">${item.desc}</textarea>
                                 </td>
-                                <td class="py-2 px-2 text-center align-top pt-2">
-                                    <input type="number" value="${item.qty}" min="1" oninput="calculateTotal()" class="w-16 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
+                                <td class="py-2 px-1 text-center align-top pt-2">
+                                    <input type="number" value="${item.qty}" min="1" oninput="calculateTotal()" class="w-14 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
                                 </td>
-                                <td class="py-2 px-2 text-right align-top pt-2">
+                                <td class="py-2 px-1 text-right align-top pt-2">
                                     <input type="number" value="${item.price}" min="0" oninput="calculateTotal()" class="w-full text-right border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-price">
                                 </td>
-                                <td class="py-2 px-2 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 0</td>
-                                <td class="py-2 px-2 text-center align-top pt-2 no-print">
+                                <td class="py-2 px-1 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 0</td>
+                                <td class="py-2 px-1 text-center align-top pt-2 no-print">
                                     <button onclick="removeRow(this)" class="text-rose-500 hover:text-rose-700 font-bold p-1 btn-delete text-sm">×</button>
                                 </td>
                             `;
@@ -368,17 +368,17 @@
             const tr = document.createElement('tr');
             tr.className = "transition hover:bg-slate-50/50";
             tr.innerHTML = `
-                <td class="py-2 px-2">
+                <td class="py-2 px-1">
                     <textarea rows="1" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none auto-expand item-desc" placeholder="Deskripsi item atau layanan...">Deskripsi Item Baru</textarea>
                 </td>
-                <td class="py-2 px-2 text-center align-top pt-2">
-                    <input type="number" value="1" min="1" oninput="calculateTotal()" class="w-16 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
+                <td class="py-2 px-1 text-center align-top pt-2">
+                    <input type="number" value="1" min="1" oninput="calculateTotal()" class="w-14 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
                 </td>
-                <td class="py-2 px-2 text-right align-top pt-2">
+                <td class="py-2 px-1 text-right align-top pt-2">
                     <input type="number" value="0" min="0" oninput="calculateTotal()" class="w-full text-right border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-price">
                 </td>
-                <td class="py-2 px-2 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 0</td>
-                <td class="py-2 px-2 text-center align-top pt-2 no-print">
+                <td class="py-2 px-1 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 0</td>
+                <td class="py-2 px-1 text-center align-top pt-2 no-print">
                     <button onclick="removeRow(this)" class="text-rose-500 hover:text-rose-700 font-bold p-1 btn-delete text-sm">×</button>
                 </td>
             `;

@@ -3,1491 +3,491 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>furniture</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <title>InvoiceTAGIHAN</title>
+    <!-- Tailwind CSS untuk styling modern -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2pdf.js untuk export PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-  
-      
-      /* --- RESET & VARIABLES --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        @media print {
+            body {
+                background: white;
+            }
+            .no-print {
+                display: none !important;
+            }
+            textarea {
+                resize: none;
+                border: none !important;
+                background: transparent !important;
+            }
         }
-
-        :root {
-            --bg-primary: #ffffff;
-            --bg-card: rgba(0, 0, 0, 0.03);
-            --accent-wood: #b58252;
-            --accent-fabric: #4a6b5d;
-            --text-main: #111827;
-            --text-muted: #6b7280;
-            --glass-border: rgba(0, 0, 0, 0.08);
-            
-            /* Variabel Warna Utama Kode Kedua (Nuansa Biru) */
-            --blue-light: #2575fc; 
-            --blue-dark: #6a11cb;  
-
-            /* Variabel Modul Workspace Monitor */
-            --bg-deep: #ffffff;
-            --bg-panel: rgba(245, 247, 250, 0.85);
-            --border-neon: rgba(140, 145, 155, 0.3);
-            --border-neon-glow: rgba(200, 205, 215, 0.5);
-            --text-glow: #111827;
-            --text-bright: #111827;
-            --panel-blur: blur(12px);
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
-
-        /* --- NAVBAR --- */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            backdrop-filter: blur(5px);
-            background-color: rgba(255, 255, 255, 0.2);
-            border-bottom: 1px solid var(--glass-border);
-           text-shadow: 0 0 10px rgba(0,0,0,1);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: var(--text-main);
-            text-transform: uppercase;
-           text-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-
-        .logo img {
-            height: 100px; 
-            width: auto;
-            object-fit: contain;
-          
-          
-        }
-
-        .logo span { 
-            color: var(--accent-wood); 
-            text-stroke: 2px black;
-          
-        }
-
-       @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.3; } /* Tidak sampai hilang total agar tetap mudah dibaca */
-    }
-
-    .nav-links {
-        display: flex;
-        list-style: none;
-        gap: 30px;
-        font-size: 30px;
-        text-shadow: 0 0 10px rgba(0,0,0,1);
-        animation: blink 1s infinite; /* Kedipan lembut setiap 2 detik */
-      
-        }
-
-        .nav-links a {
-           color: #80eeee;
-            text-decoration: none;
-            font-weight: 500;
-            
-        }
-        .nav-links a:hover, .nav-links a.active {
-    color: #ffa500;
-    /* Meningkatkan kontras glow agar sesuai dengan warna oranye */
-    text-shadow: 0 0 10px rgba(255, 165, 0, 0.8), 0 0 20px rgba(255, 165, 0, 0.4);
-    transition: all 0.3s ease-in-out;
-}
-        /* --- HERO SECTION --- */
-        .hero {
-            height: 200vh; 
-            display: flex;
-            align-items: center;
-            padding: 0 5%;
-            position: relative;
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c') center/cover no-repeat;
-            top: 50px;
-        
-        }
-
-        .hero-content2 {
-            max-width: 600px;
-            z-index: 2;
-        }
-
-        .hero-content2 h1 {
-            font-size: 3.5rem;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .hero-content2 p {
-            color: #ffffff;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        /* --- BUTTON HORIZONTAL ROW SECTION --- */
-        .button-grid-section {
-            padding: 40px 0px 0px 0px;
-            background-color: #ffffff;
+        /* Style untuk textarea otomatis menyesuaikan tinggi */
+        .auto-expand {
             overflow: hidden;
-        }
-
-        .grid-title {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .grid-title h2 {
-            font-size: 2rem;
-            color: var(--text-main);
-            letter-spacing: 1px;
-        }
-
-        .gallery-scroll-container {
-            width: 100%;
-            overflow-x: auto;
-            padding-bottom: 15px;
-            cursor: grab;
-            scrollbar-width: none;
-            -ms-overflow-style: none;  
-        }
-        
-        .gallery-scroll-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .gallery-scroll-container:active {
-            cursor: grabbing;
-        }
-
-        .gallery-grid {
-            display: flex;
-            gap: 20px;
-            max-width: fit-content;
-            margin: 0 auto;
-            padding: 0 10px;
-        }
-
-        .image-button-custom {
-            flex: 0 0 280px; 
-            height: 200px;
-            border: 2px solid var(--glass-border);
-            border-radius: 12px;
-            cursor: pointer;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
-
-        .image-button-custom::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.1);
-            transition: background 0.3s ease;
-        }
-
-        .image-button-custom:hover::after {
-            background: rgba(0, 0, 0, 0);
-        }
-
-        .image-button-custom:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: var(--accent-wood);
-        }
-
-        .image-button-custom:active {
-            transform: scale(0.98);
-        }     
-
-        #btn6 { background-image: url('https://firstian84.github.io/firstiantechnology/furn_location.png'); }
-        #btn2 { background-image: url('https://firstian84.github.io/firstiantechnology/furn_origin.png'); }
-        #btn7 { background-image: url('https://firstian84.github.io/firstiantechnology/furn_sketch1.png'); }
-        #btn4 { background-image: url('https://firstian84.github.io/firstiantechnology/furn_sketch2.png'); }
-        #btn5 { background-image: url('https://firstian84.github.io/firstiantechnology/furn_viewport.png'); }
-            
-        /* --- MODAL SYSTEM --- */
-        .modal-custom {
-            display: none;             
-            position: fixed;           
-            z-index: 2000;             
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
-            justify-content: center;   
-            align-items: center;  
-        }
-
-        .modal-content-custom {
-            max-width: 85%;
-            max-height: 80vh;
-            border-radius: 12px;
-            border: 1px solid rgba(0,0,0,0.1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-            animation: zoomIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
-            object-fit: contain;
-        }
-
-        .close-btn-custom {
-            position: absolute;
-            top: 25px;
-            right: 40px;
-            color: #111827;
-            font-size: 45px;
-            font-weight: 300;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .close-btn-custom:hover {
-            color: var(--accent-wood);
-        }
-
-        @keyframes zoomIn {
-            from { transform: scale(0.92); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* --- PRODUCT CUSTOMIZER SECTION --- */
-        .customizer-section {
-            padding: 80px 5% 40px 5%; 
-            background: #ffffff;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-title h2 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #111827;
-        }
-
-        .customizer-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .product-display {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .product-image {
-            width: 100%;
-            max-width: 400px;
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.08));
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .customizer-controls {
-            padding: 20px;
-        }
-
-        .customizer-controls h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            color: #111827;
-        }
-
-        .furniture-list {
-            list-style: none;
-            margin-bottom: 20px;
-        }
-
-        .furniture-list li {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            color: #111827;
-            white-space: pre-line;
-        }
-
-        .price {
-            font-size: 1.5rem;
-            color: var(--accent-wood);
-            font-weight: 700;
-            margin-bottom: 25px;
-        }
-
-        .option-group {
-            margin-bottom: 0px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .option-title {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            color: var(--text-muted);
-        }
-
-        .color-pickers {
-            display: flex;
-            gap: 15px;
-        }
-
-        .color-dot {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid transparent;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        .color-dot.active {
-            border-color: #111827;
-            transform: scale(1.1);
-        }
-
-        .dot-c1 { background-color: #dcdddb; border: 1px solid #ccc; }
-        .dot-c2 { background-color: #704085; }
-        .dot-c3 { background-color: #e77543; }
-
-        /* --- INFINITE MARQUEE SECTION (BOTTOM) --- */
-        .marquee-section {
-            width: 100%;
-            overflow: hidden;
-           background-color: transparent;
-            padding: 40px 0;
-           
-            position: relative;
-        }
-
-        .marquee-track {
-            display: flex;
-            width: max-content;
-            animation: marqueeScroll 50s linear infinite;
-        }
-
-        .marquee-track:hover {
-            animation-play-state: paused;
-        }
-
-        .marquee-group {
-            display: flex;
-            gap: 20px;
-            padding-right: 20px;
-        }
-
-        .marquee-item {
-            flex: 0 0 280px;
-            height: 180px;
-            border: 2px solid var(--glass-border);
-            border-radius: 12px;
-            cursor: pointer;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
-
-        .marquee-item::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.1);
-            transition: background 0.3s ease;
-        }
-
-        .marquee-item:hover::after {
-            background: rgba(0, 0, 0, 0);
-        }
-
-        .marquee-item:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: var(--accent-wood);
-        }
-
-        @keyframes marqueeScroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        /* --- FOOTER BUTTON --- */
-        .button-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 30px 0 60px 0; 
-            background-color: #ffffff;
-        }
-        .btn-web-animated {
-            background: linear-gradient(45deg, #ff9f43, #ff5252);
-            box-shadow: 0 0 15px rgba(255, 159, 67, 0.4);
-            animation: pulse-web-main 2s infinite;
-            width: 250px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 18px;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            letter-spacing: 1px;
-        }
-
-        .btn-web-animated:hover {
-            transform: scale(1.05);
-        }
-
-        @keyframes pulse-web-main {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 117, 252, 0.5); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 117, 252, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 117, 252, 0); }
-        }
-
-        /* --- AUDIO INTERACTION OVERLAY --- */
-        #interaction-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.02);
-            z-index: 9999;
-            cursor: pointer;
-        }
-
-        /* --- WORKSPACE MONITOR STYLING (REFERENSI) --- */
-        .workspace-section {
-            background-color: var(--bg-deep);
-            color: var(--text-bright);
-            padding: 40px 20px;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .workspace-main {
-            display: grid;
-            grid-template-columns: 320px 320px 1fr 280px;
-            gap: 15px;
-            height: 600px;
-        }
-
-        .column {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            overflow: hidden;
-
-        }
-
-        .column-center {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            position: relative;
-            overflow: hidden;
-
-        }
-
-        .ui-panel {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-neon);
-            border-radius: 6px;
-            backdrop-filter: var(--panel-blur);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
-        }
-
-        .panel-hdr {
-            padding: 10px 15px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--text-glow);
-            border-bottom: 1px solid rgba(140, 145, 155, 0.2);
-            background: #f9fafb;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .panel-body {
-            padding: 12px;
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .technical-img-container {
-            width: 100%;
-            flex: 1;
-            min-height: 180px;
-            background: #f3f4f6;
-            border: 1px solid rgba(140, 145, 155, 0.2);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            cursor: zoom-in;
-            overflow: hidden;
-        }
-
-        .technical-img-container img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            opacity: 0.85;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .technical-img-container:hover img {
-            opacity: 1;
-        }
-
-        .viewer-hud-line-h, .viewer-hud-line-v {
-            position: absolute;
-            background: rgba(17, 24, 39, 0.4);
-            pointer-events: none;
-            display: none;
-        }
-        .viewer-hud-line-h { width: 100%; height: 1px; left: 0; }
-        .viewer-hud-line-v { width: 1px; height: 100%; top: 0; }
-
-        .viewer-coords-badge {
-            position: absolute;
-            background: #ffffff;
-            border: 1px solid var(--text-glow);
-            color: var(--text-glow);
-            font-family: monospace;
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 3px;
-            pointer-events: none;
-            display: none;
-            z-index: 3;
-        }
-
-        #canvas-container {
-            flex: 1;
-            background: #f3f4f6;
-            border: 1px solid rgba(140, 145, 155, 0.2);
-            border-radius: 6px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hud-overlay {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            pointer-events: none;
-            font-family: monospace;
-            font-size: 11px;
-            color: var(--text-muted);
-            line-height: 1.6;
-            z-index: 2;
-        }
-        .hud-overlay span { color: var(--text-glow); }
-
-        .loading-screen {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--text-glow);
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            background: #ffffff;
-            border: 1px solid var(--text-glow);
-            padding: 12px 24px;
-            border-radius: 4px;
-            pointer-events: none;
-            z-index: 5;
-            transition: opacity 0.5s ease;
-        }
-
-        .metric-card {
-            background: rgba(0, 0, 0, 0.02);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 4px;
-            padding: 8px 12px;
-        }
-
-        .metric-title {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 2px;
-        }
-
-        .btn-action {
-            background: rgba(0, 0, 0, 0.03);
-            border: 1px solid var(--border-neon);
-            color: var(--text-bright);
-            padding: 8px 12px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-
-        .btn-action:hover {
-            background: rgba(0, 0, 0, 0.08);
-            border-color: var(--text-glow);
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .btn-action.active {
-            background: rgba(0, 0, 0, 0.1);
-            border-color: var(--text-bright);
-        }
-
-        .hud-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
-            z-index: 2500;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .hud-modal.show {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            position: relative;
-            background: var(--bg-panel);
-            border: 2px solid var(--text-glow);
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            padding: 25px 15px 15px 15px;
-            max-width: 90vw;
-            max-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .modal-content img {
-            max-width: 100%;
-            max-height: 75vh;
-            object-fit: contain;
-            border: 1px solid rgba(140, 145, 155, 0.3);
-            border-radius: 4px;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: -35px; right: 0;
-            color: var(--text-glow);
-            font-size: 12px;
-            font-family: monospace;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            background: #ffffff;
-            border: 1px solid var(--border-neon);
-            padding: 4px 10px;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-
-        .modal-close:hover {
-            background: var(--text-glow);
-            color: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-caption {
-            margin-top: 10px;
-            font-size: 11px;
-            font-family: monospace;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .modal-caption span { color: var(--text-glow); }
-
-        /* --- RESPONSIVE LAYOUT --- */
-        @media (max-width: 1024px) {
-            .workspace-main {
-                grid-template-columns: 1fr 1fr;
-                height: auto;
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav { 
-                position: fixed;
-                top: 0;
-                width: 100%;
-                padding: 10px 5%;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                z-index: 100;
-                backdrop-filter: blur(5px);
-                border-bottom: 1px solid var(--glass-border);
-            }
-            
-            .nav-links {     display: flex;
-            list-style: none;
-            gap: 30px;} 
-      color: var(--text-muted);
-            
-            .button-grid-section {
-                padding: 20px 15px;
-                background-color: #ffffff;
-            }
-
-            /* HILANGKAN SLIDER: Diubah menjadi container normal untuk grid */
-            .gallery-scroll-container {
-                display: block;
-                width: 100%;
-                overflow-x: visible;
-            }
-            
-            /* DITENGAH-TENGAH: Menggunakan CSS Grid otomatis terpusat (center) tanpa bungkus lebar tak terbatas */
-            .gallery-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(1px, 2fr));
-                justify-content: center;
-                justify-items: center;
-                align-items: center;
-                gap: 0px;
-                padding: 0;
-                width: 100%;
-                max-width: 450px;
-                margin: 0 auto;
-            }
-
-            /* UKURAN TOMBOL MOBILE: Dioptimalkan agar pas di dalam baris grid tengah */
-            .image-button-custom {
-                flex: none;  
-                width: 60px;  
-                height: 50px;    
-                border-radius: 8px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-                display: block;
-            }
-            
-            .customizer-container { 
-                grid-template-columns: 1fr; 
-                gap: 20px;
-            }
-            
-            .hero-content2 h1 { font-size: 2.2rem; } 
-            .product-image { max-height: 320px; } 
-            
-            .hero { 
-                height: 50vh;  
-                top: 50px;
-            }
-
-            .workspace-main {
-                grid-template-columns: 1fr;
-            }
-
-            /* FIX ANDROID: Memberikan ruang render visual yang presisi saat mode mobile */
-            #canvas-container {
-                min-height: 350px;
-                width: 100%;
-            }
-        }
-      
-      
-          
-    /* --- WATERMARK --- */
-        body::before {
-            content: ""; /* Harus kosong agar teks SVG berulang dengan rapi */
+            resize: none;
+            min-height: 28px;
+        }
+/* --- WATERMARK --- */
+        body.is-paid::before {
+            content: "";
             position: fixed;
             top: -50%; left: -50%;
             width: 200%; height: 200%;
-            z-index: -0; 
-            
-            /* FIX: Memperbaiki penutup tag karakter '%3E' sebelum teks "firstian furniture" */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='80' viewBox='0 0 160 80'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='vivaldi' font-size='20'  fill='%23000000'%3EFirstian furniture%3C/text%3E%3C/svg%3E");
+            z-index: 50; /* Posisi paling depan */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='35' viewBox='0 0 70 35'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='18' fill='%232563eb'%3ELUNAS%3C/text%3E%3C/svg%3E");
             background-repeat: repeat;
-            
-            /* Ukuran grid disesuaikan (160px x 80px) agar teks yang lebih panjang tidak terpotong */
-            background-size: 160px 80px;
+            background-size: 70px 35px; /* Jarak dirapatkan 50% lebih padat */
             transform: rotate(-25deg);
-            
-            /* Opacity disetel tipis agar tidak mengganggu keterbacaan konten utama */
-            opacity: 0.2; 
+            opacity: 0.15; /* Transparansi teks biru */
             pointer-events: none;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen py-4 px-2 sm:px-4">
 
-    <div id="interaction-overlay"></div>
-
-    <audio id="myAudio">
-        <source src="https://firstian84.github.io/firstiantechnology/middle.m4a" type="audio/mpeg">
-    </audio>
-
-    <nav>
-        <div class="logo">
-            <img src="https://drive.google.com/thumbnail?sz=w500&id=1CZ1_KLCaTw56YSy3wH-a3rBJLa0E1nBf" alt="Logo">
-            <span>furniture <br> customize</span>
-        </div>
-        <ul class="nav-links">
-          <li><a href="https://sites.google.com/view/1farchie/home"><strong>@</strong></a></li>
-    
-        </ul>
-    </nav>
-
-    <section class="hero" id="heroBg">
-        <div class="hero-content2">
-            <h1 id="heroTitle">Pengalaman Berkesan <br>di Ruang Anda</h1>
-            <p id="heroDesc">Kami merancang bangun furniture bukan sekadar fungsi, melainkan sebuah karya seni interaktif yang mengisi jiwa rumah Anda.</p>
-        </div>
-    </section>
-
-    <section class="button-grid-section">
-        <div class="grid-title"></div>
-        <div class="gallery-scroll-container" id="scrollContainer">
-            <div class="gallery-grid">
-                <button class="image-button-custom" id="btn6" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_location.png')"></button>
-                <button class="image-button-custom" id="btn2" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_origin.png')"></button>
-                <button class="image-button-custom" id="btn7" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_sketch1.png')"></button>
-                <button class="image-button-custom" id="btn4" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_sketch2.png')"></button>
-                <button class="image-button-custom" id="btn5" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_viewport.png')"></button>
-            </div>
-        </div>
-    </section>
-
-    <div id="unifiedModal" class="modal-custom" onclick="closeVisualModal(event)">
-        <span class="close-btn-custom" onclick="forceCloseModal()">×</span>
-        <img class="modal-content-custom" id="modalTargetImg" src="" alt="Preview Visual">
-    </div>
-
-    <section class="customizer-section" id="customizer">
-        <div class="section-title">
-            <h2>Interaktif Pilihan</h2>
-            <div class="option-group">
-                <div class="color-pickers">
-                    <div class="color-dot dot-c1 active" onclick="changeVariant('c1', this)"></div>
-                    <div class="color-dot dot-c2" onclick="changeVariant('c2', this)"></div>
-                    <div class="color-dot dot-c3" onclick="changeVariant('c3', this)"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="customizer-container">
-            <div class="product-display" id="tiltCard">
-                <img src="https://lh3.googleusercontent.com/d/1SacgdbZug4ZkB6IwZSV3lL8lGdmxvNq4" class="product-image" id="productImg" alt="Product Layout">
-            </div>
-            <div class="customizer-controls">
-                <h3 id="productName">Koleksi Eksklusif</h3>
-                <ul class="furniture-list" id="furnitureList"></ul>
-                <div class="price" id="productPrice">Total Paket: Rp21.000.000</div>
-            </div>
-        </div>
-    </section>
-
-
-    <div class="button-wrapper">
-        <button onclick="openLink()" class="btn-web-animated" title="Mulai Diskusi RND PO">
-            DISKUSI RnD P.O
-        </button>
-    </div>
-
-    <!-- --- SECTION REFERENSI: WORKSPACE MONITOR --- -->
-    <section class="workspace-section">
-        <div class="workspace-main">
-            <!-- KOLOM 1: DESIGN ANALYTICS -->
-            <div class="column">
-                <div class="ui-panel" style="flex: 1;">
-                    <div class="panel-hdr">Desain</div>
-                    <div class="panel-body">
-                        <div class="technical-img-container image-hud-viewer" data-caption="Desain & Dimensi Mebel // furn_des1.png">
-                            <img src="https://firstian84.github.io/firstiantechnology/furn_des1.png" alt="Desain Mebel">
-                            <div class="viewer-hud-line-h"></div>
-                            <div class="viewer-hud-line-v"></div>
-                            <div class="viewer-coords-badge">X: 0 Y: 0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-title">Source Target</div>
-                            <div style="font-size: 11px; font-family: monospace; color: var(--text-glow);">furn_des1.png</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- KOLOM 2: CONSTRUCTION & JOINT DETAIL ANALYTICS -->
-            <div class="column">
-                <div class="ui-panel" style="flex: 1;">
-                    <div class="panel-hdr">Konstruksi</div>
-                    <div class="panel-body">
-                        <div class="technical-img-container image-hud-viewer" data-caption="Analisis Konstruksi & Joint Detail // furn_konst1.png">
-                            <img src="https://firstian84.github.io/firstiantechnology/furn_konst1.png" alt="Konstruksi Mebel">
-                            <div class="viewer-hud-line-h"></div>
-                            <div class="viewer-hud-line-v"></div>
-                            <div class="viewer-coords-badge">X: 0 Y: 0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-title">Structure Data</div>
-                            <div style="font-size: 11px; font-family: monospace; color: var(--text-glow);">furn_konst1.png</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- KOLOM 3: MAIN 3D ENGINE VIEWPORT -->
-            <div class="column-center">
-                <div id="loading" class="loading-screen">Initialize 3D Stream...</div>
-                <div id="canvas-container">
-                    <div class="hud-overlay">
-                        RENDER_MODE: <span id="hud-mode">SOLID</span><br>
-                        CAM_X: <span id="hud-x">0.0</span> | CAM_Y: <span id="hud-y">0.0</span> | CAM_Z: <span id="hud-z">0.0</span>
-                    </div>
-                </div>
-                <button class="btn-action" id="btn-reset-view" style="width: 100%;">Reset 3D Space</button>
-            </div>
-
-            <!-- KOLOM 4: MODIFIERS & CONTROL -->
-            <div class="column">
-                <div class="ui-panel" style="flex: 1;">
-                    <div class="panel-hdr">Telemetry FX</div>
-                    <div class="panel-body">
-                        <div class="metric-card">
-                            <div class="metric-title">3D Asset Target</div>
-                            <div style="font-size: 11px; font-family: monospace; color: var(--text-glow);">breket_LED_STRIP.obj</div>
-                        </div>
-                        
-                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
-                            <div class="metric-title">Visual Shader</div>
-                            <button class="btn-action" id="btn-wireframe">Toggle Wireframe</button>
-                        </div>
-
-                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
-                            <div class="metric-title">Material Preset</div>
-                            <button class="btn-action active" id="mat-alloy">Chrome Alloy</button>
-                        </div>
-
-                        <div class="metric-card" style="margin-top: auto; border-color: rgba(140, 145, 155, 0.2);">
-                            <div class="metric-title" style="color: var(--text-glow);">Navigasi Modul</div>
-                            <div style="font-size: 11px; line-height: 1.5; opacity: 0.8;">
-                                Klik pada gambar modul di sebelah kiri untuk memicu pandangan penuh <b>Telemetry Preview Expanded Modal</b>.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- GLOBAL TELEMETRY OVERLAY MODAL -->
-    <div id="image-modal" class="hud-modal">
-        <div class="modal-content">
-            <div class="modal-close" id="modal-close-trigger">[ Close_Node ]</div>
-            <img id="modal-target-img" src="" alt="Expanded View">
-            <div class="modal-caption" id="modal-target-caption">NODE // DETAILS</div>
-        </div>
-    </div>
-
-  
-  
-  
-  
-    <!-- INFINITE MARQUEE SECTION (BOTTOM) -->
-    <section class="marquee-section">
-        <div class="marquee-track">
-            <div class="marquee-group">
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c1A.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c1A.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c1.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c1.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c2.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c2.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c3.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c3.png')"></div>
-              
-                              <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c6.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c6.png')"></div>
-                                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c6a.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c6a.png')"></div>
-                               <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c7.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c7.png')"></div>
-                               <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c7a.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c7a.png')"></div>
-                               <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c8.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c8.png')"></div>
-                 <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c8a.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c8a.png')"></div>      
-                        <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c9.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c9.png')"></div>
-                        <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c9a.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c9a.png')"></div>  
-              
-              
-              0
-              
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c4.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c4.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c5.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c5.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_reala.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_reala.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_realb.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_realb.png')"></div>
-            </div>
-            <div class="marquee-group" aria-hidden="true">
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c1A.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c1A.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c1.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c1.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c2.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c2.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c3.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c3.png')"></div>
-              
-              
-                      <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c6.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c6.png')"></div>
-                      <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c6a.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c6a.png')"></div>
-                      <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c7.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c7.png')"></div>
-                      <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c7a.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c7a.png')"></div>
-                      <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c8.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c8.png')"></div>
-                      <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c8a.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c8a.png')"></div>
-                      <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c9.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c9a.png')"></div>
-                                          
-              
-              
-              
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c4.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c4.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_c5.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_c5.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_reala.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_reala.png')"></div>
-                <div class="marquee-item" style="background-image: url('https://firstian84.github.io/firstiantechnology/furn_realb.png');" onclick="openVisualModal('https://firstian84.github.io/firstiantechnology/furn_realbpng')"></div>
-            </div>
-        </div>
-    </section>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <!-- Import Map Library Three.js -->
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-            }
-        }
-    </script>
-
-    <script type="module">
-        import * as THREE from 'three';
-        import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-        // --- INTERACTIVE IMAGE VIEWER HUD & POPUP MODAL LOGIC ---
-        const viewers = document.querySelectorAll('.image-hud-viewer');
-        const modal = document.getElementById('image-modal');
-        const modalImg = document.getElementById('modal-target-img');
-        const modalCaption = document.getElementById('modal-target-caption');
-        const modalClose = document.getElementById('modal-close-trigger');
+    <div class="max-w-3xl mx-auto space-y-4 relative z-10">
         
-        viewers.forEach(viewer => {
-            const lineH = viewer.querySelector('.viewer-hud-line-h');
-            const lineV = viewer.querySelector('.viewer-hud-line-v');
-            const badge = viewer.querySelector('.viewer-coords-badge');
-            const imgElement = viewer.querySelector('img');
+        <!-- Status Banner / Notification -->
+        <div id="status-banner" class="hidden p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm">
+            <span id="status-text">Memeriksa status invoice...</span>
+        </div>
 
-            viewer.addEventListener('mousemove', (e) => {
-                const rect = viewer.getBoundingClientRect();
-                const x = Math.round(e.clientX - rect.left);
-                const y = Math.round(e.clientY - rect.top);
+        <!-- Tombol Aksi Kontrol (No Print) -->
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-lg shadow-sm no-print">
+            <div class="flex items-center gap-2">
+                <button id="btn-selesai" onclick="setSelesai()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3 py-1.5 rounded-lg transition text-xs flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    Selesai
+                </button>
+                <button onclick="addRow()" id="btn-tambah" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed">
+                    + Tambah Item
+                </button>
+                <!-- Tombol Lunas -->
+                <button onclick="toggleLunas()" id="btn-lunas" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1">
+                    <span id="lunas-indicator" class="w-2 h-2 rounded-full bg-slate-400"></span>
+                    <span id="lunas-text">Belum Lunas</span>
+                </button>
+            </div>
+            <div>
+                <button onclick="downloadPDF()" class="bg-slate-800 hover:bg-slate-900 text-white font-medium px-4 py-1.5 rounded-lg transition text-xs flex items-center gap-1.5 shadow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Download PDF
+                </button>
+            </div>
+        </div>
 
-                lineH.style.display = 'block';
-                lineH.style.top = `${y}px`;
-                
-                lineV.style.display = 'block';
-                lineV.style.left = `${x}px`;
-
-                badge.style.display = 'block';
-                badge.style.left = `${x + 12}px`;
-                badge.style.top = `${y + 12}px`;
-                badge.innerText = `LOC_X:${x} LOC_Y:${y}`;
-            });
-
-            viewer.addEventListener('mouseleave', () => {
-                lineH.style.display = 'none';
-                lineV.style.display = 'none';
-                badge.style.display = 'none';
-            });
-
-            viewer.addEventListener('click', () => {
-                modalImg.src = imgElement.src;
-                modalCaption.innerHTML = `SYS_TELEMETRY // <span>${viewer.getAttribute('data-caption')}</span>`;
-                modal.classList.add('show');
-            });
-        });
-
-        const closeModal = () => modal.classList.remove('show');
-        modalClose.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if(e.target === modal) closeModal();
-        });
-
-        // --- THREE.JS 3D ENGINE ARCHITECTURE ---
-        let activeMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0xcccccc, 
-            roughness: 0.3,
-            metalness: 0.6
-        });
-
-        let loadedModel = null;
-
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        
-        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-        camera.position.set(100, 80, 180); 
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        container.appendChild(renderer.domElement);
-
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-        scene.add(ambientLight);
-
-        const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.6);
-        dirLight1.position.set(100, 150, 100);
-        scene.add(dirLight1);
-
-        const dirLight2 = new THREE.DirectionalLight(0xaaaaaa, 0.4); 
-        dirLight2.position.set(-100, -50, -100);
-        scene.add(dirLight2);
-
-        const gridHelper = new THREE.GridHelper(200, 40, 0x888888, 0x444444);
-        gridHelper.position.y = -35;
-        gridHelper.material.opacity = 0.2;
-        gridHelper.material.transparent = true;
-        scene.add(gridHelper);
-
-        const loader = new OBJLoader();
-        const urlModelObj = 'https://firstian84.github.io/firstiantechnology/furn_otoman.obj';
-   
-        loader.load(
-            urlModelObj, 
-            function (object) {
-                document.getElementById('loading').style.opacity = '0';
-                setTimeout(() => document.getElementById('loading').style.display = 'none', 500);
-                
-                loadedModel = object;
-                applyShaderSettings();
-
-                const box = new THREE.Box3().setFromObject(object);
-                const center = box.getCenter(new THREE.Vector3());
-                object.position.x += (object.position.x - center.x);
-                object.position.y += (object.position.y - center.y) - 10;
-                object.position.z += (object.position.z - center.z);
-
-                scene.add(object);
-            },
-            function (xhr) {
-                if (xhr.total > 0) {
-                    const persen = Math.round((xhr.loaded / xhr.total * 100));
-                    document.getElementById('loading').innerText = `STREAMING: ${persen}%`;
-                }
-            },
-            function (error) {
-                console.error(error);
-                document.getElementById('loading').innerText = 'ERROR NODE';
-            }
-        );
-
-        function applyShaderSettings() {
-            if (!loadedModel) return;
-            loadedModel.traverse(function (child) {
-                if (child.isMesh) {
-                    child.material = activeMaterial;
-                }
-            });
-        }
-
-        const hudX = document.getElementById('hud-x');
-        const hudY = document.getElementById('hud-y');
-        const hudZ = document.getElementById('hud-z');
-        const hudMode = document.getElementById('hud-mode');
-
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update(); 
+        <!-- Area Invoice yang akan di-PDF-kan -->
+        <div id="invoice-content" class="bg-white rounded-xl shadow-lg p-6 sm:p-8 space-y-5 relative text-xs">
             
-            hudX.innerText = camera.position.x.toFixed(1);
-            hudY.innerText = camera.position.y.toFixed(1);
-            hudZ.innerText = camera.position.z.toFixed(1);
-            hudMode.innerText = activeMaterial.wireframe ? "WIREFRAME" : "SOLID";
+            <!-- Header Invoice -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-5 relative">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900">INVOICE</h1>
+                    <p class="text-xs text-slate-500 mt-0.5">No: <input type="text" id="inv-no" value="INV-2026-001" class="border-b border-dashed border-slate-300 focus:border-blue-600 focus:outline-none px-1 font-semibold text-slate-700 bg-transparent text-[11px]"></p>
+                </div>
+                
+                <!-- Kontainer Logo -->
+                <div class="text-left sm:text-right flex flex-col items-start sm:items-end relative w-full sm:w-auto">
+                    <div class="relative z-20 my-2 sm:my-0 translate-x-[-25px] sm:translate-x-[30px] translate-y-[75px]">
+                        <img src="https://lh3.googleusercontent.com/d/1CZ1_KLCaTw56YSy3wH-a3rBJLa0E1nBf" alt="Logo Perusahaan" class="h-28 sm:h-40 mb-1 object-contain opacity-30">
+                    </div>
+                    
+                    <h2 class="font-bold text-slate-800 text-sm">firstian TECHNOLOGY</h2>
+                    <p class="text-[10px] text-slate-500 max-w-xs leading-relaxed">OFFICE-1 (M Center) Jl. Teuku Nyak Arief No.16  <br> lv.5 room206,Kby.LamaUtara <br> OFFICE-2 (18 Office Park) Jl. TB Simatupang No.18 <br> lv.12 floor, Kebagusan <br> Jakarta Selatan</p>
+                    <p class="text-[10px] text-slate-500 mt-0.5">Email: firstian84@gmail.com <br> Phone: 087796126529</p>
+                </div>
+            </div>
 
-            renderer.render(scene, camera);
-        }
-        animate();
+            <!-- Informasi Klien & Tanggal -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <span class="block font-semibold text-slate-700 mb-1">Tagihan Pelunasan Kepada:</span>
+                    <input type="text" id="client-name" value="Nama Klien / Perusahaan" class="w-full border border-slate-200 rounded-lg p-1.5 text-slate-700 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <textarea id="client-address" rows="2" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-slate-700 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none mt-1.5 auto-expand">Alamat Klien, Kota</textarea>
+                </div>
+                <div class="space-y-2 sm:text-right">
+                    <div>
+                        <span class="block font-semibold text-slate-700 mb-1">Tanggal Invoice:</span>
+                        <input type="date" id="inv-date" class="border border-slate-200 rounded-lg px-2 py-1 text-slate-700 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none sm:text-right">
+                    </div>
+                </div>
+            </div>
 
-        document.getElementById('btn-reset-view').addEventListener('click', () => {
-            camera.position.set(100, 80, 180);
-            controls.target.set(0, 0, 0);
-        });
+            <!-- Tabel Item Dinamis Menurun -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-200 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                            <th class="py-2 px-1">Deskripsi Item</th>
+                            <th class="py-2 px-1 w-16 text-center">Jumlah</th>
+                            <th class="py-2 px-1 w-36 text-right">Harga Satuan</th>
+                            <th class="py-2 px-1 w-36 text-right">Total</th>
+                            <th class="py-2 px-1 w-8 text-center no-print">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="item-list" class="divide-y divide-slate-100">
+                        <!-- Baris Item Default -->
+                        <tr class="transition hover:bg-slate-50/50">
+                            <td class="py-2 px-1">
+                                <textarea rows="1" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none auto-expand item-desc" placeholder="Deskripsi item atau layanan...">Jasa Pembuatan Website Custom</textarea>
+                            </td>
+                            <td class="py-2 px-1 text-center align-top pt-2">
+                                <input type="number" value="1" min="1" oninput="calculateTotal()" class="w-14 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
+                            </td>
+                            <td class="py-2 px-1 text-right align-top pt-2">
+                                <input type="number" value="5000000" min="0" oninput="calculateTotal()" class="w-full text-right border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-price">
+                            </td>
+                            <td class="py-2 px-1 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 5.000.000</td>
+                            <td class="py-2 px-1 text-center align-top pt-2 no-print">
+                                <button onclick="removeRow(this)" class="text-rose-500 hover:text-rose-700 font-bold p-1 btn-delete text-sm">×</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        document.getElementById('btn-wireframe').addEventListener('click', function() {
-            activeMaterial.wireframe = !activeMaterial.wireframe;
-            this.classList.toggle('active', activeMaterial.wireframe);
-        });
+            <!-- Total Pembayaran, DP, & Sisa Tagihan -->
+            <div class="flex justify-end pt-2 border-t border-slate-100">
+                <div class="w-full sm:w-72 space-y-1.5">
+                    <div class="flex justify-between text-slate-600">
+                        <span>Subtotal:</span>
+                        <span id="subtotal" class="font-medium">Rp 5.000.000</span>
+                    </div>
+                    <div class="flex justify-between text-slate-600">
+                        <span>PPN (0%):</span>
+                        <span>Rp 0</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1.5">
+                        <span>Total Tagihan:</span>
+                        <span id="grand-total">Rp 5.000.000</span>
+                    </div>
+                    
+                    <!-- Bagian DP (Down Payment) -->
+                    <div class="pt-1.5 border-t border-dashed border-slate-200 space-y-1.5">
+                        <div class="flex items-center justify-between gap-2 text-slate-600">
+                            <span class="text-[11px]">Tanggal DP:</span>
+                            <input type="date" id="dp-date" class="border border-slate-200 rounded px-1.5 py-0.5 text-[11px] text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div class="flex items-center justify-between gap-2 text-slate-600">
+                            <span class="text-[11px] font-medium">Pembayaran DP:</span>
+                            <input type="number" id="dp-amount" value="0" min="0" oninput="calculateTotal()" class="w-32 text-right border border-slate-200 rounded px-1.5 py-0.5 text-[11px] font-medium text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
 
-        window.addEventListener('resize', () => {
-            if(container.clientWidth > 0 && container.clientHeight > 0) {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            }
-        });
-    </script>
+                    <!-- Sisa Tagihan Pelunasan -->
+                    <div class="flex justify-between font-bold text-emerald-700 border-t border-slate-200 pt-1.5 bg-emerald-50/50 p-1.5 rounded-lg">
+                        <span>SISA PELUNASAN:</span>
+                        <span id="remaining-total">Rp 5.000.000</span>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Catatan Footer Invoice -->
+            <div class="border-t border-slate-100 pt-3 text-[10px] text-slate-500 space-y-1">
+                <p class="font-semibold text-slate-700">Catatan / Pembayaran melalui:</p>
+                <p>Bank BCA a.n Achmad Firstian Budiastomo - Rekening: 3090128077</p>
+                <p># Segera Lunasi Pembayaran Untuk Kelancaran Operasional Bersama</p>
+                <p># Setelah surat ini keterima, Jika dalam 3 hari tidak segera melunasi pembayaran segera kordinasikan situasinya</p>
+                <p># Tim kami akan follow up setiap periode untuk pelunasan pembayaran</p>
+                <p class="font-medium text-slate-700 pt-0.5">TERIMA KASIH KESEMPATAN DAN KERJASAMANYA</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Logika Upstash & Invoice -->
     <script>
-        // --- 1. HERO SLIDESHOW MATRIX DATA ---
-        const heroData = [   
-            {
-                bg: "https://lh3.googleusercontent.com/u/0/d/1CBwiD06r3CJ0BGB0BmJqiXO-1b_yTT1c",
-                title: "Pengalaman Berkesan di Ruang Anda",
-                desc: "Kami merancang bangun furniture bukan sekadar fungsi, melainkan sebuah karya seni yang mengisi jiwa rumah Anda."
-            },
-            {
-                bg: "https://lh3.googleusercontent.com/u/0/d/17rDviRouf0Rh93x23dSe4A2JMhAZ-ubj",
-                title: "",
-                desc: ""
-            },
-            {
-                bg: "https://lh3.googleusercontent.com/u/0/d/1Ow_n6k8QhYDMwmZYv4Q04obUeOgnekj1",
-                title: "",
-                desc: ""
-            }
-        ];
-
-        function changeHero(index) {
-            const heroBg = document.getElementById('heroBg');
-            const heroTitle = document.getElementById('heroTitle');
-            const heroDesc = document.getElementById('heroDesc');
-            
-            heroBg.style.opacity = "0.8";
-            
-            setTimeout(() => {
-                heroBg.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0)), url('${heroData[index].bg}')`;
-                heroTitle.innerText = heroData[index].title;
-                heroDesc.innerText = heroData[index].desc;
-                heroBg.style.opacity = "1";
-            }, 200);
-        }
-
-        // --- 2. CONFIG VARIANT INTERACTION ---
-        const variants = {
-            c1: {
-                img: "https://lh3.googleusercontent.com/d/1SacgdbZug4ZkB6IwZSV3lL8lGdmxvNq4", 
-                name: "",
-                items: [
-                    "• Ottoman: 50x50x45 \n (Rp1.500.000)",
-                    "• Ottoman: 195x50x42 \n (Rp6.500.000)",
-                    "• Dipan: 180x200x30 \n (Rp8.000.000)",
-                    "• Kepala Dipan: 180x100x10 \n (Rp5.000.000)"
-                ],
-                price: "Total Paket: Rp21.000.000"
-            },
-            c2: { 
-                img: "https://lh3.googleusercontent.com/d/1TGLBKZOuWchqRpXlELkHIQi1p0Ai176K",
-                name: "",
-                items: [
-                    "• Ottoman: 50x50x45 \n (Rp1.500.000)",
-                    "• Ottoman: 195x50x42 \n (Rp6.500.000)",
-                    "• Dipan: 180x200x30 \n (Rp8.000.000)",
-                    "• Kepala Dipan: 180x100x10 \n (Rp5.000.000)"
-                ],
-                price: "Total Paket: Rp21.000.000"
-            },
-            c3: {
-                img: "https://lh3.googleusercontent.com/d/1Mv2l-dS1kgU2skxQPZYyoblTwqda5jKc",
-                name: "",
-                items: [
-                    "• Ottoman: 50x50x45 \n (Rp1.500.000)",
-                    "• Ottoman: 195x50x42 \n (Rp6.500.000)",
-                    "• Dipan: 180x200x30 \n (Rp8.000.000)",
-                    "• Kepala Dipan: 180x100x10 \n (Rp5.000.000)"
-                ],
-                price: "Total Paket: Rp21.000.000"
-            }
+        const UPSTASH_CONFIG = {
+            URL: "https://enabled-crayfish-71186.upstash.io",
+            TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
+            PREFIX: "project_order_invocetagih_yuni1"
         };
 
-        function changeVariant(key, element) {
-            const imgEl = document.getElementById('productImg');
-            const nameEl = document.getElementById('productName');
-            const priceEl = document.getElementById('productPrice');
-            const listEl = document.getElementById('furnitureList');
+        const keyName = UPSTASH_CONFIG.PREFIX;
+        let isPaidValue = 0; // 0 = Belum Lunas, 1 = Lunas
 
-            imgEl.style.transform = 'scale(0.95)';
-            imgEl.style.opacity = '0';
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
 
-            setTimeout(() => {
-                imgEl.src = variants[key].img;
-                imgEl.style.borderRadius = "15px"; 
-                imgEl.style.height = "400px";
-                imgEl.style.objectFit = "cover";
-                
-                nameEl.innerText = variants[key].name;
-                priceEl.innerText = variants[key].price;
-                
-                listEl.innerHTML = "";
-                variants[key].items.forEach(itemText => {
-                    const li = document.createElement('li');
-                    li.innerText = itemText;
-                    listEl.appendChild(li);
+        window.addEventListener('DOMContentLoaded', () => {
+            if(!document.getElementById('inv-date').value) {
+                document.getElementById('inv-date').valueAsDate = new Date();
+            }
+            if(!document.getElementById('dp-date').value) {
+                document.getElementById('dp-date').valueAsDate = new Date();
+            }
+            loadInvoiceData();
+        });
+
+        function toggleLunas() {
+            isPaidValue = isPaidValue === 1 ? 0 : 1;
+            updateLunasUI();
+        }
+
+        function updateLunasUI() {
+            const btnLunas = document.getElementById('btn-lunas');
+            const indicator = document.getElementById('lunas-indicator');
+            const lunasText = document.getElementById('lunas-text');
+
+            if (isPaidValue === 1) {
+                btnLunas.className = "bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 border border-emerald-300";
+                indicator.className = "w-2 h-2 rounded-full bg-emerald-600";
+                lunasText.textContent = "Lunas";
+                document.body.classList.add('is-paid');
+            } else {
+                btnLunas.className = "bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1";
+                indicator.className = "w-2 h-2 rounded-full bg-slate-400";
+                lunasText.textContent = "Belum Lunas";
+                document.body.classList.remove('is-paid');
+            }
+        }
+
+        async function loadInvoiceData() {
+            const banner = document.getElementById('status-banner');
+            const statusText = document.getElementById('status-text');
+
+            try {
+                const response = await fetch(`${UPSTASH_CONFIG.URL}/get/${keyName}`, {
+                    headers: {
+                        Authorization: `Bearer ${UPSTASH_CONFIG.TOKEN}`
+                    }
                 });
+                const data = await response.json();
                 
-                imgEl.style.transform = 'scale(1)';
-                imgEl.style.opacity = '1';
-            }, 300);
+                let savedData = null;
+                if (data.result) {
+                    try {
+                        savedData = JSON.parse(data.result);
+                    } catch (e) {
+                        savedData = { status: data.result };
+                    }
+                }
 
-            document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
-            element.classList.add('active');
+                if (savedData) {
+                    if (savedData.invNo) document.getElementById('inv-no').value = savedData.invNo;
+                    if (savedData.invDate) document.getElementById('inv-date').value = savedData.invDate;
+                    if (savedData.clientName) document.getElementById('client-name').value = savedData.clientName;
+                    if (savedData.clientAddress) {
+                        const addrEl = document.getElementById('client-address');
+                        addrEl.value = savedData.clientAddress;
+                        autoResize(addrEl);
+                    }
+                    if (savedData.dpDate) document.getElementById('dp-date').value = savedData.dpDate;
+                    if (savedData.dpAmount !== undefined) document.getElementById('dp-amount').value = savedData.dpAmount;
+                    
+                    if (savedData.isPaid !== undefined) {
+                        isPaidValue = parseInt(savedData.isPaid) || 0;
+                        updateLunasUI();
+                    }
 
-            if (key === 'c1') changeHero(0);
-            else if (key === 'c2') changeHero(1);
-            else if (key === 'c3') changeHero(2);
-        }
+                    if (savedData.items && Array.isArray(savedData.items) && savedData.items.length > 0) {
+                        const tbody = document.getElementById('item-list');
+                        tbody.innerHTML = ''; 
 
-        // --- 3. UNIFIED MODAL CORE CONTROLLER ---
-        const uModal = document.getElementById('unifiedModal');
-        const modalTargetImg = document.getElementById('modalTargetImg');
+                        savedData.items.forEach(item => {
+                            const tr = document.createElement('tr');
+                            tr.className = "transition hover:bg-slate-50/50";
+                            tr.innerHTML = `
+                                <td class="py-2 px-1">
+                                    <textarea rows="1" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none auto-expand item-desc" placeholder="Deskripsi item atau layanan...">${item.desc}</textarea>
+                                </td>
+                                <td class="py-2 px-1 text-center align-top pt-2">
+                                    <input type="number" value="${item.qty}" min="1" oninput="calculateTotal()" class="w-14 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
+                                </td>
+                                <td class="py-2 px-1 text-right align-top pt-2">
+                                    <input type="number" value="${item.price}" min="0" oninput="calculateTotal()" class="w-full text-right border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-price">
+                                </td>
+                                <td class="py-2 px-1 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 0</td>
+                                <td class="py-2 px-1 text-center align-top pt-2 no-print">
+                                    <button onclick="removeRow(this)" class="text-rose-500 hover:text-rose-700 font-bold p-1 btn-delete text-sm">×</button>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                            const textarea = tr.querySelector('.item-desc');
+                            autoResize(textarea);
+                        });
+                        calculateTotal();
+                    }
 
-        function openVisualModal(imgUrl) {
-            modalTargetImg.src = imgUrl;
-            uModal.style.display = 'flex';
-        }
-
-        function closeVisualModal(event) {
-            if (event.target === uModal) {
-                uModal.style.display = 'none';
+                    if (savedData.status === "1" || data.result === "1") {
+                        applyLockedState();
+                        banner.className = "p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm bg-amber-50 text-amber-800 border border-amber-200";
+                        statusText.innerHTML = "🔒 <strong>Invoice Telah Selesai:</strong> Seluruh konten terkunci dan tersimpan aman di Upstash.";
+                        banner.classList.remove('hidden');
+                    } else {
+                        applyActiveState();
+                        banner.className = "p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm bg-blue-50 text-blue-800 border border-blue-200";
+                        statusText.innerHTML = "ℹ️ <strong>Status Aktif:</strong> Konten invoice dapat diedit kembali.";
+                        banner.classList.remove('hidden');
+                    }
+                } else {
+                    applyActiveState();
+                    banner.className = "p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm bg-blue-50 text-blue-800 border border-blue-200";
+                    statusText.innerHTML = "ℹ️ <strong>Status Aktif:</strong> Silakan edit dan simpan invoice.";
+                    banner.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error("Gagal terhubung ke Upstash:", error);
+                statusText.innerHTML = "⚠️ Gagal terhubung ke server Upstash.";
+                banner.className = "p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm bg-rose-50 text-rose-800 border border-rose-200";
+                banner.classList.remove('hidden');
             }
         }
 
-        function forceCloseModal() {
-            uModal.style.display = 'none';
-        }
+        async function setSelesai() {
+            if (!confirm("Apakah Anda yakin ingin menyelesaikan invoice ini? Semua konten akan disimpan dan dikunci.")) return;
 
-        // --- 4. REDIRECTION ACTION ---
-        function openLink() { 
-            window.open("https://firstian84.github.io/firstiantechnology/tech.html", "_blank"); 
-        }
+            const btnSelesai = document.getElementById('btn-selesai');
+            btnSelesai.disabled = true;
+            btnSelesai.textContent = "Menyimpan...";
 
-        // --- 5. AUDIO SCHEDULER ENGINE ---
-        const audio = document.getElementById('myAudio');
-        const overlay = document.getElementById('interaction-overlay');
-        const delayBetweenLoops = 10000; 
+            // Ketika tombol selesai disentuh, tombol lunas ikut dikunci/nonaktif otomatis
+            document.getElementById('btn-lunas').disabled = true;
 
-        function setupDelayedLoop() {
-            audio.addEventListener('ended', function() {
-                console.log("Audio putaran selesai. Istirahat 10 detik...");
-                setTimeout(function() {
-                    audio.currentTime = 0; 
-                    audio.play().catch(err => console.log("Gagal memutar ulang:", err));
-                }, delayBetweenLoops);
+            const items = [];
+            const rows = document.querySelectorAll('#item-list tr');
+            rows.forEach(row => {
+                const desc = row.querySelector('.item-desc').value;
+                const qty = row.querySelector('.item-qty').value;
+                const price = row.querySelector('.item-price').value;
+                items.push({ desc, qty, price });
             });
+
+            const payloadData = {
+                status: "1",
+                isPaid: isPaidValue,
+                invNo: document.getElementById('inv-no').value,
+                invDate: document.getElementById('inv-date').value,
+                clientName: document.getElementById('client-name').value,
+                clientAddress: document.getElementById('client-address').value,
+                dpDate: document.getElementById('dp-date').value,
+                dpAmount: document.getElementById('dp-amount').value,
+                items: items
+            };
+
+            try {
+                const response = await fetch(`${UPSTASH_CONFIG.URL}/set/${keyName}/${encodeURIComponent(JSON.stringify(payloadData))}`, {
+                    headers: {
+                        Authorization: `Bearer ${UPSTASH_CONFIG.TOKEN}`
+                    }
+                });
+                const data = await response.json();
+
+                if (data.result === "OK") {
+                    alert("Semua konten invoice berhasil disimpan dan dikunci!");
+                    loadInvoiceData();
+                } else {
+                    alert("Gagal menyimpan ke Upstash.");
+                    btnSelesai.disabled = false;
+                    btnSelesai.textContent = "Selesai";
+                    document.getElementById('btn-lunas').disabled = false;
+                }
+            } catch (error) {
+                console.error("Error setting Upstash:", error);
+                alert("Terjadi kesalahan koneksi.");
+                btnSelesai.disabled = false;
+                btnSelesai.textContent = "Selesai";
+                document.getElementById('btn-lunas').disabled = false;
+            }
         }
 
-        // --- 6. DRAG-TO-SCROLL MOUSE INTERACTION FOR HORIZONTAL LAYOUT ---
-        const slider = document.getElementById('scrollContainer');
-        let isDown = false;
-        let startX;
-        let scrollLeft;
+        function applyLockedState() {
+            const allInputs = document.querySelectorAll('input, textarea');
+            allInputs.forEach(input => {
+                input.disabled = true;
+                input.classList.add('bg-slate-50', 'cursor-not-allowed', 'opacity-80');
+            });
+            document.getElementById('btn-tambah').disabled = true;
+            document.getElementById('btn-selesai').disabled = true;
+            document.getElementById('btn-lunas').disabled = true;
+            document.querySelectorAll('.btn-delete').forEach(btn => btn.style.display = 'none');
+        }
 
-        slider.addEventListener('mousedown', (e) => {
-            isDown = true;
-            slider.classList.add('active');
-            startX = e.pageX - slider.offsetLeft;
-            scrollLeft = slider.scrollLeft;
-        });
-        slider.addEventListener('mouseleave', () => {
-            isDown = false;
-        });
-        slider.addEventListener('mouseup', () => {
-            isDown = false;
-        });
-        slider.addEventListener('mousemove', (e) => {
-            if(!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 1.5; 
-            slider.scrollLeft = scrollLeft - walk;
-        });
+        function applyActiveState() {
+            const allInputs = document.querySelectorAll('input, textarea');
+            allInputs.forEach(input => {
+                input.disabled = false;
+                input.classList.remove('bg-slate-50', 'cursor-not-allowed', 'opacity-80');
+            });
+            document.getElementById('btn-tambah').disabled = false;
+            document.getElementById('btn-selesai').disabled = false;
+            document.getElementById('btn-lunas').disabled = false;
+            document.querySelectorAll('.btn-delete').forEach(btn => btn.style.display = 'inline-block');
+        }
 
-        // --- 7. WINDOW BOOTSTRAP INITIALIZER ---
-        window.onload = function() {
-            changeVariant('c1', document.querySelector('.dot-c1'));
+        function addRow() {
+            const tbody = document.getElementById('item-list');
+            const tr = document.createElement('tr');
+            tr.className = "transition hover:bg-slate-50/50";
+            tr.innerHTML = `
+                <td class="py-2 px-1">
+                    <textarea rows="1" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none auto-expand item-desc" placeholder="Deskripsi item atau layanan...">Deskripsi Item Baru</textarea>
+                </td>
+                <td class="py-2 px-1 text-center align-top pt-2">
+                    <input type="number" value="1" min="1" oninput="calculateTotal()" class="w-14 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
+                </td>
+                <td class="py-2 px-1 text-right align-top pt-2">
+                    <input type="number" value="0" min="0" oninput="calculateTotal()" class="w-full text-right border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-price">
+                </td>
+                <td class="py-2 px-1 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 0</td>
+                <td class="py-2 px-1 text-center align-top pt-2 no-print">
+                    <button onclick="removeRow(this)" class="text-rose-500 hover:text-rose-700 font-bold p-1 btn-delete text-sm">×</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            autoResize(tr.querySelector('.item-desc'));
+            calculateTotal();
+        }
 
-            setTimeout(() => {
-                window.dispatchEvent(new Event('resize'));
-            }, 500);
+        function removeRow(btn) {
+            const row = btn.closest('tr');
+            row.remove();
+            calculateTotal();
+        }
 
-            overlay.addEventListener('click', function() {
-                overlay.style.display = 'none'; 
-                setupDelayedLoop();
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        }
+
+        function calculateTotal() {
+            const rows = document.querySelectorAll('#item-list tr');
+            let subtotal = 0;
+
+            rows.forEach(row => {
+                const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                const total = qty * price;
                 
-                audio.play()
-                    .then(() => console.log("Audio Stream Aktif."))
-                    .catch(err => {
-                        console.error("Gagal melakukan inisiasi audio:", err);
-                    });
+                row.querySelector('.item-total').textContent = formatRupiah(total);
+                subtotal += total;
             });
-        };
+
+            const dpAmount = parseFloat(document.getElementById('dp-amount').value) || 0;
+            const remaining = subtotal - dpAmount;
+
+            document.getElementById('subtotal').textContent = formatRupiah(subtotal);
+            document.getElementById('grand-total').textContent = formatRupiah(subtotal);
+            document.getElementById('remaining-total').textContent = formatRupiah(remaining >= 0 ? remaining : 0);
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('invoice-content');
+            const invNo = document.getElementById('inv-no').value || 'INV-2026-001';
+            
+            const filename = `1tech${invNo}.pdf`;
+
+            const options = {
+                margin:       5,
+                filename:     filename,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().from(element).set(options).save();
+        }
     </script>
 </body>
 </html>

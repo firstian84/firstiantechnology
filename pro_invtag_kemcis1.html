@@ -28,11 +28,25 @@
             resize: none;
             min-height: 28px;
         }
+/* --- WATERMARK --- */
+        body.is-paid::before {
+            content: "";
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            z-index: 50; /* Posisi paling depan */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='35' viewBox='0 0 70 35'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='18' fill='%232563eb'%3ELUNAS%3C/text%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 70px 35px; /* Jarak dirapatkan 50% lebih padat */
+            transform: rotate(-25deg);
+            opacity: 0.15; /* Transparansi teks biru */
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen py-4 px-2 sm:px-4">
 
-    <div class="max-w-3xl mx-auto space-y-4">
+    <div class="max-w-3xl mx-auto space-y-4 relative z-10">
         
         <!-- Status Banner / Notification -->
         <div id="status-banner" class="hidden p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm">
@@ -48,6 +62,11 @@
                 </button>
                 <button onclick="addRow()" id="btn-tambah" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed">
                     + Tambah Item
+                </button>
+                <!-- Tombol Lunas -->
+                <button onclick="toggleLunas()" id="btn-lunas" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1">
+                    <span id="lunas-indicator" class="w-2 h-2 rounded-full bg-slate-400"></span>
+                    <span id="lunas-text">Belum Lunas</span>
                 </button>
             </div>
             <div>
@@ -68,9 +87,8 @@
                     <p class="text-xs text-slate-500 mt-0.5">No: <input type="text" id="inv-no" value="INV-2026-001" class="border-b border-dashed border-slate-300 focus:border-blue-600 focus:outline-none px-1 font-semibold text-slate-700 bg-transparent text-[11px]"></p>
                 </div>
                 
-                <!-- Kontainer Logo dengan Koordinat X, Y murni CSS (Mobile vs Desktop) -->
+                <!-- Kontainer Logo -->
                 <div class="text-left sm:text-right flex flex-col items-start sm:items-end relative w-full sm:w-auto">
-                    <!-- Ubah nilai translate-x[...] dan translate-y[...] di bawah untuk mengatur posisi X dan Y -->
                     <div class="relative z-20 my-2 sm:my-0 translate-x-[-25px] sm:translate-x-[30px] translate-y-[75px]">
                         <img src="https://lh3.googleusercontent.com/d/1CZ1_KLCaTw56YSy3wH-a3rBJLa0E1nBf" alt="Logo Perusahaan" class="h-28 sm:h-40 mb-1 object-contain opacity-30">
                     </div>
@@ -187,6 +205,7 @@
         };
 
         const keyName = UPSTASH_CONFIG.PREFIX;
+        let isPaidValue = 0; // 0 = Belum Lunas, 1 = Lunas
 
         function autoResize(textarea) {
             textarea.style.height = 'auto';
@@ -202,6 +221,29 @@
             }
             loadInvoiceData();
         });
+
+        function toggleLunas() {
+            isPaidValue = isPaidValue === 1 ? 0 : 1;
+            updateLunasUI();
+        }
+
+        function updateLunasUI() {
+            const btnLunas = document.getElementById('btn-lunas');
+            const indicator = document.getElementById('lunas-indicator');
+            const lunasText = document.getElementById('lunas-text');
+
+            if (isPaidValue === 1) {
+                btnLunas.className = "bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 border border-emerald-300";
+                indicator.className = "w-2 h-2 rounded-full bg-emerald-600";
+                lunasText.textContent = "Lunas";
+                document.body.classList.add('is-paid');
+            } else {
+                btnLunas.className = "bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1";
+                indicator.className = "w-2 h-2 rounded-full bg-slate-400";
+                lunasText.textContent = "Belum Lunas";
+                document.body.classList.remove('is-paid');
+            }
+        }
 
         async function loadInvoiceData() {
             const banner = document.getElementById('status-banner');
@@ -235,6 +277,11 @@
                     }
                     if (savedData.dpDate) document.getElementById('dp-date').value = savedData.dpDate;
                     if (savedData.dpAmount !== undefined) document.getElementById('dp-amount').value = savedData.dpAmount;
+                    
+                    if (savedData.isPaid !== undefined) {
+                        isPaidValue = parseInt(savedData.isPaid) || 0;
+                        updateLunasUI();
+                    }
 
                     if (savedData.items && Array.isArray(savedData.items) && savedData.items.length > 0) {
                         const tbody = document.getElementById('item-list');
@@ -273,7 +320,7 @@
                     } else {
                         applyActiveState();
                         banner.className = "p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm bg-blue-50 text-blue-800 border border-blue-200";
-                        statusText.innerHTML = "ℹ️ <strong>Status Aktif (Value = 0):</strong> Konten invoice dapat diedit kembali.";
+                        statusText.innerHTML = "ℹ️ <strong>Status Aktif:</strong> Konten invoice dapat diedit kembali.";
                         banner.classList.remove('hidden');
                     }
                 } else {
@@ -297,6 +344,9 @@
             btnSelesai.disabled = true;
             btnSelesai.textContent = "Menyimpan...";
 
+            // Ketika tombol selesai disentuh, tombol lunas ikut dikunci/nonaktif otomatis
+            document.getElementById('btn-lunas').disabled = true;
+
             const items = [];
             const rows = document.querySelectorAll('#item-list tr');
             rows.forEach(row => {
@@ -308,6 +358,7 @@
 
             const payloadData = {
                 status: "1",
+                isPaid: isPaidValue,
                 invNo: document.getElementById('inv-no').value,
                 invDate: document.getElementById('inv-date').value,
                 clientName: document.getElementById('client-name').value,
@@ -332,12 +383,14 @@
                     alert("Gagal menyimpan ke Upstash.");
                     btnSelesai.disabled = false;
                     btnSelesai.textContent = "Selesai";
+                    document.getElementById('btn-lunas').disabled = false;
                 }
             } catch (error) {
                 console.error("Error setting Upstash:", error);
                 alert("Terjadi kesalahan koneksi.");
                 btnSelesai.disabled = false;
                 btnSelesai.textContent = "Selesai";
+                document.getElementById('btn-lunas').disabled = false;
             }
         }
 
@@ -349,6 +402,7 @@
             });
             document.getElementById('btn-tambah').disabled = true;
             document.getElementById('btn-selesai').disabled = true;
+            document.getElementById('btn-lunas').disabled = true;
             document.querySelectorAll('.btn-delete').forEach(btn => btn.style.display = 'none');
         }
 
@@ -360,6 +414,7 @@
             });
             document.getElementById('btn-tambah').disabled = false;
             document.getElementById('btn-selesai').disabled = false;
+            document.getElementById('btn-lunas').disabled = false;
             document.querySelectorAll('.btn-delete').forEach(btn => btn.style.display = 'inline-block');
         }
 

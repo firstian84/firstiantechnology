@@ -2,492 +2,486 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InvoiceTAGIHAN</title>
-    <!-- Tailwind CSS untuk styling modern -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2pdf.js untuk export PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Project Controller</title>
     <style>
-        @media print {
-            body {
-                background: white;
+        :root {
+            --bg-color: #0d1117; 
+            --card-bg: #161b22; 
+            --card-bg-interacted: #111418; 
+            --accent-red-main: #ff1a1a; 
+            --accent-red-glow: rgba(255, 26, 26, 0.8);
+            --border-red: #cc0000;
+            --accent-blue-main: #00d2ff;
+            --accent-blue-glow: rgba(0, 210, 255, 0.4);
+            --border-blue: #00a3cc;
+            --accent-yellow: #ff9800;
+            --accent-green: #00ff88;
+            --text-main: #e6edf3;
+            --text-dim: #8b949e;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes deepPulseRed {
+            0%, 100% { 
+                border-color: var(--border-red); 
+                box-shadow: 0 0 15px var(--accent-red-glow), inset 0 0 10px var(--accent-red-glow);
+                background: #350000;
             }
-            .no-print {
-                display: none !important;
-            }
-            textarea {
-                resize: none;
-                border: none !important;
-                background: transparent !important;
+            50% { 
+                border-color: #ff3333; 
+                box-shadow: 0 0 35px 5px var(--accent-red-glow), inset 0 0 20px var(--accent-red-glow);
+                background: #5c0000;
             }
         }
-        /* Style untuk textarea otomatis menyesuaikan tinggi */
-        .auto-expand {
-            overflow: hidden;
-            resize: none;
-            min-height: 28px;
+
+        @keyframes issuePulseRed {
+            0%, 100% { 
+                border-color: var(--border-red); 
+                box-shadow: 0 0 15px var(--accent-red-glow), inset 0 0 10px var(--accent-red-glow);
+                background: #350000;
+            }
+            50% { 
+                border-color: #ff3333; 
+                box-shadow: 0 0 35px 5px var(--accent-red-glow), inset 0 0 20px var(--accent-red-glow);
+                background: #5c0000;
+            }
         }
-/* --- WATERMARK --- */
-        body.is-paid::before {
-            content: "";
-            position: fixed;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            z-index: 50; /* Posisi paling depan */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='50' viewBox='0 0 140 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='18' fill='%23dc2626'%3EDIBATALKAN%3C/text%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 140px 50px; /* Jarak didekatkan */
-            transform: rotate(-25deg);
-            opacity: 0.2; /* Transparansi teks */
-            pointer-events: none;
+
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; user-select: none; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            padding: 20px; overflow-x: hidden;
         }
+
+        /* --- HEADER & CONTROLS --- */
+        .project-header { width: 100%; max-width: 900px; text-align: center; margin-bottom: 10px; padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        #project-name-display { font-size: 0.9rem; color: var(--accent-blue-main); letter-spacing: 3px; font-weight: 600; text-transform: uppercase; text-shadow: 0 0 8px var(--accent-blue-glow); }
+        
+        .admin-controls { margin-bottom: 20px; display: flex; gap: 10px; }
+        .btn-action { background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; text-transform: uppercase; }
+        .btn-confirm { border-color: var(--accent-blue-main); color: var(--accent-blue-main); }
+        .btn-delete:hover { border-color: var(--accent-red-main); color: var(--accent-red-main); }
+
+        .container { width: 100%; max-width: 900px; }
+        h1 { text-align: center; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.4rem; font-weight: 800; background: linear-gradient(to right, var(--accent-red-main), #fff, var(--accent-blue-main)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* --- WORKFLOW --- */
+        .workflow-wrapper { position: relative; display: flex; flex-direction: column; gap: 20px; padding-bottom: 40px; }
+        .workflow-wrapper::before { content: ''; position: absolute; left: 25px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--accent-red-main) 0%, var(--border-blue) 100%); z-index: 0; opacity: 0.5; }
+
+        .step-card {
+            background: var(--card-bg); border: 1px solid #30363d; 
+            border-radius: 12px; padding: 15px 15px 15px 65px; position: relative;
+            transition: all 0.3s ease; cursor: pointer; z-index: 1; overflow: hidden;
+        }
+
+        .step-card.v-pulse { 
+            animation: deepPulseRed 1.5s infinite ease-in-out; 
+            border: 2px solid var(--accent-red-main);
+        }
+
+        .verification-wrapper { position: absolute; right: 15px; top: 15px; display: flex; flex-direction: column; align-items: center; gap: 5px; z-index: 10; }
+        .gps-checkbox { width: 24px; height: 24px; cursor: pointer; accent-color: var(--accent-green); }
+        .gps-label { font-size: 0.55rem; color: var(--text-dim); text-transform: uppercase; }
+
+        .step-number {
+            position: absolute; left: 12px; top: 15px; width: 32px; height: 32px;
+            background: var(--bg-color); border: 2px solid var(--text-dim);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800; color: var(--text-dim);
+        }
+
+        .v-pulse .step-number { border-color: var(--accent-red-main); color: var(--accent-red-main); box-shadow: 0 0 10px var(--accent-red-glow); }
+
+        .step-content h3 { font-size: 1.1rem; color: var(--text-main); text-transform: uppercase; }
+        .step-content p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.4; margin-bottom: 5px; }
+
+        .action-row { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .link-input-group { display: flex; flex-direction: row; gap: 6px; }
+        .link-input-small { width: 150px; flex-grow: 1; background: #0d1117; border: 1px solid #30363d; border-radius: 4px; padding: 4px 10px; color: #00d2ff; font-size: 0.7rem; outline: none; height: 28px; }
+        .btn-save-link { background: var(--accent-blue-main); border: none; color: black; font-weight: bold; font-size: 0.65rem; padding: 0 12px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+
+        .image-preview-container { display: flex; gap: 12px; width: 100%; overflow-x: auto; padding: 5px 0; min-height: 50px; }
+        .preview-img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid var(--accent-blue-main); cursor: zoom-in; flex-shrink: 0; }
+
+        /* --- STATES --- */
+        .status-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 4px; border: 1px solid #30363d; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+        .timestamp-active { font-size: 0.7rem; color: var(--accent-blue-main); margin-top: 8px; font-family: monospace; font-weight: bold; display: none; }
+        .timestamp-gps { font-size: 0.65rem; color: var(--accent-green); margin-top: 4px; font-family: monospace; display: none; }
+
+        .step-card.interacted { animation: none !important; border-color: var(--accent-blue-main) !important; background: var(--card-bg-interacted) !important; box-shadow: 0 0 15px var(--accent-blue-glow) !important; }
+        .step-card.interacted .timestamp-active { display: block; }
+        .step-card.interacted .step-number { border-color: var(--accent-blue-main); color: var(--accent-blue-main); box-shadow: 0 0 10px var(--accent-blue-glow); }
+        .step-card.interacted .status-badge { border-color: var(--accent-blue-main); color: var(--accent-blue-main); }
+
+        .step-card.verified-ui { animation: none !important; border-color: var(--accent-green) !important; box-shadow: 0 0 15px rgba(0, 255, 136, 0.2) !important; }
+        .step-card.verified-ui .timestamp-gps { display: block; }
+        .step-card.verified-ui .step-number { border-color: var(--accent-green); color: var(--accent-green); box-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
+        .step-card.verified-ui .status-badge { border-color: var(--accent-green); color: var(--accent-green); }
+
+        /* --- ISSUE TRACKER --- */
+        .issue-monitor-section { width: 100%; max-width: 900px; margin-top: 20px; padding-top: 30px; border-top: 2px dashed rgba(255,255,255,0.1); }
+        .issue-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 25px; position: relative; transition: all 0.3s ease; }
+        .issue-card.has-issue { animation: issuePulseRed 1.5s infinite ease-in-out !important; border: 2px solid var(--accent-red-main) !important; }
+        .issue-input { width: 100%; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 14px; color: white; margin-top: 10px; }
+        .btn-update-issue { background: transparent; color: var(--accent-yellow); border: 1px solid var(--accent-yellow); padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+
+        /* --- MODAL --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--accent-blue-main); padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; }
+        .modal-box input { width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-blue); color: white; border-radius: 6px; margin-bottom: 20px; text-align: center; }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen py-4 px-2 sm:px-4">
+<body>
 
-    <div class="max-w-3xl mx-auto space-y-4 relative z-10">
-        
-        <!-- Status Banner / Notification -->
-        <div id="status-banner" class="hidden p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm">
-            <span id="status-text">Memeriksa status invoice...</span>
+<div class="modal-overlay" id="projectModal">
+    <div class="modal-box">
+        <h2>PROYEK BARU</h2>
+        <input type="text" id="clientInput" placeholder="NAMA CLIENT...">
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button class="btn-action" onclick="closeModal()">Batal</button>
+            <button class="btn-action btn-confirm" onclick="confirmProject()">Simpan</button>
         </div>
-
-        <!-- Tombol Aksi Kontrol (No Print) -->
-        <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-lg shadow-sm no-print">
-            <div class="flex items-center gap-2">
-                <button id="btn-selesai" onclick="setSelesai()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3 py-1.5 rounded-lg transition text-xs flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    Selesai
-                </button>
-                <button onclick="addRow()" id="btn-tambah" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed">
-                    + Tambah Item
-                </button>
-                <!-- Tombol Lunas -->
-                <button onclick="toggleLunas()" id="btn-lunas" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1">
-                    <span id="lunas-indicator" class="w-2 h-2 rounded-full bg-slate-400"></span>
-                    <span id="lunas-text">Belum Lunas</span>
-                </button>
-            </div>
-            <div>
-                <button onclick="downloadPDF()" class="bg-slate-800 hover:bg-slate-900 text-white font-medium px-4 py-1.5 rounded-lg transition text-xs flex items-center gap-1.5 shadow">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    Download PDF
-                </button>
-            </div>
-        </div>
-
-        <!-- Area Invoice yang akan di-PDF-kan -->
-        <div id="invoice-content" class="bg-white rounded-xl shadow-lg p-6 sm:p-8 space-y-5 relative text-xs">
-            
-            <!-- Header Invoice -->
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-5 relative">
-                <div>
-                    <h1 class="text-2xl font-bold tracking-tight text-slate-900">INVOICE</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">No: <input type="text" id="inv-no" value="INV-2026-001" class="border-b border-dashed border-slate-300 focus:border-blue-600 focus:outline-none px-1 font-semibold text-slate-700 bg-transparent text-[11px]"></p>
-                </div>
-                
-                <!-- Kontainer Logo -->
-                <div class="text-left sm:text-right flex flex-col items-start sm:items-end relative w-full sm:w-auto">
-                    <div class="relative z-20 my-2 sm:my-0 translate-x-[-25px] sm:translate-x-[30px] translate-y-[75px]">
-                        <img src="https://lh3.googleusercontent.com/d/1CZ1_KLCaTw56YSy3wH-a3rBJLa0E1nBf" alt="Logo Perusahaan" class="h-28 sm:h-40 mb-1 object-contain opacity-30">
-                    </div>
-                    
-                    <h2 class="font-bold text-slate-800 text-sm">firstian TECHNOLOGY</h2>
-                    <p class="text-[10px] text-slate-500 max-w-xs leading-relaxed">OFFICE-1 (M Center) Jl. Teuku Nyak Arief No.16  <br> lv.5 room206,Kby.LamaUtara <br> OFFICE-2 (18 Office Park) Jl. TB Simatupang No.18 <br> lv.12 floor, Kebagusan <br> Jakarta Selatan</p>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Email: firstian84@gmail.com <br> Phone: 087796126529</p>
-                </div>
-            </div>
-
-            <!-- Informasi Klien & Tanggal -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <span class="block font-semibold text-slate-700 mb-1">Tagihan Pelunasan Kepada:</span>
-                    <input type="text" id="client-name" value="Nama Klien / Perusahaan" class="w-full border border-slate-200 rounded-lg p-1.5 text-slate-700 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    <textarea id="client-address" rows="2" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-slate-700 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none mt-1.5 auto-expand">Alamat Klien, Kota</textarea>
-                </div>
-                <div class="space-y-2 sm:text-right">
-                    <div>
-                        <span class="block font-semibold text-slate-700 mb-1">Tanggal Invoice:</span>
-                        <input type="date" id="inv-date" class="border border-slate-200 rounded-lg px-2 py-1 text-slate-700 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none sm:text-right">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tabel Item Dinamis Menurun -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b border-slate-200 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                            <th class="py-2 px-1">Deskripsi Item</th>
-                            <th class="py-2 px-1 w-16 text-center">Jumlah</th>
-                            <th class="py-2 px-1 w-36 text-right">Harga Satuan</th>
-                            <th class="py-2 px-1 w-36 text-right">Total</th>
-                            <th class="py-2 px-1 w-8 text-center no-print">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="item-list" class="divide-y divide-slate-100">
-                        <!-- Baris Item Default -->
-                        <tr class="transition hover:bg-slate-50/50">
-                            <td class="py-2 px-1">
-                                <textarea rows="1" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none auto-expand item-desc" placeholder="Deskripsi item atau layanan...">Jasa Pembuatan Website Custom</textarea>
-                            </td>
-                            <td class="py-2 px-1 text-center align-top pt-2">
-                                <input type="number" value="1" min="1" oninput="calculateTotal()" class="w-14 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
-                            </td>
-                            <td class="py-2 px-1 text-right align-top pt-2">
-                                <input type="number" value="5000000" min="0" oninput="calculateTotal()" class="w-full text-right border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-price">
-                            </td>
-                            <td class="py-2 px-1 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 5.000.000</td>
-                            <td class="py-2 px-1 text-center align-top pt-2 no-print">
-                                <button onclick="removeRow(this)" class="text-rose-500 hover:text-rose-700 font-bold p-1 btn-delete text-sm">×</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Total Pembayaran, DP, & Sisa Tagihan -->
-            <div class="flex justify-end pt-2 border-t border-slate-100">
-                <div class="w-full sm:w-72 space-y-1.5">
-                    <div class="flex justify-between text-slate-600">
-                        <span>Subtotal:</span>
-                        <span id="subtotal" class="font-medium">Rp 5.000.000</span>
-                    </div>
-                    <div class="flex justify-between text-slate-600">
-                        <span>PPN (0%):</span>
-                        <span>Rp 0</span>
-                    </div>
-                    <div class="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1.5">
-                        <span>Total Tagihan:</span>
-                        <span id="grand-total">Rp 5.000.000</span>
-                    </div>
-                    
-                    <!-- Bagian DP (Down Payment) -->
-                    <div class="pt-1.5 border-t border-dashed border-slate-200 space-y-1.5">
-                        <div class="flex items-center justify-between gap-2 text-slate-600">
-                            <span class="text-[11px]">Tanggal DP:</span>
-                            <input type="date" id="dp-date" class="border border-slate-200 rounded px-1.5 py-0.5 text-[11px] text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                        </div>
-                        <div class="flex items-center justify-between gap-2 text-slate-600">
-                            <span class="text-[11px] font-medium">Pembayaran DP:</span>
-                            <input type="number" id="dp-amount" value="0" min="0" oninput="calculateTotal()" class="w-32 text-right border border-slate-200 rounded px-1.5 py-0.5 text-[11px] font-medium text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                        </div>
-                    </div>
-
-                    <!-- Sisa Tagihan Pelunasan -->
-                    <div class="flex justify-between font-bold text-emerald-700 border-t border-slate-200 pt-1.5 bg-emerald-50/50 p-1.5 rounded-lg">
-                        <span>SISA PELUNASAN:</span>
-                        <span id="remaining-total">Rp 5.000.000</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Catatan Footer Invoice -->
-            <div class="border-t border-slate-100 pt-3 text-[10px] text-slate-500 space-y-1">
-                <p class="font-semibold text-slate-700">Catatan / Pembayaran melalui:</p>
-                <p>Bank BCA a.n Achmad Firstian Budiastomo - Rekening: 3090128077</p>
-                <p># Segera Lunasi Pembayaran Untuk Kelancaran Operasional Bersama</p>
-                <p># Setelah surat ini keterima, Jika dalam 3 hari tidak segera melunasi pembayaran segera kordinasikan situasinya</p>
-                <p># Tim kami akan follow up setiap periode untuk pelunasan pembayaran</p>
-                <p class="font-medium text-slate-700 pt-0.5">TERIMA KASIH KESEMPATAN DAN KERJASAMANYA</p>
-            </div>
-        </div>
-
     </div>
+</div>
 
-    <!-- Script Logika Upstash & Invoice -->
-    <script>
-        const UPSTASH_CONFIG = {
-            URL: "https://enabled-crayfish-71186.upstash.io",
-            TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
-            PREFIX: "project_order_invocetagih_yuni4"
-        };
+<div class="project-header">
+    <div id="project-name-display">SYNCING...</div>
+</div>
 
-        const keyName = UPSTASH_CONFIG.PREFIX;
-        let isPaidValue = 0; // 0 = Belum Lunas, 1 = Lunas
 
-        function autoResize(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = (textarea.scrollHeight) + 'px';
+
+<div class="container">
+    <h1>MONITOR FASE KERJA</h1>
+    <div class="workflow-wrapper" id="workflow"></div>
+
+    <div class="issue-monitor-section">
+        <div class="issue-card" id="issue-card-main">
+            <div class="status-badge" style="border-color:var(--accent-yellow); color:var(--accent-yellow)">Issue Tracker</div>
+            <h3 id="issue-title">Status Kendala Lapangan</h3>
+            <p id="issue-desc-main">Mengecek...</p>
+            <input type="text" class="issue-input" id="issue-text-input" placeholder="Tulis kendala...">
+            <button class="btn-update-issue" onclick="saveIssue()">Update Kendala</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CONFIG = {
+        URL: "https://enabled-crayfish-71186.upstash.io",
+        TOKEN: "gQAAAAAAARYSAAIncDE2MzUzMjQ5Mzg2N2E0YzU2OTUxODJjZWNmY2E2NzkyMXAxNzExODY",
+        PREFIX: "project_order_YUNI4"
+    };
+
+    let currentActiveProject = null;
+
+    const stepsTemplate = [
+  { id: "1", badge: "Planning", title: "Pra-Produksi", desc: "Pengumpulan data, survey kebutuhan klien, rancangan, anggaran, sampel model" },
+        { id: "2", badge: "Design", title: "Revisi", desc: "Proses asistensi dan perbaikan desain berdasarkan feedback." },
+        { id: "V1", badge: "Verification", title: "Verifikasi Revisi", desc: "Validasi hasil revisi dan persetujuan desain final." },
+        { id: "3", badge: "Execution", title: "Produksi", desc: "Tahap fabrikasi utama dan pengerjaan fisik proyek." },
+        { id: "V2", badge: "Verification", title: "Verifikasi Produksi", desc: "Pengecekan fisik terhadap hasil produksi lapangan." },
+        { id: "4", badge: "Testing", title: "Quality Control (QC)", desc: "Inspeksi menyeluruh dan memastikan tidak ada cacat." },
+        { id: "5", badge: "Handover", title: "Serah Terima", desc: "BAST dan pelatihan penggunaan." },
+        { id: "6", badge: "Closing", title: "Penagihan", desc: "Penerbitan invoice final pelunasan pembayaran." },
+        { id: "7", badge: "Live", title: "Published", desc: "Notifikasi Penagihan keklien" }
+    ];
+
+    function getFormattedDate() {
+        return new Date().toLocaleString('id-ID', { day:'2-digit', month:'short', year: 'numeric', hour:'2-digit', minute:'2-digit' }).replace(/\./g, ':');
+    }
+
+    function formatImgUrl(url) {
+        if (!url) return "";
+        if (url.includes("drive.google.com")) {
+            let id = url.split("/file/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
+            return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1000` : url;
         }
+        return url;
+    }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if(!document.getElementById('inv-date').value) {
-                document.getElementById('inv-date').valueAsDate = new Date();
+    function renderWorkflow() {
+        document.getElementById('workflow').innerHTML = stepsTemplate.map(step => {
+            const isVerify = step.id === 'V1' || step.id === 'V2';
+            return `
+                <div class="step-card ${isVerify ? 'v-pulse' : ''}" id="card-${step.id}" onclick="handleInteraction('${step.id}')">
+                    <div class="verification-wrapper" onclick="event.stopPropagation()">
+                        <input type="checkbox" class="gps-checkbox" id="check-${step.id}" onclick="verifyWithGPS('${step.id}'); return false;">
+                        <span class="gps-label">GPS</span>
+                    </div>
+                    <div class="status-badge">${step.badge}</div>
+                    <div class="step-number">${step.id}</div>
+                    <div class="step-content">
+                        <h3>${step.title}</h3>
+                        <p>${step.desc}</p>
+                        <div class="action-row" onclick="event.stopPropagation()">
+                            <div class="link-input-group">
+                                <input type="text" class="link-input-small" id="l1-${step.id}" placeholder="Link Img 1">
+                                <input type="text" class="link-input-small" id="l2-${step.id}" placeholder="Link Img 2">
+                                <button class="btn-save-link" onclick="saveLinks('${step.id}')">SAVE</button>
+                            </div>
+                            <div class="image-preview-container" id="preview-${step.id}"></div>
+                        </div>
+                        <div class="timestamp-active" id="ts-act-${step.id}"></div>
+                        <div class="timestamp-gps" id="ts-gps-${step.id}"></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    async function updateProjectUI() {
+        try {
+            const res = await fetch(`${CONFIG.URL}/keys/${CONFIG.PREFIX}*`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
+            const keys = (await res.json()).result;
+            if (!keys || keys.length === 0) {
+                document.getElementById('project-name-display').innerText = "NO ACTIVE PROJECT";
+                return;
             }
-            if(!document.getElementById('dp-date').value) {
-                document.getElementById('dp-date').valueAsDate = new Date();
+            keys.sort((a, b) => b.localeCompare(a));
+            
+            let validData = null;
+            let validKey = null;
+
+            for (let k of keys) {
+                const valRes = await fetch(`${CONFIG.URL}/get/${k}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
+                const rawData = await valRes.json();
+                if (rawData.result) {
+                    let data = typeof rawData.result === 'string' ? JSON.parse(rawData.result) : rawData.result;
+                    if (data.steps) {
+                        validData = data;
+                        validKey = k;
+                        break;
+                    }
+                }
             }
-            loadInvoiceData();
+
+            if (!validData) {
+                document.getElementById('project-name-display').innerText = "NO WORKFLOW DATA FOUND";
+                return;
+            }
+            
+            currentActiveProject = { key: validKey, ...validData };
+            
+            let clientVal = validData.client || "";
+            let projectNeedVal = validData.project_need || "";
+            document.getElementById('project-name-display').innerText = `PROJECT: ${clientVal} - ${projectNeedVal}`.trim();
+            
+            syncUI(validData.steps);
+        } catch (e) { console.error(e); }
+    }
+
+    function syncUI(steps) {
+        if(!steps) return;
+        stepsTemplate.forEach(step => {
+            const card = document.getElementById(`card-${step.id}`);
+            const data = steps[step.id];
+            const checkEl = document.getElementById(`check-${step.id}`);
+            const tsGpsEl = document.getElementById(`ts-gps-${step.id}`);
+            const tsActEl = document.getElementById(`ts-act-${step.id}`);
+            const input1 = document.getElementById(`l1-${step.id}`);
+            const input2 = document.getElementById(`l2-${step.id}`);
+            
+            const isVerify = step.id === 'V1' || step.id === 'V2';
+            card.classList.remove('interacted', 'verified-ui', 'v-pulse');
+            
+            const isVerified = data?.verified === 1;
+            checkEl.checked = isVerified; 
+            
+            if (isVerified) {
+                card.classList.add('verified-ui');
+                tsGpsEl.innerText = `VERIFIED: ${data.verifyTime}\nLOC: ${data.lat}, ${data.lon}`;
+                tsGpsEl.style.display = 'block';
+            } else {
+                if (isVerify) {
+                    card.classList.add('v-pulse');
+                }
+                tsGpsEl.style.display = 'none';
+            }
+
+            if (data?.status === 1 && !isVerified) {
+                card.classList.add('interacted');
+            }
+
+            tsActEl.innerText = data?.time ? `ACTIVE: ${data.time}` : "";
+            tsActEl.style.display = data?.time && !isVerified ? 'block' : 'none';
+
+            if (input1 && data?.link1 !== undefined && document.activeElement !== input1) input1.value = data.link1;
+            if (input2 && data?.link2 !== undefined && document.activeElement !== input2) input2.value = data.link2;
+
+            const previewBox = document.getElementById(`preview-${step.id}`);
+            previewBox.innerHTML = "";
+            [data?.link1, data?.link2].forEach(link => {
+                if (link) {
+                    const img = document.createElement('img');
+                    img.src = formatImgUrl(link);
+                    img.className = "preview-img";
+                    img.onclick = (e) => { e.stopPropagation(); window.open(link, '_blank'); };
+                    previewBox.appendChild(img);
+                }
+            });
         });
 
-        function toggleLunas() {
-            isPaidValue = isPaidValue === 1 ? 0 : 1;
-            updateLunasUI();
+        const issue = steps.ISSUE;
+        const issueCard = document.getElementById('issue-card-main');
+        if (issue?.text) {
+            issueCard.classList.add('has-issue');
+            document.getElementById('issue-desc-main').innerText = issue.text;
+        } else {
+            issueCard.classList.remove('has-issue');
+            document.getElementById('issue-desc-main').innerText = "Aman Terkendali.";
+        }
+    }
+
+    async function handleInteraction(id) {
+        if (!currentActiveProject || currentActiveProject.steps[id]?.verified === 1) return;
+        if (!currentActiveProject.steps[id]) {
+            currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
+        }
+        const step = currentActiveProject.steps[id];
+        step.status = step.status === 1 ? 0 : 1;
+        step.time = step.status ? getFormattedDate() : "";
+        await pushToDB();
+        syncUI(currentActiveProject.steps);
+    }
+
+    function verifyWithGPS(id) {
+        if (!currentActiveProject) return;
+        if (!currentActiveProject.steps[id]) {
+            currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
+        }
+        if (currentActiveProject.steps[id].verified === 1) return;
+        
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            const step = currentActiveProject.steps[id];
+            step.verified = 1;
+            step.status = 1;
+            step.lat = pos.coords.latitude.toFixed(6);
+            step.lon = pos.coords.longitude.toFixed(6);
+            step.verifyTime = getFormattedDate();
+            if(!step.time) step.time = step.verifyTime;
+            await pushToDB();
+            syncUI(currentActiveProject.steps);
+        }, (err) => alert("Aktifkan GPS untuk verifikasi!"), { enableHighAccuracy: true });
+    }
+
+    async function saveLinks(id) {
+        if (!currentActiveProject) {
+            alert("Belum ada proyek aktif!");
+            return;
+        }
+        if (!currentActiveProject.steps) {
+            currentActiveProject.steps = {};
+        }
+        if (!currentActiveProject.steps[id]) {
+            currentActiveProject.steps[id] = { status: 0, verified: 0, lat: 0, lon: 0, time: "", verifyTime: "", link1: "", link2: "" };
+        }
+        
+        const step = currentActiveProject.steps[id];
+        const input1 = document.getElementById(`l1-${id}`);
+        const input2 = document.getElementById(`l2-${id}`);
+
+        step.link1 = input1 ? input1.value.trim() : "";
+        step.link2 = input2 ? input2.value.trim() : "";
+        step.status = 1;
+        
+        if (!step.time) {
+            step.time = getFormattedDate();
         }
 
-        function updateLunasUI() {
-            const btnLunas = document.getElementById('btn-lunas');
-            const indicator = document.getElementById('lunas-indicator');
-            const lunasText = document.getElementById('lunas-text');
+        await pushToDB();
+        syncUI(currentActiveProject.steps);
+    }
 
-            if (isPaidValue === 1) {
-                btnLunas.className = "bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 border border-emerald-300";
-                indicator.className = "w-2 h-2 rounded-full bg-emerald-600";
-                lunasText.textContent = "Lunas";
-                document.body.classList.add('is-paid');
-            } else {
-                btnLunas.className = "bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-3 py-1.5 rounded-lg transition text-xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1";
-                indicator.className = "w-2 h-2 rounded-full bg-slate-400";
-                lunasText.textContent = "Belum Lunas";
-                document.body.classList.remove('is-paid');
+    async function saveIssue() {
+        if (!currentActiveProject) return;
+        const text = document.getElementById('issue-text-input').value.trim();
+        currentActiveProject.steps["ISSUE"] = { text, time: getFormattedDate() };
+        await pushToDB();
+        syncUI(currentActiveProject.steps);
+    }
+
+    async function pushToDB() {
+        await fetch(`${CONFIG.URL}/set/${currentActiveProject.key}`, {
+            method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` },
+            body: JSON.stringify({ 
+                id: currentActiveProject.id || "PRJ-" + Math.floor(1000 + Math.random() * 9000),
+                client: currentActiveProject.client, 
+                contact: currentActiveProject.contact || "",
+                project_need: currentActiveProject.project_need || "", 
+                project_details: currentActiveProject.project_details || "",
+                budget: currentActiveProject.budget || "",
+                status: currentActiveProject.status || 0,
+                finver: currentActiveProject.finver ?? -1,
+                link: currentActiveProject.link || "",
+                location: currentActiveProject.location || { lat: 0, lng: 0 },
+                submitted_at_jakarta: currentActiveProject.submitted_at_jakarta || getFormattedDate(),
+                steps: currentActiveProject.steps 
+            })
+        });
+    }
+
+    function openModal() { document.getElementById('projectModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('projectModal').style.display = 'none'; }
+
+    async function confirmProject() {
+        const name = document.getElementById('clientInput').value.toUpperCase().trim();
+        if(!name) return;
+        
+        let existingData = {};
+        
+        try {
+            const checkRes = await fetch(`${CONFIG.URL}/get/${CONFIG.PREFIX}${name}`, { headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
+            const checkData = await checkRes.json();
+            if (checkData.result) {
+                const parsedData = typeof checkData.result === 'string' ? JSON.parse(checkData.result) : checkData.result;
+                existingData = parsedData;
             }
+        } catch(err) {
+            console.error(err);
         }
 
-        async function loadInvoiceData() {
-            const banner = document.getElementById('status-banner');
-            const statusText = document.getElementById('status-text');
+        const steps = {}; 
+        stepsTemplate.forEach(s => {
+            steps[s.id] = existingData.steps?.[s.id] || { status:0, verified:0, lat:0, lon:0, time:"", verifyTime:"", link1:"", link2:"" };
+        });
+        steps["ISSUE"] = existingData.steps?.ISSUE || { text: "", time: "" };
+        
+        currentActiveProject = {
+            key: `${CONFIG.PREFIX}${name}`,
+            id: existingData.id || "PRJ-" + Math.floor(1000 + Math.random() * 9000),
+            client: name,
+            contact: existingData.contact || "",
+            project_need: existingData.project_need || "",
+            project_details: existingData.project_details || "",
+            budget: existingData.budget || "",
+            status: existingData.status || 0,
+            finver: existingData.finver ?? -1,
+            link: existingData.link || "",
+            location: existingData.location || { lat: 0, lng: 0 },
+            submitted_at_jakarta: existingData.submitted_at_jakarta || getFormattedDate(),
+            steps: steps
+        };
 
-            try {
-                const response = await fetch(`${UPSTASH_CONFIG.URL}/get/${keyName}`, {
-                    headers: {
-                        Authorization: `Bearer ${UPSTASH_CONFIG.TOKEN}`
-                    }
-                });
-                const data = await response.json();
-                
-                let savedData = null;
-                if (data.result) {
-                    try {
-                        savedData = JSON.parse(data.result);
-                    } catch (e) {
-                        savedData = { status: data.result };
-                    }
-                }
+        await pushToDB();
+        closeModal(); 
+        updateProjectUI();
+    }
 
-                if (savedData) {
-                    if (savedData.invNo) document.getElementById('inv-no').value = savedData.invNo;
-                    if (savedData.invDate) document.getElementById('inv-date').value = savedData.invDate;
-                    if (savedData.clientName) document.getElementById('client-name').value = savedData.clientName;
-                    if (savedData.clientAddress) {
-                        const addrEl = document.getElementById('client-address');
-                        addrEl.value = savedData.clientAddress;
-                        autoResize(addrEl);
-                    }
-                    if (savedData.dpDate) document.getElementById('dp-date').value = savedData.dpDate;
-                    if (savedData.dpAmount !== undefined) document.getElementById('dp-amount').value = savedData.dpAmount;
-                    
-                    if (savedData.isPaid !== undefined) {
-                        isPaidValue = parseInt(savedData.isPaid) || 0;
-                        updateLunasUI();
-                    }
-
-                    if (savedData.items && Array.isArray(savedData.items) && savedData.items.length > 0) {
-                        const tbody = document.getElementById('item-list');
-                        tbody.innerHTML = ''; 
-
-                        savedData.items.forEach(item => {
-                            const tr = document.createElement('tr');
-                            tr.className = "transition hover:bg-slate-50/50";
-                            tr.innerHTML = `
-                                <td class="py-2 px-1">
-                                    <textarea rows="1" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none auto-expand item-desc" placeholder="Deskripsi item atau layanan...">${item.desc}</textarea>
-                                </td>
-                                <td class="py-2 px-1 text-center align-top pt-2">
-                                    <input type="number" value="${item.qty}" min="1" oninput="calculateTotal()" class="w-14 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
-                                </td>
-                                <td class="py-2 px-1 text-right align-top pt-2">
-                                    <input type="number" value="${item.price}" min="0" oninput="calculateTotal()" class="w-full text-right border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-price">
-                                </td>
-                                <td class="py-2 px-1 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 0</td>
-                                <td class="py-2 px-1 text-center align-top pt-2 no-print">
-                                    <button onclick="removeRow(this)" class="text-rose-500 hover:text-rose-700 font-bold p-1 btn-delete text-sm">×</button>
-                                </td>
-                            `;
-                            tbody.appendChild(tr);
-                            const textarea = tr.querySelector('.item-desc');
-                            autoResize(textarea);
-                        });
-                        calculateTotal();
-                    }
-
-                    if (savedData.status === "1" || data.result === "1") {
-                        applyLockedState();
-                        banner.className = "p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm bg-amber-50 text-amber-800 border border-amber-200";
-                        statusText.innerHTML = "🔒 <strong>Invoice Telah Selesai:</strong> Seluruh konten terkunci dan tersimpan aman di Upstash.";
-                        banner.classList.remove('hidden');
-                    } else {
-                        applyActiveState();
-                        banner.className = "p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm bg-blue-50 text-blue-800 border border-blue-200";
-                        statusText.innerHTML = "ℹ️ <strong>Status Aktif:</strong> Konten invoice dapat diedit kembali.";
-                        banner.classList.remove('hidden');
-                    }
-                } else {
-                    applyActiveState();
-                    banner.className = "p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm bg-blue-50 text-blue-800 border border-blue-200";
-                    statusText.innerHTML = "ℹ️ <strong>Status Aktif:</strong> Silakan edit dan simpan invoice.";
-                    banner.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error("Gagal terhubung ke Upstash:", error);
-                statusText.innerHTML = "⚠️ Gagal terhubung ke server Upstash.";
-                banner.className = "p-3 rounded-lg text-xs font-medium flex items-center justify-between no-print shadow-sm bg-rose-50 text-rose-800 border border-rose-200";
-                banner.classList.remove('hidden');
-            }
+    async function deleteLatestProject() {
+        if (currentActiveProject && confirm(`Hapus Proyek ${currentActiveProject.client}?`)) {
+            await fetch(`${CONFIG.URL}/del/${currentActiveProject.key}`, { method: 'POST', headers: { Authorization: `Bearer ${CONFIG.TOKEN}` } });
+            location.reload(); 
         }
+    }
 
-        async function setSelesai() {
-            if (!confirm("Apakah Anda yakin ingin menyelesaikan invoice ini? Semua konten akan disimpan dan dikunci.")) return;
-
-            const btnSelesai = document.getElementById('btn-selesai');
-            btnSelesai.disabled = true;
-            btnSelesai.textContent = "Menyimpan...";
-
-            // Ketika tombol selesai disentuh, tombol lunas ikut dikunci/nonaktif otomatis
-            document.getElementById('btn-lunas').disabled = true;
-
-            const items = [];
-            const rows = document.querySelectorAll('#item-list tr');
-            rows.forEach(row => {
-                const desc = row.querySelector('.item-desc').value;
-                const qty = row.querySelector('.item-qty').value;
-                const price = row.querySelector('.item-price').value;
-                items.push({ desc, qty, price });
-            });
-
-            const payloadData = {
-                status: "1",
-                isPaid: isPaidValue,
-                invNo: document.getElementById('inv-no').value,
-                invDate: document.getElementById('inv-date').value,
-                clientName: document.getElementById('client-name').value,
-                clientAddress: document.getElementById('client-address').value,
-                dpDate: document.getElementById('dp-date').value,
-                dpAmount: document.getElementById('dp-amount').value,
-                items: items
-            };
-
-            try {
-                const response = await fetch(`${UPSTASH_CONFIG.URL}/set/${keyName}/${encodeURIComponent(JSON.stringify(payloadData))}`, {
-                    headers: {
-                        Authorization: `Bearer ${UPSTASH_CONFIG.TOKEN}`
-                    }
-                });
-                const data = await response.json();
-
-                if (data.result === "OK") {
-                    alert("Semua konten invoice berhasil disimpan dan dikunci!");
-                    loadInvoiceData();
-                } else {
-                    alert("Gagal menyimpan ke Upstash.");
-                    btnSelesai.disabled = false;
-                    btnSelesai.textContent = "Selesai";
-                    document.getElementById('btn-lunas').disabled = false;
-                }
-            } catch (error) {
-                console.error("Error setting Upstash:", error);
-                alert("Terjadi kesalahan koneksi.");
-                btnSelesai.disabled = false;
-                btnSelesai.textContent = "Selesai";
-                document.getElementById('btn-lunas').disabled = false;
-            }
-        }
-
-        function applyLockedState() {
-            const allInputs = document.querySelectorAll('input, textarea');
-            allInputs.forEach(input => {
-                input.disabled = true;
-                input.classList.add('bg-slate-50', 'cursor-not-allowed', 'opacity-80');
-            });
-            document.getElementById('btn-tambah').disabled = true;
-            document.getElementById('btn-selesai').disabled = true;
-            document.getElementById('btn-lunas').disabled = true;
-            document.querySelectorAll('.btn-delete').forEach(btn => btn.style.display = 'none');
-        }
-
-        function applyActiveState() {
-            const allInputs = document.querySelectorAll('input, textarea');
-            allInputs.forEach(input => {
-                input.disabled = false;
-                input.classList.remove('bg-slate-50', 'cursor-not-allowed', 'opacity-80');
-            });
-            document.getElementById('btn-tambah').disabled = false;
-            document.getElementById('btn-selesai').disabled = false;
-            document.getElementById('btn-lunas').disabled = false;
-            document.querySelectorAll('.btn-delete').forEach(btn => btn.style.display = 'inline-block');
-        }
-
-        function addRow() {
-            const tbody = document.getElementById('item-list');
-            const tr = document.createElement('tr');
-            tr.className = "transition hover:bg-slate-50/50";
-            tr.innerHTML = `
-                <td class="py-2 px-1">
-                    <textarea rows="1" oninput="autoResize(this)" class="w-full border border-slate-200 rounded-lg p-1.5 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none auto-expand item-desc" placeholder="Deskripsi item atau layanan...">Deskripsi Item Baru</textarea>
-                </td>
-                <td class="py-2 px-1 text-center align-top pt-2">
-                    <input type="number" value="1" min="1" oninput="calculateTotal()" class="w-14 text-center border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-qty">
-                </td>
-                <td class="py-2 px-1 text-right align-top pt-2">
-                    <input type="number" value="0" min="0" oninput="calculateTotal()" class="w-full text-right border border-slate-200 rounded-lg p-1 text-[11px] focus:ring-2 focus:ring-blue-500 focus:outline-none item-price">
-                </td>
-                <td class="py-2 px-1 text-right font-medium text-slate-700 align-top pt-3 item-total">Rp 0</td>
-                <td class="py-2 px-1 text-center align-top pt-2 no-print">
-                    <button onclick="removeRow(this)" class="text-rose-500 hover:text-rose-700 font-bold p-1 btn-delete text-sm">×</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-            autoResize(tr.querySelector('.item-desc'));
-            calculateTotal();
-        }
-
-        function removeRow(btn) {
-            const row = btn.closest('tr');
-            row.remove();
-            calculateTotal();
-        }
-
-        function formatRupiah(number) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
-        }
-
-        function calculateTotal() {
-            const rows = document.querySelectorAll('#item-list tr');
-            let subtotal = 0;
-
-            rows.forEach(row => {
-                const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
-                const price = parseFloat(row.querySelector('.item-price').value) || 0;
-                const total = qty * price;
-                
-                row.querySelector('.item-total').textContent = formatRupiah(total);
-                subtotal += total;
-            });
-
-            const dpAmount = parseFloat(document.getElementById('dp-amount').value) || 0;
-            const remaining = subtotal - dpAmount;
-
-            document.getElementById('subtotal').textContent = formatRupiah(subtotal);
-            document.getElementById('grand-total').textContent = formatRupiah(subtotal);
-            document.getElementById('remaining-total').textContent = formatRupiah(remaining >= 0 ? remaining : 0);
-        }
-
-        function downloadPDF() {
-            const element = document.getElementById('invoice-content');
-            const invNo = document.getElementById('inv-no').value || 'INV-2026-001';
-            
-            const filename = `1tech${invNo}.pdf`;
-
-            const options = {
-                margin:       5,
-                filename:     filename,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().from(element).set(options).save();
-        }
-    </script>
+    document.addEventListener('DOMContentLoaded', () => { renderWorkflow(); updateProjectUI(); });
+    setInterval(updateProjectUI, 15000);
+</script>
 </body>
 </html>

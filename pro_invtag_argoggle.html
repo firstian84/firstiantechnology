@@ -28,7 +28,7 @@
             resize: none;
             min-height: 28px;
         }
-/* --- WATERMARK --- */
+        /* --- WATERMARK --- */
         body.is-paid::before {
             content: "";
             position: fixed;
@@ -224,7 +224,14 @@
 
         function toggleLunas() {
             isPaidValue = isPaidValue === 1 ? 0 : 1;
+            
+            // Jika status berubah menjadi Lunas (isPaidValue === 1), ubah input Pembayaran DP menjadi 0
+            if (isPaidValue === 1) {
+                document.getElementById('dp-amount').value = 0;
+            }
+            
             updateLunasUI();
+            calculateTotal(); // Hitung ulang total dan sisa pelunasan
         }
 
         function updateLunasUI() {
@@ -344,7 +351,6 @@
             btnSelesai.disabled = true;
             btnSelesai.textContent = "Menyimpan...";
 
-            // Ketika tombol selesai disentuh, tombol lunas ikut dikunci/nonaktif otomatis
             document.getElementById('btn-lunas').disabled = true;
 
             const items = [];
@@ -466,11 +472,20 @@
             });
 
             const dpAmount = parseFloat(document.getElementById('dp-amount').value) || 0;
-            const remaining = subtotal - dpAmount;
+            let remaining = subtotal - dpAmount;
+
+            // Jika status sudah Lunas (isPaidValue === 1), set Total Tagihan & Sisa Pelunasan menjadi 0
+            let displayGrandTotal = subtotal;
+            let displayRemaining = remaining >= 0 ? remaining : 0;
+
+            if (isPaidValue === 1) {
+                displayGrandTotal = 0;
+                displayRemaining = 0;
+            }
 
             document.getElementById('subtotal').textContent = formatRupiah(subtotal);
-            document.getElementById('grand-total').textContent = formatRupiah(subtotal);
-            document.getElementById('remaining-total').textContent = formatRupiah(remaining >= 0 ? remaining : 0);
+            document.getElementById('grand-total').textContent = formatRupiah(displayGrandTotal);
+            document.getElementById('remaining-total').textContent = formatRupiah(displayRemaining);
         }
 
         function downloadPDF() {
